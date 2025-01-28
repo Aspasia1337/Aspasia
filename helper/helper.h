@@ -47,10 +47,12 @@ public:
 
 	class Memory {
 	public:
+		Memory();
+		~Memory();
 		std::vector<std::uint32_t> PatternToBytes(const char* pattern);
 		std::uint8_t* PatternScanner(const char* moduleName, const char* signature);
 	};
-	Memory m_Memory;
+	Memory m_Mem;
 };
 
 inline Helper* helper = new Helper();
