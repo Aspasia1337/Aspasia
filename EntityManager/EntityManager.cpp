@@ -1,103 +1,88 @@
 #include "EntityManager.h"
 
-struct vec3 {
-	float x, y, z;
-};
 
-bool EntityManager::populateModule(uintptr_t& module, const char* moduleName) {
-	module = reinterpret_cast<uintptr_t>(GetModuleHandle(moduleName));
+std::string GameEntitySystem::GetSchemaName(void* entity)
+{
+	const uintptr_t entity_identity = *(uintptr_t*)((uintptr_t)entity + 0x10);
+	if (!entity_identity)return "";
 
-	if (!module) {
-		helper->m_Console.printMessage(INFO, "Cant find module ", moduleName);
-		return false;
-	}
-	helper->m_Console.printMessage(INFO, "Module ", moduleName, " stored");
-	return true;
+	const uintptr_t entity_class_info = *(uintptr_t*)(entity_identity + 0x8);
+	if (!entity_class_info)return "";
+
+	const uintptr_t schema_class_info_data = *(uintptr_t*)(entity_class_info + 0x30);
+	if (!schema_class_info_data)return "";
+
+	const char* class_name = *(const char**)(schema_class_info_data + 0x8);
+	if (!class_name) return "";
+
+	char buffer[1024];
+
+	lstrcpyA(buffer, class_name);
+	return std::string(buffer);
 }
 
-bool EntityManager::entityListIterator() {
-
-	if (!populateModule(hmoduleClientdll, "client.dll")) {
-		return false;
-	}
-
-	listEntryVector.clear();
-	controllerVector.clear();
-	controllerPawnVector.clear();
-	CCSPlayerControllerVector.clear();
-	C_BaseEntityVector.clear();
-
-	uintptr_t entityList = *(uintptr_t*)(hmoduleClientdll + 0x1A292F0);
-
-	std::vector<uintptr_t> buffer = {};
-
-	for (int i = 0; i < 64; i++) {
-		//uintptr_t listEntry = *(uintptr_t*)(entityList + ((8 * (i & 0x7FFF) >> 9) + 16));
-		uintptr_t listEntryTemp = (entityList + ((8 * (i & 0x7FFF) >> 9) + 16));
-		uintptr_t listEntry = *(uintptr_t*)listEntryTemp;
-
-		if (!listEntry) {
-			continue;
-		}
-
-		if ((8 * (i & 0x7FFF) >> 9) == 0) {
-			helper->m_Console.printMessage(INFO, "List 1");
-		}
-		else if ((8 * (i & 0x7FFF) >> 9) == 2) {
-			helper->m_Console.printMessage(INFO, "List 2");
-
-		}
-		else if ((8 * (i & 0x7FFF) >> 9) == 2) {
-			helper->m_Console.printMessage(INFO, "List 3");
-
-		}
-
-		//CSSPlayerController
-		uintptr_t entityControllerTemp = ((listEntry + 120 * (i & 0x1FF))); //0x78
-		uintptr_t entityController = *(uintptr_t*)entityControllerTemp;
-
-
-		if (!entityController) {
-			continue;
-		}
-
-		//C_CSPlayerPawn
-		uintptr_t entityControllerPawnTemp = (entityController + 0x80C);
-		uintptr_t entityControllerPawn = *(uintptr_t*)entityControllerPawnTemp;
-
-
-
-		if (!entityControllerPawn) {
-			continue;
-		}
-
-
-		//C_CSPlayerPawn
-		uintptr_t entityTemp = (listEntry + 120 * (entityControllerPawn & 0x1FF));
-		uintptr_t entity = *(uintptr_t*)entityTemp;
-
-		if (entity) {
-			this->listEntryVector.push_back(listEntry);
-			this->controllerVector.push_back(entityController);
-			this->controllerPawnVector.push_back(entityControllerPawn);
-			//this->CCSPlayerControllerVector.push_back((*(CCSPlayerController**)entityControllerTemp));
-			this->C_CSPlayerPawnVector.push_back((*(C_CSPlayerPawn**)entityTemp));
-			//this - C_BaseEntityVector.push_back((*(C_BaseEntity**)entityControllerTemp));
-
-
-		}
-	}
-
-	helper->m_Console.printMessage(INFO, "Entity Manager found ", this->C_CSPlayerPawnVector.size(), " entities");
-
-	return true;
+void* GameEntitySystem::GetEntityByIndexFunction(int Index)
+{
+	// sub_606B10 IDA returns the entity
+	using fnGetBaseEntity = uintptr_t * (__thiscall*)(void*, int);
+	static auto GetBaseEntity = reinterpret_cast<fnGetBaseEntity>(helper->m_Mem.PatternScanner("client.dll", "81 FA ? ? ? ? 77 36 8B C2 C1 F8 09 83 F8 3F 77 2C 48 98 48 8B 4C C1 ? 48 85 C9 74 20 8B C2 25 ? ? ? ? 48 6B C0 78 48 03 C8 74 10 8B 41 10 25 ? ? ? ? 3B C2 75 04 48 8B 01 C3"));
+	return GetBaseEntity(*(uintptr_t**)pEntityList, Index);
 }
 
 
-void EntityManager::printPlayerInfo() {
-	vec3* position = nullptr;
-	for (unsigned i = 0; i < entManager->C_CSPlayerPawnVector.size();i++) {
-		helper->m_Console.printMessage(INFO, "Is buyZone? -> ", entManager->C_CSPlayerPawnVector[i]->m_bInBuyZone);
+void GameEntitySystem::getGameEntities() {
+	pMaxIndex = *(DWORD*)(*(uintptr_t*)(clientDll + (uintptr_t)0x1A359C0) + (uintptr_t)0x20F0);
 
+	ControllerVector.clear();
+	PawnVector.clear();
+
+	//helper->m_Console.printMessage(WARNING,"-----------------------------------");
+
+	for (unsigned int i = 0; i < pMaxIndex; i++) {
+
+		void* Entity = (void*)(GetEntityByIndexFunction(i));
+		if (!Entity)
+			continue;
+
+		// helper->m_Console.printMessage(DEBUG, "Found! - ", GetSchemaName(Entity));
+
+		if (GetSchemaName(Entity) == ("C_CSPlayerPawnBase")) {
+
+			C_PlayerPawn* Pawn = (C_PlayerPawn*)Entity;
+
+			if (Pawn->pawnHealth > 0 && Pawn->pawnHealth <= 100 && Pawn->isAlive == 0) {
+				PawnVector.push_back(Pawn);
+				continue;
+			}
+		}
+
+		if (GetSchemaName(Entity) == ("CBasePlayerController")) {
+
+			C_PlayerController* Controller = (C_PlayerController*)Entity;
+
+			if (Controller->pawnIsAlive)
+			{
+				ControllerVector.push_back(Controller);
+				continue;
+			}
+		}
+	}
+	helper->m_Console.printMessage(DEBUG, "EntityManager found ", ControllerVector.size(), " controllers & ", PawnVector.size(), " pawns!");
+}
+
+
+void GameEntitySystem::glowPatch()
+{
+	Color glowColor = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+	for (unsigned i = 1; i < PawnVector.size();i++) {
+
+		DWORD colorArgb = ((DWORD)(glowColor.w * 255) << 24) |
+			((DWORD)(glowColor.z * 255) << 16) |
+			((DWORD)(glowColor.y * 255) << 8) |
+			((DWORD)(glowColor.x * 255));
+
+		*(DWORD*)((char*)PawnVector[i] + 0xC00 + 0x40) = colorArgb;  // It's mandatory to use char* because void* doesn't allow poitner arithmetic
+		*(DWORD*)((char*)PawnVector[i] + 0xC00 + 0x51) = 1;
 	}
 }
