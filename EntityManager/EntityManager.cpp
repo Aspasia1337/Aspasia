@@ -1,5 +1,9 @@
 #include "EntityManager.h"
+#include "../math/vector.h"
+#include "../includes/imgui/imgui.h"
 
+#include <iostream>
+#include <string>
 
 std::string GameEntitySystem::GetSchemaName(void* entity)
 {
@@ -30,52 +34,75 @@ void* GameEntitySystem::GetEntityByIndexFunction(int Index)
 }
 
 
-void GameEntitySystem::getGameEntities() {
-	pMaxIndex = *(DWORD*)(*(uintptr_t*)(clientDll + (uintptr_t)0x1A359C0) + (uintptr_t)0x20F0);
+void GameEntitySystem::getGameEntities ( ) {
 
-	ControllerVector.clear();
-	PawnVector.clear();
+	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1A359C0) + (uintptr_t)0x20F0);
+
+	ControllerVector.clear ( );
+	PawnVector.clear ( );
 
 	//helper->m_Console.printMessage(WARNING,"-----------------------------------");
 
 	for (unsigned int i = 0; i < pMaxIndex; i++) {
 
-		void* Entity = (void*)(GetEntityByIndexFunction(i));
+		void *Entity = (void *)(GetEntityByIndexFunction (i));
 		if (!Entity)
 			continue;
 
 		// helper->m_Console.printMessage(DEBUG, "Found! - ", GetSchemaName(Entity));
 
-		if (GetSchemaName(Entity) == ("C_CSPlayerPawnBase")) {
+		if (GetSchemaName (Entity) == ("C_CSPlayerPawnBase")) {
 
-			C_PlayerPawn* Pawn = (C_PlayerPawn*)Entity;
+			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
 
 			if (Pawn->pawnHealth > 0 && Pawn->pawnHealth <= 100 && Pawn->isAlive == 0) {
-				PawnVector.push_back(Pawn);
+				PawnVector.push_back (Pawn);
 				continue;
 			}
+
 		}
 
-		if (GetSchemaName(Entity) == ("CBasePlayerController")) {
+		if (GetSchemaName (Entity) == ("CBasePlayerController")) {
 
-			C_PlayerController* Controller = (C_PlayerController*)Entity;
+			C_PlayerController *Controller = (C_PlayerController *)Entity;
 
 			if (Controller->pawnIsAlive)
 			{
-				ControllerVector.push_back(Controller);
+				ControllerVector.push_back (Controller);
 				continue;
 			}
 		}
 	}
-	helper->m_Console.printMessage(DEBUG, "EntityManager found ", ControllerVector.size(), " controllers & ", PawnVector.size(), " pawns!");
+
+}
+
+void GameEntitySystem::getAllPlayers(){
+
+	getGameEntities ( );
+	PlayersVector.clear ( );
+
+	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
+		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
+			if (PawnVector[i]->m_hOriginalController == ControllerVector[j]->m_hOriginalControllerOfCurrentPawn) {
+				PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j]));
+				break;
+			}
+		}
+	}
 }
 
 
 void GameEntitySystem::glowPatch()
 {
-	Color glowColor = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	for (unsigned i = 1; i < PawnVector.size();i++) {
+	C_PlayerPawn* aspasiaUser = (C_PlayerPawn*)(clientDll + 0x1889F30);
+
+	Color glowColor = { 0.2f, 1.0f, 0.2f, 1.0f };
+
+	for (unsigned i = 0; i < PawnVector.size();i++) {
+
+		if ((char*)PawnVector[i] == *(char**)aspasiaUser)
+			continue;
 
 		DWORD colorArgb = ((DWORD)(glowColor.w * 255) << 24) |
 			((DWORD)(glowColor.z * 255) << 16) |
@@ -84,5 +111,35 @@ void GameEntitySystem::glowPatch()
 
 		*(DWORD*)((char*)PawnVector[i] + 0xC00 + 0x40) = colorArgb;  // It's mandatory to use char* because void* doesn't allow poitner arithmetic
 		*(DWORD*)((char*)PawnVector[i] + 0xC00 + 0x51) = 1;
+	}
+}
+
+
+void GameEntitySystem::renderDot() {
+	float(*ViewMatrix)[4][4] = (float(*)[4][4])(clientDll + 0x1AA17C0);
+
+	for (unsigned i = 0; i < PlayersVector.size();i++) {
+		Vec3 feetPosition = (PlayersVector[i]->Pawn->vOldOrigin);
+
+		Vec3 headPos = { feetPosition.x + 0.0f,feetPosition.y + 0.0f,feetPosition.z + 65.0f };
+
+		Vec2 feet, head;
+
+		if (feetPosition.WorldToScreen(feet, ViewMatrix) && headPos.WorldToScreen(head, ViewMatrix)) {
+			float height = (feet.y - head.y) * 1.5f;
+			float width = height / 1.5f;
+
+			//char playername[128] = {};
+
+			//std::memcpy(playername, PlayersVector[i]->Controller->m_iszPlayerName, sizeof(playername));
+
+
+
+			//ImGui::GetBackgroundDrawList()->AddRect({ (feet.x-width/2),head.y }, {(feet.x-width/2) + width,head.y+height}, ImColor(255,255,255));
+			ImGui::GetBackgroundDrawList ( )->AddText ({ feet.x, feet.y }, ImColor (0, 150, 0), std::to_string (PlayersVector[i]->Pawn->pawnHealth).c_str ( ));
+			ImGui::GetBackgroundDrawList()->AddText({ feet.x, feet.y-30 }, ImColor(0, 0, 80), std::to_string(PlayersVector[i]->Pawn->m_armor).c_str());
+			//ImGui::GetBackgroundDrawList()->AddText({ feet.x, feet.y }, ImColor(0, 255, 0), playername);
+		}
+		
 	}
 }
