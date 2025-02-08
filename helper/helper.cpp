@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-#include <Windows.h>
+
 #include "helper.h"
 
 void Helper::Console::printTime(void) {
@@ -20,6 +20,8 @@ void Helper::Console::printTime(void) {
 }
 
 
+
+
 Helper::Console::Console() {
 	AllocConsole();
 
@@ -31,6 +33,7 @@ Helper::Console::Console() {
 
 	printMessage(INFO, "Console allocated");
 }
+
 
 
 Helper::Console::~Console()
@@ -64,12 +67,6 @@ std::vector<std::uint32_t> Helper::Memory::PatternToBytes(const char* pattern)
 	return result;
 }
 
-
-Helper::Memory::Memory() {
-
-
-
-}
 
 
 
@@ -118,3 +115,17 @@ std::uint8_t* Helper::Memory::PatternScanner(const char* module_name, const char
 }
 
 
+std::uint8_t * Helper::Memory::ResolveRip (std::uint8_t *address, std::uint32_t rvaOffset, std::uint32_t ripOffset) {
+	if (!address || !rvaOffset || !ripOffset)
+		return nullptr;
+
+	//lea rcx, unk_1AA17C0
+	//48 8D 0D ? ? ? ?  
+	//rvaOffset = 3
+	//ripOffset = 7
+
+	uint32_t rva = *reinterpret_cast<uint32_t*>(address + rvaOffset);  
+	uint64_t rip = reinterpret_cast<uint32_t>(address) + ripOffset;
+
+	return reinterpret_cast<uint8_t *>(rva + rip);
+}
