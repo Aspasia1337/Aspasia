@@ -1,13 +1,19 @@
 #pragma once
 
+#include "../math/vector.h"
+
+
+class CCSGOInput {
+
+};
 
 class HooksManager
 {
 public:
 
+	void *CGameInput = nullptr;
 	
 	HooksManager ( ) {
-		initHook ( );
 	}
 
 	bool initHook ( );
@@ -37,13 +43,26 @@ public:
 	class CreateMove {
 
 	public:
-		typedef void (__fastcall *CreateMoveFunction)(__int64 *a1, __int64 a2, float *a3);
+		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput * csgoInput, __int64 a2, __int64 *a3);
 		static CreateMoveFunction oCreateMove;
-		static void __fastcall hCreateMove (__int64 *a1, __int64 a2, float *a3);
+		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64 a2, __int64* a3);
 
 	};
 	CreateMove m_CreateMove;
 
+
+	class SetViewAngles {
+	public:
+
+		typedef void (__fastcall *SetViewAnglesFunction)(__int64 *a1, __int64 a2, Vec3 a3);
+		static SetViewAnglesFunction oSetViewAngles;
+		static void __fastcall hSetViewAngles (__int64 *a1, __int64 a2, Vec3 a3);
+
+	};
+
+	SetViewAngles m_SetViewAngles;
 };
 
-inline HooksManager *hookMgr = new HooksManager ( );
+inline HooksManager *iHooksManager = new HooksManager ( );
+
+
