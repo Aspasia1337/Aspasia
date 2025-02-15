@@ -4,10 +4,12 @@ class Visuals
 
 public:
 
-	void glowPlayers ( );
+	void glowPlayers ( uint32_t glowType, float chamsColor [4]);
 	void renderWithImgui ( );
 	void NoSmoke ( );
 	void changeSmokeColor (float smokeColor[3]);
 };
 
-inline Visuals *VisualsManager = new Visuals ( );
+
+
+inline Visuals *iVisuals = new Visuals ( );

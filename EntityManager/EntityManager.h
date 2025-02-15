@@ -35,7 +35,6 @@ public:
 		DEFINE_MEMBER_N (uint32_t, pawnHealth, 0x818);
 		DEFINE_MEMBER_N (uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); //linker!
 
-
 	};
 };
 
@@ -57,9 +56,10 @@ public:
 		DEFINE_MEMBER_N (uint8_t, isAlive, 0x348);
 		DEFINE_MEMBER_N (Vec3, vOldOrigin, 0x1324);
 		DEFINE_MEMBER_N (char *, playerName, 0x660);
+		DEFINE_MEMBER_N (uintptr_t, CGlowProperty, 0xC00);
+		DEFINE_MEMBER_N (Color, m_glowColorOverride, 0x40);
+		DEFINE_MEMBER_N (bool, m_bGlowing, 0x51);
 		DEFINE_MEMBER_N (uint32_t, m_hOriginalController, 0x1508);   //linker!
-
-
 	};
 };
 
@@ -85,23 +85,20 @@ public:
 	std::vector<Players *> PlayersVector;
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
 	float (*ViewMatrix)[4][4];
-
+	C_PlayerPawn *LocalPlayerPawn;
+	C_PlayerController *LocalPlayerController;
 	int indexes = 0;
 
-
-
 	GameEntitySystem ( ) {
-		init ( );
+
 	}
 
 	void init ( ) {
 		clientDll = (uintptr_t)GetModuleHandle ("client.dll");
-		pEntityList = (uintptr_t)GetModuleHandle ("client.dll") + (uintptr_t)0x1B5C6D8;
+		pEntityList = (uintptr_t)GetModuleHandle ("client.dll") + (uintptr_t)0x1A359B0;
 		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1A359C0) + (uintptr_t)0x20F0);
-		ViewMatrix = reinterpret_cast<float(*)[4][4]>(helper->m_Mem.ResolveRip (helper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
-
+		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip (iHelper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
 	}
-
 
 	std::string GetSchemaName (void *entity);
 
@@ -115,4 +112,4 @@ public:
 
 };
 
-inline GameEntitySystem *cgame = new GameEntitySystem ( );
+inline GameEntitySystem *iGameEntitySystem = new GameEntitySystem ( );

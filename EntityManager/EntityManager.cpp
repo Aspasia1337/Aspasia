@@ -29,14 +29,14 @@ void *GameEntitySystem::GetEntityByIndexFunction (int Index)
 {
 	// sub_606B10 IDA returns the entity
 	using fnGetBaseEntity = uintptr_t * (__thiscall *)(void *, int);
-	static auto GetBaseEntity = reinterpret_cast<fnGetBaseEntity>(helper->m_Mem.PatternScanner ("client.dll", "81 FA ? ? ? ? 77 36 8B C2 C1 F8 09 83 F8 3F 77 2C 48 98 48 8B 4C C1 ? 48 85 C9 74 20 8B C2 25 ? ? ? ? 48 6B C0 78 48 03 C8 74 10 8B 41 10 25 ? ? ? ? 3B C2 75 04 48 8B 01 C3"));
+	static auto GetBaseEntity = reinterpret_cast<fnGetBaseEntity>(iHelper->m_Mem.PatternScanner ("client.dll", "81 FA ? ? ? ? 77 36 8B C2 C1 F8 09 83 F8 3F 77 2C 48 98 48 8B 4C C1 ? 48 85 C9 74 20 8B C2 25 ? ? ? ? 48 6B C0 78 48 03 C8 74 10 8B 41 10 25 ? ? ? ? 3B C2 75 04 48 8B 01 C3"));
 	return GetBaseEntity (*(uintptr_t **)pEntityList, Index);
 }
 
 
 void GameEntitySystem::getGameEntities ( ) {
 
-	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1A359C0) + (uintptr_t)0x20F0);
+	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5C6C8) + (uintptr_t)0x20F0);
 
 	ControllerVector.clear ( );
 	PawnVector.clear ( );
@@ -71,7 +71,6 @@ void GameEntitySystem::getGameEntities ( ) {
 		}
 
 
-		//Schema
 
 		if (GetSchemaName (Entity) == ("C_BaseCSGrenadeProjectile")) {
 			C_SmokeGrenadeProjectile *SmokeProjectile = (C_SmokeGrenadeProjectile *)Entity;
@@ -89,19 +88,22 @@ void GameEntitySystem::getAllPlayers ( ) {
 
 	// Change this to qsort 
 
+	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x1889F20);
+
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
 		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
 			if (PawnVector[i]->m_hOriginalController == ControllerVector[j]->m_hOriginalControllerOfCurrentPawn) {
 				PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j]));
+				if (PawnVector[i] == localPlayerPawn) {
+					LocalPlayerPawn = PawnVector[i];
+					LocalPlayerController = ControllerVector[i];
+				}
 				break;
 			}
 		}
 	}
 
 }
-
-
-
 
 
 

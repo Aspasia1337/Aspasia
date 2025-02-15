@@ -6,13 +6,13 @@
 
 #include "helper.h"
 
-void Helper::Console::printTime(void) {
-	std::time_t now = std::time(nullptr);
+void Helper::Console::printTime (void) {
+	std::time_t now = std::time (nullptr);
 	std::tm localTime;
 
-	if (localtime_s(&localTime, &now) == 0) {
-		SetConsoleTextAttribute(m_hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-		printf("[%02d:%02d:%02d] - ",
+	if (localtime_s (&localTime, &now) == 0) {
+		SetConsoleTextAttribute (m_hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+		printf ("[%02d:%02d:%02d] - ",
 			localTime.tm_hour,
 			localTime.tm_min,
 			localTime.tm_sec);
@@ -22,32 +22,32 @@ void Helper::Console::printTime(void) {
 
 
 
-Helper::Console::Console() {
-	AllocConsole();
+Helper::Console::Console ( ) {
+	AllocConsole ( );
 
-	SetConsoleTitle("m_Console");
+	SetConsoleTitle ("m_Console");
 
-	freopen_s(&m_ConsoleFile, "CONOUT$", "w", stdout);
+	freopen_s (&m_ConsoleFile, "CONOUT$", "w", stdout);
 
-	m_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	m_hConsole = GetStdHandle (STD_OUTPUT_HANDLE);
 
-	printMessage(INFO, "Console allocated");
+	printMessage (DEBUG, "Aspasia 1337 ~ Console Allocated");
 }
 
 
 
-Helper::Console::~Console()
+Helper::Console::~Console ( )
 {
-	fclose(m_ConsoleFile);
-	FreeConsole();
+	fclose (m_ConsoleFile);
+	FreeConsole ( );
 }
 
 
-std::vector<std::uint32_t> Helper::Memory::PatternToBytes(const char* pattern)
+std::vector<std::uint32_t> Helper::Memory::PatternToBytes (const char *pattern)
 {
 	std::vector<uint32_t> result;
 
-	char* start = (char*)(pattern);
+	char *start = (char *)(pattern);
 
 	do {
 		if (*start == '?') {
@@ -55,10 +55,10 @@ std::vector<std::uint32_t> Helper::Memory::PatternToBytes(const char* pattern)
 			if (*start == '?') {
 				start += 1;
 			}
-			result.push_back(-1);
+			result.push_back (-1);
 		}
 		else {
-			result.push_back(std::strtoul(start, &start, 16));
+			result.push_back (std::strtoul (start, &start, 16));
 		}
 		start += 1;
 
@@ -70,11 +70,11 @@ std::vector<std::uint32_t> Helper::Memory::PatternToBytes(const char* pattern)
 
 
 
-std::uint8_t* Helper::Memory::PatternScanner(const char* module_name, const char* sig)
+std::uint8_t *Helper::Memory::PatternScanner (const char *module_name, const char *sig)
 {
 
-	const char* signature = sig;
-	HMODULE module_handle = GetModuleHandle(module_name);
+	const char *signature = sig;
+	HMODULE module_handle = GetModuleHandle (module_name);
 
 	if (!module_handle)
 	{
@@ -82,14 +82,14 @@ std::uint8_t* Helper::Memory::PatternScanner(const char* module_name, const char
 	}
 
 	PIMAGE_DOS_HEADER dos_header = reinterpret_cast<PIMAGE_DOS_HEADER>(module_handle);
-	PIMAGE_NT_HEADERS nt_headers = reinterpret_cast<PIMAGE_NT_HEADERS>(reinterpret_cast<std::uint8_t*>(module_handle) + dos_header->e_lfanew);
+	PIMAGE_NT_HEADERS nt_headers = reinterpret_cast<PIMAGE_NT_HEADERS>(reinterpret_cast<std::uint8_t *>(module_handle) + dos_header->e_lfanew);
 
 	std::size_t size_of_image = nt_headers->OptionalHeader.SizeOfImage;
-	std::vector<std::uint32_t> pattern_bytes = PatternToBytes(signature);
-	std::uint8_t* image_base = reinterpret_cast<std::uint8_t*>(module_handle);
+	std::vector<std::uint32_t> pattern_bytes = PatternToBytes (signature);
+	std::uint8_t *image_base = reinterpret_cast<std::uint8_t *>(module_handle);
 
-	std::size_t pattern_size = pattern_bytes.size();
-	std::uint32_t* array_of_bytes = pattern_bytes.data();
+	std::size_t pattern_size = pattern_bytes.size ( );
+	std::uint32_t *array_of_bytes = pattern_bytes.data ( );
 
 	for (std::size_t i = 0; i < size_of_image - pattern_size; i++)
 	{
@@ -103,10 +103,10 @@ std::uint8_t* Helper::Memory::PatternScanner(const char* module_name, const char
 				break;
 			}
 		}
-			
+
 		if (found)
 		{
-			helper->m_Console.printMessage(INFO, "Pattern found");
+			//helper->m_Console.printMessage (INFO, "Pattern found");
 			return &image_base[i];
 		}
 	}
@@ -115,7 +115,7 @@ std::uint8_t* Helper::Memory::PatternScanner(const char* module_name, const char
 }
 
 
-std::uint8_t * Helper::Memory::ResolveRip (std::uint8_t *address, std::uint32_t rvaOffset, std::uint32_t ripOffset) {
+std::uint8_t *Helper::Memory::ResolveRip (std::uint8_t *address, std::uint32_t rvaOffset, std::uint32_t ripOffset) {
 	if (!address || !rvaOffset || !ripOffset)
 		return nullptr;
 
@@ -124,8 +124,9 @@ std::uint8_t * Helper::Memory::ResolveRip (std::uint8_t *address, std::uint32_t 
 	//rvaOffset = 3
 	//ripOffset = 7
 
-	uint32_t rva = *reinterpret_cast<uint32_t*>(address + rvaOffset);  
-	uint64_t rip = reinterpret_cast<uint32_t>(address) + ripOffset;
+	uint32_t rva = *reinterpret_cast<uint32_t *>(address + rvaOffset);
+	uint64_t rip = reinterpret_cast<uint64_t>(address) + ripOffset;   // !!!! uint64_t 
 
 	return reinterpret_cast<uint8_t *>(rva + rip);
 }
+

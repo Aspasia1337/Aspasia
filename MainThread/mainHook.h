@@ -4,8 +4,6 @@
 #include "../visuals/Visuals.h"
 #include "../includes/includes.h"
 
-
-
 #include <iostream>
 #include <chrono>
 
@@ -162,7 +160,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 		ImGui::SetNextWindowPos ({ 15,15 });
 		ImGui::SetNextWindowSize ({ 200,30 });
 
-		ImGui::Begin ("Warermark", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove);
+		ImGui::Begin ("Watermark", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove);
 		ImGui::Text ("Aspasia.win | %d:%d:%d", localTime.tm_hour, localTime.tm_min, localTime.tm_sec);
 
 		ImGui::End ( );
@@ -240,9 +238,14 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				if (ImGui::Checkbox ("CreateMove Hook!", &globals::CreateMoveHook)) {
 
 				}
-				if (ImGui::Checkbox ("View Angles  Hook!", &globals::SetViewAngles)) {
-
+				if (ImGui::Checkbox ("View Angles Hook!", &globals::SetViewAngles)) {
 				}
+
+				if (globals::SetViewAngles) {
+					ImGui::DragFloat3 ("Vector", reinterpret_cast<float *>(&globals::viewAngles), 0.1f, -360.0f, 360.0f, "%.2f");
+				}
+
+
 			}
 
 
@@ -253,30 +256,27 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 	if (globals::glow) {
 
-		cgame->getAllPlayers ( );
-		VisualsManager->glowPlayers (globals::glowType, globals::chamsColor);
+		iGameEntitySystem->getAllPlayers ( );
+		iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
 
 	}
 
 	if (globals::ShowInfo) {
-		cgame->getAllPlayers ( );
-		VisualsManager->renderWithImgui ( );
+		iGameEntitySystem->getAllPlayers ( );
+		iVisuals->renderWithImgui ( );
 
 	}
 
 	if (globals::noSmoke) {
-		cgame->getAllPlayers ( );
-		VisualsManager->NoSmoke( );
+		iGameEntitySystem->getAllPlayers ( );
 
 	}
 
 	if (globals::smokeVisuals) {
-		cgame->getAllPlayers ( );
-		VisualsManager->changeSmokeColor ( globals::smokeColorRGB);
+		iGameEntitySystem->getAllPlayers ( );
+		iVisuals->changeSmokeColor ( globals::smokeColorRGB);
 
 	}
-
-
 
 	ImGui::Render ( );
 
@@ -295,6 +295,10 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 DWORD WINAPI MainThread (LPVOID lpReserved)
 {
 	bool init_hook = false;
+
+	iHooksManager->initHook ( );
+	iGameEntitySystem->init ( );
+
 	do
 	{
 		if (kiero::init (kiero::RenderType::D3D11) == kiero::Status::Success)
