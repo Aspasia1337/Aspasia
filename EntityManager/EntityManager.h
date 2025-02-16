@@ -110,6 +110,8 @@ public:
 
 	void noFlash ( );
 
+	void getClosetEnemis ( );
+
 };
 
 inline GameEntitySystem *iGameEntitySystem = new GameEntitySystem ( );

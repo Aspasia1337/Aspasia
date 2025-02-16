@@ -93,11 +93,12 @@ void GameEntitySystem::getAllPlayers ( ) {
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
 		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
 			if (PawnVector[i]->m_hOriginalController == ControllerVector[j]->m_hOriginalControllerOfCurrentPawn) {
-				PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j]));
 				if (PawnVector[i] == localPlayerPawn) {
 					LocalPlayerPawn = PawnVector[i];
 					LocalPlayerController = ControllerVector[i];
+					continue;
 				}
+				PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j]));
 				break;
 			}
 		}
@@ -105,6 +106,31 @@ void GameEntitySystem::getAllPlayers ( ) {
 
 }
 
+void GameEntitySystem::getClosetEnemis ( )
+{
+	getAllPlayers ( );
+	
+	
+
+	int n = PlayersVector.size ( );
+	bool swapped;
+
+	for (int i = 0; i < n - 1; i++) {
+		swapped = false;
+		for (int j = 0; j < n - i - 1; j++) {
+			// Comparamos la distancia de cada jugador con LocalPlayerPawn
+			if (CalculateDistance (PlayersVector[j]->Pawn->vOldOrigin, LocalPlayerPawn->vOldOrigin) >
+				CalculateDistance (PlayersVector[j + 1]->Pawn->vOldOrigin, LocalPlayerPawn->vOldOrigin)) {
+				std::swap (PlayersVector[j], PlayersVector[j + 1]); // Intercambio si es necesario
+				swapped = true;
+			}
+		}
+		if (!swapped) break; // Si no hubo intercambios, el array ya está ordenado
+	}
+
+	iHelper->m_Console.printMessage (WARNING, "ordered");
+
+}
 
 
 void GameEntitySystem::noFlash ( ) {
@@ -115,5 +141,6 @@ void GameEntitySystem::noFlash ( ) {
 	*(float *)flashtime = 0;
 	*(float *)flahscreenshot = 0;
 }
+
 
 
