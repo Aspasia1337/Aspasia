@@ -12,6 +12,7 @@
 #include "../math/vector.h"
 
 #include "../EntityManager/EntityManager.h"
+#include "../visuals/Visuals.h"
 
 HooksManager::SmokeEffect::RenderSmokeParticlesFunction HooksManager::SmokeEffect::oRenderSmokeParticles = nullptr;
 HooksManager::FlashEffect::FlashEffectFunction HooksManager::FlashEffect::oFlashEffect = nullptr;
@@ -98,6 +99,7 @@ void HooksManager::SmokeEffect::hRenderSmoke (__int64 a1, __int64 a2, int a3, in
 void HooksManager::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float* a3) {
 
 	if (globals::RenderFlashHook) {
+
 		return;
 	}
 
@@ -110,8 +112,12 @@ void HooksManager::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float* a3)
 void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64 a2, __int64* a3) {
 	
 	if (globals::CreateMoveHook && GetAsyncKeyState(RI_MOUSE_LEFT_BUTTON_DOWN & 1)) {
+		iGameEntitySystem->getClosetEnemis ( );
+		SetViewAngles::hSetViewAngles ((__int64*)a1, 0, CalculateAngles(iGameEntitySystem->LocalPlayerPawn->vOldOrigin, iGameEntitySystem->PlayersVector[0]->Pawn->vOldOrigin));
+	}
+	if (globals::glow) {
 		iGameEntitySystem->getAllPlayers ( );
-		SetViewAngles::hSetViewAngles ((__int64*)a1, 0, CalculateAngles(iGameEntitySystem->LocalPlayerPawn->vOldOrigin, iGameEntitySystem->PawnVector[2]->vOldOrigin));
+		iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
 	}
 	return oCreateMove (a1, a2, a3);
 }
@@ -120,9 +126,7 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64 a2, __int64*
 
 void HooksManager::SetViewAngles::hSetViewAngles (__int64 *a1, __int64 a2, Vec3 a3) {
 
-	//if (globals::SetViewAngles) {
-		//return oSetViewAngles (a1,0,);
-	//}
+
 
 	return oSetViewAngles (a1, a2, a3);
 

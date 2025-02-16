@@ -24,7 +24,7 @@ struct Vec3 {
 
 };
 
-
+double CalculateDistance (Vec3 Source, Vec3 Dest);
 Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination);
 
 void NormalizeAngles (Vec3 &qAngle);

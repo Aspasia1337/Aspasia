@@ -1,6 +1,5 @@
 #include "vector.h"
 
-
 const bool Vec3::WorldToScreen (Vec2 &out, float(*ViewMatrix)[4][4])
 {
 	const float w = (*ViewMatrix)[3][0] * x + (*ViewMatrix)[3][1] * y + (*ViewMatrix)[3][2] * z + (*ViewMatrix)[3][3];
@@ -20,17 +19,25 @@ const bool Vec3::WorldToScreen (Vec2 &out, float(*ViewMatrix)[4][4])
 	return true;
 }
 
+
+double CalculateDistance (Vec3 Source, Vec3 Dest) {
+	return sqrt (pow (Dest.x - Source.x, 2) + pow (Dest.y - Source.y, 2));
+}
+
+// Poor Angle Calculation 
 Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination) {
 
 	Vec3 qAngles;
+	
+	Vec3 playerToEnemyVec = Vec3 ((vec3Source.x - vec3Destination.x), (vec3Source.y - vec3Destination.y), (vec3Source.z - vec3Destination.z));
+	
+	double hyp = sqrtf (playerToEnemyVec.x * playerToEnemyVec.x + playerToEnemyVec.y * playerToEnemyVec.y);
 
-	Vec3 delta = Vec3 ((vec3Source.x - vec3Destination.x), (vec3Source.y - vec3Destination.y), (vec3Source.z - vec3Destination.z));
-	double hyp = sqrtf (delta.x * delta.x + delta.y + delta.y);
-	qAngles.x = (float)(atan (delta.z / hyp) * (180.0 / 3.14159265358979323846));
-	qAngles.y = (float)(atan (delta.y / delta.x) * (180.0 / 3.14159265358979323846));
+	qAngles.x = (float)(atan (playerToEnemyVec.z / hyp) * (180.0 / 3.14159265358979323846)); // yaw
+	qAngles.y = (float)(atan (playerToEnemyVec.y / playerToEnemyVec.x) * (180.0 / 3.14159265358979323846)); //pitch
 	qAngles.z = 0.f;
 
-	if (delta.x >= 0.f)
+	if (playerToEnemyVec.x >= 0.f)
 		qAngles.y += 180.f;
 
 	NormalizeAngles (qAngles);
