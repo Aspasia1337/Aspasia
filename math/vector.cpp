@@ -1,4 +1,7 @@
-#include "vector.h"
+﻿#include "vector.h"
+#include "../globals.h"
+#include "../EntityManager/EntityManager.h"
+#include "../helper/helper.h"
 
 const bool Vec3::WorldToScreen (Vec2 &out, float(*ViewMatrix)[4][4])
 {
@@ -24,32 +27,50 @@ double CalculateDistance (Vec3 Source, Vec3 Dest) {
 	return sqrt (pow (Dest.x - Source.x, 2) + pow (Dest.y - Source.y, 2));
 }
 
-// Poor Angle Calculation 
+float ApproachAngle (float target, float current, float speed) {
+    float delta = target - current;
+
+    while (delta > 180.0f) delta -= 360.0f;
+    while (delta < -180.0f) delta += 360.0f;
+
+    if (fabs (delta) > speed)
+        return current + (delta / fabs (delta)) * speed;
+    return target;
+}
+
 Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination) {
+    Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AABA40); 
 
-	Vec3 qAngles;
-	
-	Vec3 playerToEnemyVec = Vec3 ((vec3Source.x - vec3Destination.x), (vec3Source.y - vec3Destination.y), (vec3Source.z - vec3Destination.z));
-	
-	double hyp = sqrtf (playerToEnemyVec.x * playerToEnemyVec.x + playerToEnemyVec.y * playerToEnemyVec.y);
+    Vec3 qAngles;
+    Vec3 playerToEnemyVec = Vec3 (
+        vec3Destination.x - vec3Source.x,
+        vec3Destination.y - vec3Source.y,
+        vec3Destination.z - vec3Source.z
+    );
 
-	qAngles.x = (float)(atan (playerToEnemyVec.z / hyp) * (180.0 / 3.14159265358979323846)); // yaw
-	qAngles.y = (float)(atan (playerToEnemyVec.y / playerToEnemyVec.x) * (180.0 / 3.14159265358979323846)); //pitch
-	qAngles.z = 0.f;
+    double hyp = sqrtf (playerToEnemyVec.x * playerToEnemyVec.x + playerToEnemyVec.y * playerToEnemyVec.y);
 
-	if (playerToEnemyVec.x >= 0.f)
-		qAngles.y += 180.f;
+    float targetX = (float)(atan (playerToEnemyVec.z / hyp) * (180.0 / 3.14159265358979323846)); // Pitch
+    float targetY = (float)(atan2 (playerToEnemyVec.y, playerToEnemyVec.x) * (180.0 / 3.14159265358979323846)); // Yaw
+    float targetZ = 0.f; 
 
-	NormalizeAngles (qAngles);
+    
 
-	return qAngles;
+    
+    qAngles.x = ApproachAngle (targetX, viewangles->x, globals::smoothing);
+    qAngles.y = ApproachAngle (targetY, viewangles->y, globals::smoothing);
+    qAngles.z = 0.f;
 
+    NormalizeAngles (qAngles);
+
+    return qAngles;
 }
 
 
-void NormalizeAngles (Vec3 &qAngle) {
-	while (qAngle.x > 89.0f) qAngle.x -= 180.0f;
-	while (qAngle.x < -89.0f) qAngle.x += 180.0f;
-	while (qAngle.y > 180.0f) qAngle.y -= 360.0f;
-	while (qAngle.y < -180.0f) qAngle.y += 360.0f;
+void NormalizeAngles(Vec3 &qAngle) {
+    if (qAngle.x > 89.0f) qAngle.x = 89.0f;
+    if (qAngle.x < -89.0f) qAngle.x = -89.0f;
+
+    while (qAngle.y > 180.0f) qAngle.y -= 360.0f;
+    while (qAngle.y < -180.0f) qAngle.y += 360.0f;
 }
