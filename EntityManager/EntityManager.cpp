@@ -1,7 +1,8 @@
 #include "EntityManager.h"
 #include "../math/vector.h"
 #include "../includes/imgui/imgui.h"
-
+#include "../globals.h"
+#include <algorithm> 
 #include <iostream>
 #include <string>
 
@@ -86,8 +87,6 @@ void GameEntitySystem::getAllPlayers ( ) {
 	getGameEntities ( );
 	PlayersVector.clear ( );
 
-	// Change this to qsort 
-
 	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x1889F20);
 
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
@@ -110,37 +109,87 @@ void GameEntitySystem::getClosetEnemis ( )
 {
 	getAllPlayers ( );
 	
-	
-
-	int n = PlayersVector.size ( );
-	bool swapped;
-
-	for (int i = 0; i < n - 1; i++) {
-		swapped = false;
-		for (int j = 0; j < n - i - 1; j++) {
-			// Comparamos la distancia de cada jugador con LocalPlayerPawn
-			if (CalculateDistance (PlayersVector[j]->Pawn->vOldOrigin, LocalPlayerPawn->vOldOrigin) >
-				CalculateDistance (PlayersVector[j + 1]->Pawn->vOldOrigin, LocalPlayerPawn->vOldOrigin)) {
-				std::swap (PlayersVector[j], PlayersVector[j + 1]); // Intercambio si es necesario
-				swapped = true;
+	//bubble sort
+	for (unsigned int i = 0; i < PlayersVector.size ( ) - 1;i++) {
+		for (unsigned int j = 0; j < PlayersVector.size ( ) - 1 - i; j++) {
+			if (CalculateDistance (LocalPlayerPawn->vOldOrigin, PlayersVector[j]->Pawn->vOldOrigin) > 
+				CalculateDistance (LocalPlayerPawn->vOldOrigin, PlayersVector[j+1]->Pawn->vOldOrigin)) {
+				std::swap (PlayersVector[j], PlayersVector[j + 1]);
 			}
 		}
-		if (!swapped) break; // Si no hubo intercambios, el array ya está ordenado
 	}
 
-	iHelper->m_Console.printMessage (WARNING, "ordered");
-
-}
-
-
-void GameEntitySystem::noFlash ( ) {
-
-	float *flashtime = (float *)0x00000290467B1478;
-	float *flahscreenshot = (float *)0x00000290467B147C;
-
-	*(float *)flashtime = 0;
-	*(float *)flahscreenshot = 0;
 }
 
 
 
+void GameEntitySystem::getEnemisByFov ( ) {
+	Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AABA40);
+	float distance;
+
+	if (!viewangles) return; 
+
+	getAllPlayers ( ); 
+
+	if (!PlayersVector[0]) {
+		return;
+	}
+
+	for (unsigned int i = 0; i < PlayersVector.size ( ) - 1; i++) {
+		for (unsigned j = 0; j < PlayersVector.size ( ) - 1 - i; j++) {
+			Vec3 playerToMe = Vec3 (
+				PlayersVector[j]->Pawn->vOldOrigin.x - LocalPlayerPawn->vOldOrigin.x,
+				PlayersVector[j]->Pawn->vOldOrigin.y - LocalPlayerPawn->vOldOrigin.y,
+				PlayersVector[j]->Pawn->vOldOrigin.z - LocalPlayerPawn->vOldOrigin.z);
+
+			Vec3 playerToMeTwo = Vec3 (
+				PlayersVector[j + 1]->Pawn->vOldOrigin.x - LocalPlayerPawn->vOldOrigin.x,
+				PlayersVector[j + 1]->Pawn->vOldOrigin.y - LocalPlayerPawn->vOldOrigin.y,
+				PlayersVector[j + 1]->Pawn->vOldOrigin.z - LocalPlayerPawn->vOldOrigin.z);
+
+			double hyp = sqrtf (playerToMe.x * playerToMe.x + playerToMe.y * playerToMe.y);
+			float targetX = (float)(atan (playerToMe.z / hyp) * (180.0 / std::numbers::pi)); // Pitch
+			float targetY = (float)(atan2 (playerToMe.y, playerToMe.x) * (180.0 / std::numbers::pi)); // Yaw
+
+			double hyp2 = sqrtf (playerToMeTwo.x * playerToMeTwo.x + playerToMeTwo.y * playerToMeTwo.y);
+			float targetXTWO = (float)(atan (playerToMeTwo.z / hyp2) * (180.0 / std::numbers::pi)); // Pitch
+			float targetYTWO = (float)(atan2 (playerToMeTwo.y, playerToMeTwo.x) * (180.0 / std::numbers::pi)); // Yaw
+
+			bool x = false, y = false;
+
+			if (IsTargetWithinFOV (targetX, targetY, viewangles->x, viewangles->y, globals::aimbotFov, distance)) {
+				PlayersVector[j]->Pawn->isInFov = true;
+				x = true;
+			}
+			else {
+				PlayersVector[j]->Pawn->isInFov = false;
+
+			}
+			if (IsTargetWithinFOV (targetXTWO, targetYTWO, viewangles->x, viewangles->y, globals::aimbotFov, distance)) {
+				PlayersVector[j+1]->Pawn->isInFov = true;
+				y = true;
+			}
+			else {
+				PlayersVector[j + 1]->Pawn->isInFov = false;
+
+			}
+
+			if (!x && y) {
+				std::swap (PlayersVector[j], PlayersVector[j + 1]);
+			}
+			else if (x && y) {
+
+				float angleDiff1 = fabs (targetX - viewangles->x) + fabs (targetY - viewangles->y);
+				float angleDiff2 = fabs (targetXTWO - viewangles->x) + fabs (targetYTWO - viewangles->y);
+
+				if (angleDiff2 < angleDiff1) {
+					std::swap (PlayersVector[j], PlayersVector[j + 1]);
+				}
+			}
+		}
+	}
+
+
+
+
+}

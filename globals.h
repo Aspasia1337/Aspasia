@@ -16,6 +16,10 @@ namespace globals {
     extern bool RenderFlashHook;
     extern bool CreateMoveHook;
     extern bool SetViewAngles;
+    extern float smoothing;
+    extern float maxFov;
+    extern float aimbotFov;
+    extern Vec3 viewAngles;
 
 
     extern float smokeColorRGB[3];

@@ -32,6 +32,9 @@ namespace globals {
     bool RenderFlashHook = false;
     bool CreateMoveHook = false;
     bool SetViewAngles = false;
+    float smoothing = 1;
+    float maxFov = 50.0f;
+    float aimbotFov = 50;
     Vec3 viewAngles;
 
     float smokeColorRGB[3] = { 0.0f, 0.0f, 0.0f }; // Inicializamos en negro

@@ -38,10 +38,27 @@ float ApproachAngle (float target, float current, float speed) {
     return target;
 }
 
-Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination) {
-    Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AABA40); 
+bool IsTargetWithinFOV (float targetYaw, float targetPitch, float playerYaw, float playerPitch, float AimFov, float &resultingDistance) {
+    float deltaYaw = targetYaw - playerYaw;
+    float deltaPitch = targetPitch - playerPitch;
+
+    while (deltaYaw > 180.0f) deltaYaw -= 360.0f;
+    while (deltaYaw < -180.0f) deltaYaw += 360.0f;
+    while (deltaPitch > 180.0f) deltaPitch -= 360.0f;
+    while (deltaPitch < -180.0f) deltaPitch += 360.0f;
+
+     resultingDistance = sqrtf (deltaYaw * deltaYaw + deltaPitch * deltaPitch);
+
+    return resultingDistance <= AimFov;
+}
+
+Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float AimFov) {
+    Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AABA40);
+
+    float returningDistance;
 
     Vec3 qAngles;
+
     Vec3 playerToEnemyVec = Vec3 (
         vec3Destination.x - vec3Source.x,
         vec3Destination.y - vec3Source.y,
@@ -50,13 +67,12 @@ Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination) {
 
     double hyp = sqrtf (playerToEnemyVec.x * playerToEnemyVec.x + playerToEnemyVec.y * playerToEnemyVec.y);
 
-    float targetX = (float)(atan (playerToEnemyVec.z / hyp) * (180.0 / 3.14159265358979323846)); // Pitch
-    float targetY = (float)(atan2 (playerToEnemyVec.y, playerToEnemyVec.x) * (180.0 / 3.14159265358979323846)); // Yaw
-    float targetZ = 0.f; 
+    float targetX = (float)(atan (playerToEnemyVec.z / hyp) * (180.0 / std::numbers::pi)); // Pitch
+    float targetY = (float)(atan2 (playerToEnemyVec.y, playerToEnemyVec.x) * (180.0 / std::numbers::pi)); // Yaw
 
-    
+    if (!IsTargetWithinFOV (targetY, targetX, viewangles->y, viewangles->x, AimFov, returningDistance))
+        return *viewangles;
 
-    
     qAngles.x = ApproachAngle (targetX, viewangles->x, globals::smoothing);
     qAngles.y = ApproachAngle (targetY, viewangles->y, globals::smoothing);
     qAngles.z = 0.f;
@@ -65,7 +81,6 @@ Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination) {
 
     return qAngles;
 }
-
 
 void NormalizeAngles(Vec3 &qAngle) {
     if (qAngle.x > 89.0f) qAngle.x = 89.0f;

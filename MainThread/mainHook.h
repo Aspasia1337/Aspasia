@@ -246,6 +246,13 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				}
 
 
+				if (ImGui::DragFloat ("smoothing", &globals::smoothing, 0.1f, 0.01f, 100.0f)) {
+					if (globals::smoothing < 0.01f) globals::smoothing = 0.01f;
+				}
+
+				if (ImGui::DragFloat ("fov", &globals::aimbotFov, 0.1f, 0.1f, 180.0f)) {
+					if (globals::aimbotFov < 0.1f) globals::aimbotFov = 0.1f;
+				}
 			}
 
 
@@ -254,18 +261,8 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 		ImGui::End ( );
 	}
 
-	if (globals::glow) {
 
-		iGameEntitySystem->getAllPlayers ( );
-		iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
 
-	}
-
-	if (globals::ShowInfo) {
-		iGameEntitySystem->getAllPlayers ( );
-		iVisuals->renderWithImgui ( );
-
-	}
 
 	if (globals::noSmoke) {
 		iGameEntitySystem->getAllPlayers ( );
@@ -276,6 +273,10 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 		iGameEntitySystem->getAllPlayers ( );
 		iVisuals->changeSmokeColor ( globals::smokeColorRGB);
 
+	}
+
+	if (globals::CreateMoveHook) {
+		iGameEntitySystem->getEnemisByFov ( );
 	}
 
 	ImGui::Render ( );

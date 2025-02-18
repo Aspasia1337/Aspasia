@@ -47,13 +47,31 @@ public:
 	};
 };
 
+class CGameSceneNode {
+
+
+};
+
+
+class CSkeletonInstance {
+
+};
+
+class CBodyComponent {
+	DEFINE_MEMBER_N (CSkeletonInstance *, m_skeletonInstance, 0x50);   //linker!
+
+};
+
 class C_PlayerPawn {
 public:
 	union {
 		//              Type     Name    Offset
 		DEFINE_MEMBER_N (uint32_t, m_armor, 0x241C);   //linker!
+		DEFINE_MEMBER_N (CBodyComponent*, m_CBodyComponent, 0x38);   //linker!
+		DEFINE_MEMBER_N (CGameSceneNode*, m_pGameSceneNode, 0x328);   //linker!
 		DEFINE_MEMBER_N (int32_t, pawnHealth, 0x344);
 		DEFINE_MEMBER_N (uint8_t, isAlive, 0x348);
+		DEFINE_MEMBER_N (uint32_t, m_fFlags, 0x3EC);
 		DEFINE_MEMBER_N (Vec3, vOldOrigin, 0x1324);
 		DEFINE_MEMBER_N (char *, playerName, 0x660);
 		DEFINE_MEMBER_N (uintptr_t, CGlowProperty, 0xC00);
@@ -61,7 +79,10 @@ public:
 		DEFINE_MEMBER_N (bool, m_bGlowing, 0x51);
 		DEFINE_MEMBER_N (uint32_t, m_hOriginalController, 0x1508);   //linker!
 	};
+
+	bool isInFov = false;
 };
+
 
 class Players {
 public:
@@ -86,6 +107,7 @@ public:
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
 	float (*ViewMatrix)[4][4];
 	C_PlayerPawn *LocalPlayerPawn;
+
 	C_PlayerController *LocalPlayerController;
 	int indexes = 0;
 
@@ -111,6 +133,8 @@ public:
 	void noFlash ( );
 
 	void getClosetEnemis ( );
+
+	void getEnemisByFov ( );
 
 };
 

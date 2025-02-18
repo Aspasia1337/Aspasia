@@ -18,6 +18,7 @@ HooksManager::SmokeEffect::RenderSmokeParticlesFunction HooksManager::SmokeEffec
 HooksManager::FlashEffect::FlashEffectFunction HooksManager::FlashEffect::oFlashEffect = nullptr;
 HooksManager::CreateMove::CreateMoveFunction HooksManager::CreateMove::oCreateMove = nullptr;
 HooksManager::SetViewAngles::SetViewAnglesFunction HooksManager::SetViewAngles::oSetViewAngles = nullptr;
+HooksManager::DrawObjectClass::DrawObjectFunction HooksManager::DrawObjectClass::oDrawObject = nullptr;
 
 bool HooksManager::initHook ( ) {
 
@@ -80,6 +81,32 @@ bool HooksManager::initHook ( ) {
 	else
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Set View Angles! ");
 
+
+	uint8_t *drawObjectaddrr = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 8B C4 48 89 50 ? 53");
+
+	hookInit = MH_CreateHook (
+		drawObjectaddrr,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_DrawObject.hDrawObject),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_DrawObject.oDrawObject));
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t Draw Object HOOKED! ");
+	else
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Draw Object! ");
+
+
+		int (__fastcall * CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
+
+	CreateMaterialFunction = reinterpret_cast<decltype(CreateMaterialFunction)>(iHelper->m_Mem.PatternScanner ("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05"));
+
+
+	if (!CreateMaterialFunction) {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Create Material! ");
+	}
+
+
+
+
 	MH_EnableHook (MH_ALL_HOOKS);
 	return hookInit;
 }
@@ -96,7 +123,14 @@ void HooksManager::SmokeEffect::hRenderSmoke (__int64 a1, __int64 a2, int a3, in
 
 }
 
+void HooksManager::DrawObjectClass::hDrawObject (void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8) {
+
+	return oDrawObject (a1, a2, a3, a4, a5,a6, a7, a8);
+}
+
 void HooksManager::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float* a3) {
+
+
 
 	if (globals::RenderFlashHook) {
 
@@ -106,19 +140,24 @@ void HooksManager::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float* a3)
 	return (oFlashEffect (a1, a2, a3));
 }
 
-
+int IN_JUMP = (1 << 1);
 
 
 void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64 a2, __int64* a3) {
-	
-	if (globals::CreateMoveHook && GetAsyncKeyState(RI_MOUSE_LEFT_BUTTON_DOWN & 1)) {
-		iGameEntitySystem->getClosetEnemis ( );
-		SetViewAngles::hSetViewAngles ((__int64*)a1, 0, CalculateAngles(iGameEntitySystem->LocalPlayerPawn->vOldOrigin, iGameEntitySystem->PlayersVector[0]->Pawn->vOldOrigin));
+	float dist;
+
+	if (globals::CreateMoveHook && GetAsyncKeyState (RI_MOUSE_LEFT_BUTTON_DOWN & 1) && iGameEntitySystem->PlayersVector[0]->Pawn->isInFov) {
+		if (iGameEntitySystem->PlayersVector[0]->Pawn->pawnHealth > 0) {
+			SetViewAngles::hSetViewAngles ((__int64 *)a1, 0, CalculateAngles (iGameEntitySystem->LocalPlayerPawn->vOldOrigin, iGameEntitySystem->PlayersVector[0]->Pawn->vOldOrigin, globals::aimbotFov));
+		}
 	}
+
+
 	if (globals::glow) {
-		iGameEntitySystem->getAllPlayers ( );
 		iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
 	}
+
+
 	return oCreateMove (a1, a2, a3);
 }
 
