@@ -46,9 +46,9 @@ void GameEntitySystem::getGameEntities ( ) {
 	for (unsigned int i = 0; i < pMaxIndex; i++) {
 
 		void *Entity = (void *)(GetEntityByIndexFunction (i));
+		
 		if (!Entity)
 			continue;
-
 
 		if (GetSchemaName (Entity) == ("C_CSPlayerPawnBase")) {
 
@@ -71,16 +71,15 @@ void GameEntitySystem::getGameEntities ( ) {
 			}
 		}
 
-
-
 		if (GetSchemaName (Entity) == ("C_BaseCSGrenadeProjectile")) {
 			C_SmokeGrenadeProjectile *SmokeProjectile = (C_SmokeGrenadeProjectile *)Entity;
 			SmokeGrenadeVector.push_back (SmokeProjectile);
-
 		}
 	}
 
 }
+
+
 
 void GameEntitySystem::getAllPlayers ( ) {
 
@@ -131,12 +130,12 @@ void GameEntitySystem::getEnemisByFov ( ) {
 
 	getAllPlayers ( ); 
 
-	if (!PlayersVector[0]) {
-		return;
-	}
+	if (PlayersVector.size ( ) < 1) return; // Evita el desbordamiento
+
 
 	for (unsigned int i = 0; i < PlayersVector.size ( ) - 1; i++) {
 		for (unsigned j = 0; j < PlayersVector.size ( ) - 1 - i; j++) {
+
 			Vec3 playerToMe = Vec3 (
 				PlayersVector[j]->Pawn->vOldOrigin.x - LocalPlayerPawn->vOldOrigin.x,
 				PlayersVector[j]->Pawn->vOldOrigin.y - LocalPlayerPawn->vOldOrigin.y,
@@ -188,8 +187,5 @@ void GameEntitySystem::getEnemisByFov ( ) {
 			}
 		}
 	}
-
-
-
-
 }
+

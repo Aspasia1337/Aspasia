@@ -14,9 +14,6 @@
 #define MAKE_PAD(size) STR_MERGE(_pad, __COUNTER__)[size]
 #define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
 
-struct vec3 {
-	float x, y, z;
-};
 
 struct Color {
 	float x; //  (B)
@@ -48,7 +45,11 @@ public:
 };
 
 class CGameSceneNode {
-
+public:
+    union {
+        //              Type     Name    Offset
+        DEFINE_MEMBER_N (uint32_t, m_modelState, 0x170);   //linker!
+    };
 
 };
 
@@ -95,11 +96,12 @@ public:
 	}
 };
 
-class GameEntitySystem {
 
+class GameEntitySystem {
 public:
 	uintptr_t pEntityList;
 	uintptr_t clientDll;
+	uintptr_t engine2Dll;
 	DWORD pMaxIndex;
 	std::vector<C_PlayerController *> ControllerVector;
 	std::vector<C_PlayerPawn *> PawnVector;
@@ -112,14 +114,15 @@ public:
 	int indexes = 0;
 
 	GameEntitySystem ( ) {
-
+		init ( );
 	}
 
 	void init ( ) {
 		clientDll = (uintptr_t)GetModuleHandle ("client.dll");
 		pEntityList = (uintptr_t)GetModuleHandle ("client.dll") + (uintptr_t)0x1A359B0;
-		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1A359C0) + (uintptr_t)0x20F0);
+		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5C6C8) + (uintptr_t)0x20F0);
 		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip (iHelper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
+		engine2Dll = (uintptr_t)GetModuleHandle ("engine2.dll");
 	}
 
 	std::string GetSchemaName (void *entity);
@@ -129,8 +132,6 @@ public:
 	void getGameEntities ( );
 
 	void getAllPlayers ( );
-
-	void noFlash ( );
 
 	void getClosetEnemis ( );
 

@@ -7,8 +7,6 @@
 
 void Visuals::glowPlayers (uint32_t glowType , float  chamsColor [4])
 {
-	Color glowColor = { 0.2f, 1.0f, 0.2f, 1.0f };
-
 	for (unsigned i = 0; i < iGameEntitySystem->PawnVector.size ( );i++) {
 
 		if (iGameEntitySystem->PawnVector[i] == iGameEntitySystem->LocalPlayerPawn)
@@ -23,7 +21,6 @@ void Visuals::glowPlayers (uint32_t glowType , float  chamsColor [4])
 		*(DWORD *)((char *)iGameEntitySystem->PawnVector[i] + 0xC00 + 0x40) = colorArgb;  // It's mandatory to use char* because void* doesn't allow poitner arithmetic
 		*(DWORD *)((char *)iGameEntitySystem->PawnVector[i] + 0xC00 + 0x51) = 1;
 	}
-	
 }
 
 

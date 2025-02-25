@@ -11,7 +11,7 @@ namespace globals {
     extern bool noFlash;
     extern bool noSmoke;
     extern bool smokeVisuals;
-    
+
     extern bool RenderSmokeHook;
     extern bool RenderFlashHook;
     extern bool CreateMoveHook;
@@ -19,8 +19,13 @@ namespace globals {
     extern float smoothing;
     extern float maxFov;
     extern float aimbotFov;
+    extern bool anti_aim;
     extern Vec3 viewAngles;
-
+    extern bool lightModulation;
+    extern bool worldModulation;
 
     extern float smokeColorRGB[3];
-}
+    extern float lightModulationColor[3];
+    extern float worldModulationColor[3];
+
+};
