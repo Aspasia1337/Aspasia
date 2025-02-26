@@ -17,6 +17,8 @@
 HooksManager::SmokeEffect::RenderSmokeParticlesFunction HooksManager::SmokeEffect::oRenderSmokeParticles = nullptr;
 HooksManager::FlashEffect::FlashEffectFunction HooksManager::FlashEffect::oFlashEffect = nullptr;
 HooksManager::CreateMove::CreateMoveFunction HooksManager::CreateMove::oCreateMove = nullptr;
+HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::oCreateMoveTWO = nullptr;
+
 HooksManager::SetViewAngles::SetViewAnglesFunction HooksManager::SetViewAngles::oSetViewAngles = nullptr;
 HooksManager::DrawObjectClass::DrawObjectFunction HooksManager::DrawObjectClass::oDrawObject = nullptr;
 
@@ -68,6 +70,20 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (DEBUG, "\t Create Move HOOKED! ");
 	else
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Create Move! ");
+
+
+	uint8_t *createMoveTWO = iHelper->m_Mem.PatternScanner ("client.dll", "48 8B C4 4C 89 40 ? 48 89 48 ? 55 53 57");
+
+	hookInit = MH_CreateHook (
+		createMoveTWO,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_CreateMoveTWO.hCreateMoveTWO),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_CreateMoveTWO.oCreateMoveTWO));
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t Create MoveTWO HOOKED! ");
+	else
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Create MoveTWO! ");
+
 
 	uint8_t *setViewAngles = iHelper->m_Mem.PatternScanner ("client.dll", "85 D2 75 3F 48");
 
@@ -161,6 +177,18 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64 a2, __int64*
 	return oCreateMove (a1, a2, a3);
 }
 
+
+// a2 = basecmd
+void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 *a2, CUserCmd *a3) {
+
+	oCreateMoveTWO (a1, a2, a3);
+
+	if (globals::bhop) {
+		if (iGameEntitySystem->LocalPlayerPawn->m_fFlags & 257 && a3->buttons & (1 << 1)) {
+			a3->buttons &= ~(1 << 1);
+		}
+	}
+}
 
 
 void HooksManager::SetViewAngles::hSetViewAngles (__int64 *a1, __int64 a2, Vec3 a3) {

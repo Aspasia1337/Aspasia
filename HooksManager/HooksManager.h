@@ -7,6 +7,19 @@ class CCSGOInput {
 
 };
 
+
+
+
+class CUserCmd {
+public:
+    union{
+        DEFINE_MEMBER_N (uint32_t, buttons, 0x60);
+    };
+
+};
+
+
+
 class HooksManager
 {
 public:
@@ -44,11 +57,26 @@ public:
 
 	public:
 		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput * csgoInput, __int64 a2, __int64 *a3);
+		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput * csgoInput, __int64* a2, CUserCmd *a3);
 		static CreateMoveFunction oCreateMove;
-		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64 a2, __int64* a3);
+		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64* a2, CUserCmd* a3);
+        bool isPlayerInGame (void);
+
 
 	};
 	CreateMove m_CreateMove;
+
+
+    class CreateMoveTWO {
+
+    public:
+        typedef void (__fastcall *CreateMoveFunctionTWO)(CCSGOInput *csgoInput, __int64 *a2, CUserCmd *a3);
+        static CreateMoveFunctionTWO oCreateMoveTWO;
+        static void __fastcall hCreateMoveTWO (CCSGOInput *csgoInput, __int64 *a2, CUserCmd *a3);
+
+
+    };
+    CreateMoveTWO m_CreateMoveTWO;
 
 
 	class SetViewAngles {
