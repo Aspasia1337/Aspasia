@@ -54,6 +54,18 @@ public:
 		std::vector<std::uint32_t> PatternToBytes (const char *pattern);
 		std::uint8_t *PatternScanner (const char *moduleName, const char *signature);
 		std::uint8_t *ResolveRip (std::uint8_t *address, std::uint32_t rvaOffset, std::uint32_t ripOffset);
+		template <typename T, std::size_t nIndex, class CBaseClass, typename... Args_t>
+		T CallVMT (CBaseClass *thisptr, Args_t... argList)
+		{
+			using VirtualFn_t = T (__thiscall *)(const void *, decltype(argList)...);
+			return (*reinterpret_cast<VirtualFn_t *const *>(reinterpret_cast<std::uintptr_t>(thisptr)))[nIndex] (thisptr, argList...);
+		}
+
+		void *GetVMT (void *pointer, std::uint32_t index)
+		{
+			void **vtable = *static_cast<void ***>(pointer);
+			return vtable[index];
+		}
 	};
 	Memory m_Mem;
 };
