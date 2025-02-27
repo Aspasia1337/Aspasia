@@ -174,14 +174,68 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64 a2, __int64*
 	}
 
 
-	return oCreateMove (a1, a2, a3);
+}
+
+bool HooksManager::CreateMove::isPlayerInGame (void)
+{
+	int gameState = *(int*)(*(uintptr_t*)((uintptr_t)iGameEntitySystem->engine2Dll + (uintptr_t)0x53FCE0) + (uintptr_t)0x228);
+
+
+	if (gameState == 6)
+		return true;
+
+	return false;
+}
+
+// a2 = basecmd
+void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64* a2, CUserCmd* a3) {
+	float dist;
+
+	oCreateMove (a1, a2, a3);
+
+	if (iHooksManager->m_CreateMove.isPlayerInGame ( )) {
+		iGameEntitySystem->getEnemisByFov ( );
+
+		if (iGameEntitySystem->PlayersVector.size ( ) >= 1 && globals::CreateMoveHook && GetAsyncKeyState (RI_MOUSE_LEFT_BUTTON_DOWN & 1) && iGameEntitySystem->PlayersVector[0]->Pawn->isInFov) {
+			if (iGameEntitySystem->PlayersVector[0]->Pawn->pawnHealth > 0) {
+
+				Vec3 tempEnemy = *(new Vec3(
+					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.x,
+					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.y,
+					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.z
+				));
+
+				Vec3 tempMe = *(new Vec3{
+					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+					});
+
+				SetViewAngles::hSetViewAngles ((__int64 *)a1, 0, CalculateAngles (tempMe, tempEnemy, globals::aimbotFov));
+			}
+		}
+
+
+
+
+		if (globals::glow) {
+			iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
+
+			//if (iGameEntitySystem->LocalPlayerPawn->m_fFlags & 257) {
+			//	a3->buttons &= ~(1 << 1);
+			//}
+		}
+
+
+	 }
+
+	//return oCreateMove (a1, a2, a3);
 }
 
 
 // a2 = basecmd
 void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 *a2, CUserCmd *a3) {
 
-	oCreateMoveTWO (a1, a2, a3);
 
 	if (globals::bhop) {
 		if (iGameEntitySystem->LocalPlayerPawn->m_fFlags & 257 && a3->buttons & (1 << 1)) {

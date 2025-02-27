@@ -130,21 +130,30 @@ void GameEntitySystem::getEnemisByFov ( ) {
 
 	getAllPlayers ( ); 
 
-	if (PlayersVector.size ( ) < 1) return; // Evita el desbordamiento
+	if (PlayersVector.size ( ) < 1) return; 
+
+	/*
+			iHelper->m_Console.printMessage (WARNING,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+		);
+	*/
 
 
 	for (unsigned int i = 0; i < PlayersVector.size ( ) - 1; i++) {
 		for (unsigned j = 0; j < PlayersVector.size ( ) - 1 - i; j++) {
 
 			Vec3 playerToMe = Vec3 (
-				PlayersVector[j]->Pawn->vOldOrigin.x - LocalPlayerPawn->vOldOrigin.x,
-				PlayersVector[j]->Pawn->vOldOrigin.y - LocalPlayerPawn->vOldOrigin.y,
-				PlayersVector[j]->Pawn->vOldOrigin.z - LocalPlayerPawn->vOldOrigin.z);
-
+				PlayersVector[j]->Pawn->m_pGameSceneNode->m_vecOrigin.x + PlayersVector[j]->Pawn->m_vecViewOffset.x - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+				PlayersVector[j]->Pawn->m_pGameSceneNode->m_vecOrigin.y + PlayersVector[j]->Pawn->m_vecViewOffset.y - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+				PlayersVector[j]->Pawn->m_pGameSceneNode->m_vecOrigin.z + PlayersVector[j]->Pawn->m_vecViewOffset.z - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+				);
 			Vec3 playerToMeTwo = Vec3 (
-				PlayersVector[j + 1]->Pawn->vOldOrigin.x - LocalPlayerPawn->vOldOrigin.x,
-				PlayersVector[j + 1]->Pawn->vOldOrigin.y - LocalPlayerPawn->vOldOrigin.y,
-				PlayersVector[j + 1]->Pawn->vOldOrigin.z - LocalPlayerPawn->vOldOrigin.z);
+				PlayersVector[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.x + PlayersVector[j+1]->Pawn->m_vecViewOffset.x - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+				PlayersVector[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.y + PlayersVector[j+1]->Pawn->m_vecViewOffset.y - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+				PlayersVector[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.z + PlayersVector[j+1]->Pawn->m_vecViewOffset.z - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+			);
 
 			double hyp = sqrtf (playerToMe.x * playerToMe.x + playerToMe.y * playerToMe.y);
 			float targetX = (float)(atan (playerToMe.z / hyp) * (180.0 / std::numbers::pi)); // Pitch
@@ -176,6 +185,7 @@ void GameEntitySystem::getEnemisByFov ( ) {
 			if (!x && y) {
 				std::swap (PlayersVector[j], PlayersVector[j + 1]);
 			}
+
 			else if (x && y) {
 
 				float angleDiff1 = fabs (targetX - viewangles->x) + fabs (targetY - viewangles->y);

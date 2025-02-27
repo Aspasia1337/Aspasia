@@ -63,6 +63,16 @@ class CBodyComponent {
 
 };
 
+class CGameSceneNode {
+public:
+    union {
+        //              Type     Name    Offset
+        DEFINE_MEMBER_N (uint32_t, m_modelState, 0x170);   //linker!
+        DEFINE_MEMBER_N (Vec3, m_vecOrigin, 0x88);   //linker!
+    };
+
+};
+
 class C_PlayerPawn {
 public:
 	union {
@@ -79,6 +89,8 @@ public:
 		DEFINE_MEMBER_N (Color, m_glowColorOverride, 0x40);
 		DEFINE_MEMBER_N (bool, m_bGlowing, 0x51);
 		DEFINE_MEMBER_N (uint32_t, m_hOriginalController, 0x1508);   //linker!
+        DEFINE_MEMBER_N (Vec3, m_vecViewOffset, 0xCB0);   //linker!
+
 	};
 
 	bool isInFov = false;
@@ -109,6 +121,7 @@ public:
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
 	float (*ViewMatrix)[4][4];
 	C_PlayerPawn *LocalPlayerPawn;
+    Vec3 *viewangles;
 
 	C_PlayerController *LocalPlayerController;
 	int indexes = 0;
@@ -123,6 +136,7 @@ public:
 		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5C6C8) + (uintptr_t)0x20F0);
 		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip (iHelper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
 		engine2Dll = (uintptr_t)GetModuleHandle ("engine2.dll");
+        viewangles = (Vec3 *)(clientDll + 0x1AABA40);
 	}
 
 	std::string GetSchemaName (void *entity);
