@@ -13,6 +13,7 @@
 
 #include "../EntityManager/EntityManager.h"
 #include "../visuals/Visuals.h"
+#include "../Interfaces/iManager.h"
 
 HooksManager::SmokeEffect::RenderSmokeParticlesFunction HooksManager::SmokeEffect::oRenderSmokeParticles = nullptr;
 HooksManager::FlashEffect::FlashEffectFunction HooksManager::FlashEffect::oFlashEffect = nullptr;
@@ -21,6 +22,14 @@ HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::
 
 HooksManager::SetViewAngles::SetViewAnglesFunction HooksManager::SetViewAngles::oSetViewAngles = nullptr;
 HooksManager::DrawObjectClass::DrawObjectFunction HooksManager::DrawObjectClass::oDrawObject = nullptr;
+HooksManager::LightningModulation::LightningModulationFunction HooksManager::LightningModulation::oLightningModulation = nullptr;
+HooksManager::WorldModulation::oModulateWorldColorFn HooksManager::WorldModulation::oModulateWorldColor = nullptr;
+HooksManager::ValidateInput::ValidateInputFunction HooksManager::ValidateInput::oValidateInput = nullptr;
+HooksManager::OverrideViewClass::OverrideViewFunction HooksManager::OverrideViewClass::oOverrideViewFunction = nullptr;
+
+
+HooksManager::calcBonesFunction calcBones = nullptr;
+Vec3 actualAngles;
 
 bool HooksManager::initHook ( ) {
 
@@ -111,7 +120,9 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Draw Object! ");
 
 
-		int (__fastcall * CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
+
+
+	int (__fastcall * CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
 
 	CreateMaterialFunction = reinterpret_cast<decltype(CreateMaterialFunction)>(iHelper->m_Mem.PatternScanner ("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05"));
 
@@ -121,10 +132,135 @@ bool HooksManager::initHook ( ) {
 	}
 
 
+	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll","48 89 54 24 ? 53 41 56 41 57");
+
+
+
+	hookInit = MH_CreateHook (
+		LightningOverrideAddress,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_LightningModulation.hLightningModulation),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_LightningModulation.oLightningModulation));
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t Lightning HOOKED! ");
+	else
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Lightning! ");
+
+
+
+	uint8_t *WorldOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 4C 8B F9");
+
+	hookInit = MH_CreateHook (
+		WorldOverrideAddress,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_WorldModulation.hModulateWorldColor),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_WorldModulation.oModulateWorldColor));
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t World Modulation HOOKED! ");
+	else
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING World Modulation! ");
+
+
+
+	uint8_t *CalculateBones = iHelper->m_Mem.PatternScanner ("client.dll", "40 55 56 57 41 54 41 55 41 56 41 57 48 81 EC D0");
+
+	calcBonesFunction calcBones = reinterpret_cast<calcBonesFunction>(CalculateBones);
+
+	if (calcBones) {
+		iHelper->m_Console.printMessage (DEBUG, "\t Calc Bones HOOKED! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Calc Bones! ");
+	}
+
+
+
+
+	//uint8_t * validateInput = (uint8_t*)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 7);
+
+	uint8_t *valiodateInput = iHelper->m_Mem.PatternScanner ("client.dll", "85 D2 0F 85 00");
+
+	hookInit = MH_CreateHook (
+		valiodateInput,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_ValidateInput.hValidateInput),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_ValidateInput.oValidateInput));
+
+	
+
+	if (hookInit == MH_OK) {
+		iHelper->m_Console.printMessage (DEBUG, "\t VALIDATE INPUT HOOKED! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING VALIDATE INPUT! ");
+	}
+
+
+
+	uint8_t *overrideCamera = iHelper->m_Mem.PatternScanner ( "client.dll","48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC ? 48 8B FA E8");
+
+	hookInit = MH_CreateHook (
+		overrideCamera,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_OverrideViewFunction.hookOverrideView),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_OverrideViewFunction.oOverrideViewFunction));
+
+
+	if (hookInit == MH_OK) {
+		iHelper->m_Console.printMessage (DEBUG, "\t Override Camera HOOKED! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Override Camera! ");
+	}
 
 
 	MH_EnableHook (MH_ALL_HOOKS);
 	return hookInit;
+}
+
+void *HooksManager::WorldModulation::hModulateWorldColor(CAggregateSceneObjectWorld *a1, void *a2) {
+
+
+	if (globals::worldModulation) {
+		int count = a1->count;
+		for (int i = 0; i < count; i++) {
+			CAggregateSceneObjectDataWorld *pAggregateSceneObjectData = &a1->array[i];
+
+			pAggregateSceneObjectData->r = globals::worldModulationColor[0];
+			pAggregateSceneObjectData->g = globals::worldModulationColor[1];
+			pAggregateSceneObjectData->b = globals::worldModulationColor[2];
+		}
+
+	}
+
+	return oModulateWorldColor (a1, a2);
+}
+
+void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupTRY * a2) {
+
+	if (globals::thirdPerson) {
+		a2->thirdPerson = false; 
+		a2->thirdPerson2 = false;
+		a2->thirdPerson3 = true;
+		a2->thirdPerson4 = true;
+
+
+		iHelper->m_Console.printMessage (WARNING, "THIRDPERSON");
+	}
+	else {
+		a2->thirdPerson = true;
+	}
+
+	return oOverrideViewFunction (a1, a2);
+
+}
+
+void* HooksManager::LightningModulation::hLightningModulation (__int64 a1, CAggregateSceneObject *a2, __int64 a3) {
+	
+	if (globals::lightModulation) {
+		a2->red = globals::lightModulationColor[0];
+		a2->green = globals::lightModulationColor[1];
+		a2->blue = globals::lightModulationColor[2];
+	}
+	return oLightningModulation (a1, a2, a3);
 }
 
 
@@ -139,7 +275,25 @@ void HooksManager::SmokeEffect::hRenderSmoke (__int64 a1, __int64 a2, int a3, in
 
 }
 
+/*
+   //Im hooking this
+	OnDrawObject(void * pAnimatableSceneObjectDesc, void * pDx11, CMeshData * arrMeshDraw, int nDataCount, void * pSceneView, void * pSceneLayer, void * pUnk, void * pUnk2)
+
+	//Drawing the chams like this
+
+	if (bIgnoreZ) {
+	  arrMeshDraw -> pMaterial = pMaterialInvisible;
+	  arrMeshDraw -> colValue = colVisualChamsIgnoreZ;
+	  oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+	}
+
+	arrMeshDraw -> pMaterial = pMaterial;
+	arrMeshDraw -> colValue = colVisualChams;
+	oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+
+*/
 void HooksManager::DrawObjectClass::hDrawObject (void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8) {
+
 
 	return oDrawObject (a1, a2, a3, a4, a5,a6, a7, a8);
 }
@@ -149,6 +303,7 @@ void HooksManager::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float* a3)
 
 
 	if (globals::RenderFlashHook) {
+		//iHelper->m_Console.printMessage(WARNING, calcBones (iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode, 1));
 
 		return;
 	}
@@ -156,24 +311,42 @@ void HooksManager::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float* a3)
 	return (oFlashEffect (a1, a2, a3));
 }
 
-int IN_JUMP = (1 << 1);
 
 
-void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64 a2, __int64* a3) {
-	float dist;
 
-	if (globals::CreateMoveHook && GetAsyncKeyState (RI_MOUSE_LEFT_BUTTON_DOWN & 1) && iGameEntitySystem->PlayersVector[0]->Pawn->isInFov) {
-		if (iGameEntitySystem->PlayersVector[0]->Pawn->pawnHealth > 0) {
-			SetViewAngles::hSetViewAngles ((__int64 *)a1, 0, CalculateAngles (iGameEntitySystem->LocalPlayerPawn->vOldOrigin, iGameEntitySystem->PlayersVector[0]->Pawn->vOldOrigin, globals::aimbotFov));
-		}
+CUserCmd *actualcmd;
+
+void HooksManager::ValidateInput::hValidateInput (CCSGOInput *csgoInput, __int64 a2){
+
+	Vec3 qangles;
+
+
+
+	if (globals::antiAim) {
+
+		qangles = csgoInput->angles;
+		iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64*)csgoInput,0,actualAngles);
+		iHelper->m_Console.printMessage (WARNING, "settingto backwards");
+		oValidateInput (csgoInput, a2);
+		iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64 *)csgoInput, 0, qangles);
+		iHelper->m_Console.printMessage (WARNING, "settingto normal");
+
+
+
+	}
+	else {
+		oValidateInput (csgoInput, a2);
+
 	}
 
 
-	if (globals::glow) {
-		iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
-	}
+}
 
 
+void onMove (CCSGOInput *csgoInput) {
+
+	actualAngles = actualcmd->baseusercmd.qangles.msgqangle.angles;
+	actualcmd->baseusercmd.qangles.msgqangle.angles  = *new Vec3(90,180,0);
 }
 
 bool HooksManager::CreateMove::isPlayerInGame (void)
@@ -186,12 +359,87 @@ bool HooksManager::CreateMove::isPlayerInGame (void)
 
 	return false;
 }
+/////////////////////////
+
+
+class CBaseUserCmdPB {
+public:
+};
+
+
+CUserCmd *GetUserCmd ( )
+{
+	// Get the local player controller
+	if (!iGameEntitySystem->LocalPlayerController)
+		return nullptr;
+
+	// Define and resolve the GetCommandIndex function
+	using GetCommandIndexFn = void (__fastcall *)(void *controller, int *index);
+	static GetCommandIndexFn GetCommandIndex = reinterpret_cast<GetCommandIndexFn>(iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 20 4C 8B 41 10 48 8B DA 48 8B 0D ? ? ? ? 48 83 C1 10 E8 ? ? ? ?"));
+	if (!GetCommandIndex)
+		return nullptr;
+
+	// Get the command index
+	int index = 0;
+	GetCommandIndex (iGameEntitySystem->LocalPlayerController, &index);
+	int commandIndex = (index == 0 || index == -1) ? 0xFFFFFFFF : index - 1;
+
+	// Define and resolve the GetUserCmdBase function
+	using GetUserCmdBaseFn = void *(__fastcall *)(void *base, int index);
+	static GetUserCmdBaseFn GetUserCmdBase = reinterpret_cast<GetUserCmdBaseFn>(
+		iHelper->m_Mem.PatternScanner ("client.dll", "48 89 4C 24 ? 41 54 41 57 48 83 EC 48 4C 63 E2 4C 8B F9"));
+	if (!GetUserCmdBase)
+		return nullptr;
+
+	// Resolve the global offset
+	static void *userCmdBaseOffset = *reinterpret_cast<void **>(
+		iHelper->m_Mem.ResolveRip (
+			iHelper->m_Mem.PatternScanner ("client.dll", "48 8B 0D ? ? ? ? E8 ? ? ? ? 48 8B CF 4C 8B E8"),
+			0x3, 0x7));
+	if (!userCmdBaseOffset)
+		return nullptr;
+
+	// Retrieve the user command base
+	void *userCmdBase = GetUserCmdBase (userCmdBaseOffset, commandIndex);
+	if (!userCmdBase)
+		return nullptr;
+
+	// Get the sequence number
+	DWORD sequenceNumber = *reinterpret_cast<DWORD *>(reinterpret_cast<uintptr_t>(userCmdBase) + 23552);  // 0x5C00);
+
+	// Define and resolve the GetUserCmd function
+	using GetUserCmdFn = CUserCmd * (__fastcall *)(void *controller, DWORD sequenceNumber);
+	static GetUserCmdFn GetUserCmd = reinterpret_cast<GetUserCmdFn>(
+			iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 20 8B DA 85 D2 78 3C E8 ? ? ? ? 4C 8B C0 B8 ? ? ? ? F7"));
+	if (!GetUserCmd)
+		return nullptr;
+
+	// Retrieve the user command
+	CUserCmd *userCmd = GetUserCmd (iGameEntitySystem->LocalPlayerController, sequenceNumber);
+	return userCmd;
+}
+
+/////////////////////////
+
+
+/////////////////////////
 
 // a2 = basecmd
-void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64* a2, CUserCmd* a3) {
+void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot, bool bActivate) {
 	float dist;
 
-	oCreateMove (a1, a2, a3);
+	oCreateMove (csgoInput, nSlot, bActivate);
+
+	iGameEntitySystem->getEnemisByFov ( );
+
+
+	if (globals::antiAim) {
+		//actualcmd = GetUserCmd ( );
+
+		onMove (csgoInput);
+	}
+
+
 
 	if (iHooksManager->m_CreateMove.isPlayerInGame ( )) {
 		iGameEntitySystem->getEnemisByFov ( );
@@ -199,7 +447,7 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64* a2, CUserCm
 		if (iGameEntitySystem->PlayersVector.size ( ) >= 1 && globals::CreateMoveHook && GetAsyncKeyState (RI_MOUSE_LEFT_BUTTON_DOWN & 1) && iGameEntitySystem->PlayersVector[0]->Pawn->isInFov) {
 			if (iGameEntitySystem->PlayersVector[0]->Pawn->pawnHealth > 0) {
 
-				Vec3 tempEnemy = *(new Vec3(
+				Vec3 tempEnemy = *(new Vec3 (
 					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.x,
 					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.y,
 					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.z
@@ -211,7 +459,7 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64* a2, CUserCm
 					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
 					});
 
-				SetViewAngles::hSetViewAngles ((__int64 *)a1, 0, CalculateAngles (tempMe, tempEnemy, globals::aimbotFov));
+				SetViewAngles::hSetViewAngles ((__int64 *)csgoInput, 0, CalculateAngles (tempMe, tempEnemy, globals::aimbotFov));
 			}
 		}
 
@@ -220,31 +468,29 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *a1, __int64* a2, CUserCm
 
 		if (globals::glow) {
 			iVisuals->glowPlayers (globals::glowType, globals::chamsColor);
-
-			//if (iGameEntitySystem->LocalPlayerPawn->m_fFlags & 257) {
-			//	a3->buttons &= ~(1 << 1);
-			//}
 		}
 
 
-	 }
 
-	//return oCreateMove (a1, a2, a3);
+	}
 }
 
 
-// a2 = basecmd
-void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 *a2, CUserCmd *a3) {
 
+
+// a2 = basecmd
+void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot, CUserCmd *a3) {
+	oCreateMoveTWO (a1, nSlot, a3);
+
+	actualcmd = a3;
 
 	if (globals::bhop) {
 		if (iGameEntitySystem->LocalPlayerPawn->m_fFlags & 257 && a3->buttons & (1 << 1)) {
 			a3->buttons &= ~(1 << 1);
 		}
 	}
+		
 }
-
-
 void HooksManager::SetViewAngles::hSetViewAngles (__int64 *a1, __int64 a2, Vec3 a3) {
 
 

@@ -97,12 +97,7 @@ public:
 
 
 
-class CMsgQAngle
-{
-public:
-    union {
-    };
-};
+
 
 
 class CCSGOInput {
@@ -113,9 +108,35 @@ public:
     };
 };
 
+
+class CMsgQAngle {
+public:
+    union {
+        DEFINE_MEMBER_N (Vec3, angles, 0x18);
+    };
+
+};
+
+class qAngles {
+public:
+    union {
+        DEFINE_MEMBER_N (CMsgQAngle, msgqangle, 0x80);
+    };
+
+};
+
+class PBaseUserCmd {
+public:
+    union {
+        DEFINE_MEMBER_N (qAngles, qangles, 0x40);
+    };
+
+};
+
 class CUserCmd {
 public:
     union{
+        DEFINE_MEMBER_N (PBaseUserCmd, baseusercmd, 0x40);
         DEFINE_MEMBER_N (uint32_t, buttons, 0x60);
     };
 
@@ -143,6 +164,18 @@ private:
     char pad_0038[0x9];
 };
 
+
+class CViewSetupTRY {
+public:
+    union {
+        DEFINE_MEMBER_N (bool, thirdPerson, 0x6e);
+        DEFINE_MEMBER_N (bool, thirdPerson2, 0x6f);
+        DEFINE_MEMBER_N (bool, thirdPerson3, 0x6a);
+        DEFINE_MEMBER_N (bool, thirdPerson4, 0x6b);
+    };
+
+};
+
 class CAggregateSceneObjectWorld {
 private:
     char pad_0000[0x120];
@@ -162,16 +195,12 @@ public:
     Vec3 storedViewAngles;
     
 
-
-
 	void *CGameInput = nullptr;
 	
 	HooksManager ( ) {
 	}
 
 	bool initHook ( );
-
-
 
 
 	bool CreateHook (uint8_t *targetAddress, void *hookFunction, void **originalFunction, const char *hookName);
@@ -197,9 +226,9 @@ public:
 	class CreateMove {
 
 	public:
-		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput * csgoInput, __int64* a2, CUserCmd *a3);
+		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput * csgoInput, __int64 nSlot, bool bActivate);
 		static CreateMoveFunction oCreateMove;
-		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64* a2, CUserCmd* a3);
+		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64 nSlot, bool bActivate);
         bool isPlayerInGame (void);
 
 
@@ -210,9 +239,9 @@ public:
     class CreateMoveTWO {
 
     public:
-        typedef void (__fastcall *CreateMoveFunctionTWO)(CCSGOInput *csgoInput, __int64 *a2, CUserCmd *a3);
+        typedef void (__fastcall *CreateMoveFunctionTWO)(CCSGOInput *csgoInput, __int64 a2, CUserCmd *a3);
         static CreateMoveFunctionTWO oCreateMoveTWO;
-        static void __fastcall hCreateMoveTWO (CCSGOInput *csgoInput, __int64 *a2, CUserCmd *a3);
+        static void __fastcall hCreateMoveTWO (CCSGOInput *csgoInput, __int64 a2, CUserCmd *a3);
 
 
     };
@@ -254,6 +283,14 @@ public:
 
 	DrawObjectClass m_DrawObject;
 
+    class OverrideViewClass {
+    public:
+        typedef void (__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
+        static OverrideViewFunction oOverrideViewFunction; //static because shared among all the instances of the class
+        static void __fastcall hookOverrideView (__int64 a1, CViewSetupTRY *a2);
+    };
+
+    OverrideViewClass m_OverrideViewFunction;
    
 
 
@@ -280,6 +317,10 @@ public:
     typedef void (__fastcall *calcBonesFunction)(void* a1, unsigned int bone);
 
     static calcBonesFunction calcBones;
+
+
+
+
 
 };
 
