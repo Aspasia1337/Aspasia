@@ -29,7 +29,7 @@ HooksManager::OverrideViewClass::OverrideViewFunction HooksManager::OverrideView
 
 
 HooksManager::calcBonesFunction calcBones = nullptr;
-Vec3 actualAngles;
+Vec3 antiAimAngles;
 
 bool HooksManager::initHook ( ) {
 
@@ -235,18 +235,29 @@ void *HooksManager::WorldModulation::hModulateWorldColor(CAggregateSceneObjectWo
 }
 
 void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupTRY * a2) {
-
+	Vec3 test;
 	if (globals::thirdPerson) {
-		a2->thirdPerson = false; 
-		a2->thirdPerson2 = false;
-		a2->thirdPerson3 = true;
-		a2->thirdPerson4 = true;
 
-
-		iHelper->m_Console.printMessage (WARNING, "THIRDPERSON");
+		//a2->fov = globals::fov1;
+		//a2->fov2 = globals::fov2;
+		//a2->viewmodel = globals::fov3;
+		//test = a2->viewAngles;
+		test = *(new Vec3 (
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+		));
 	}
-	else {
-		a2->thirdPerson = true;
+	if (globals::antiAim) {
+
+		test = *(new Vec3 (
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+		));
+
+		a2->position = test;
+		a2->viewAngles = iGameEntitySystem->LocalPlayerPawn->v_angle;
 	}
 
 	return oOverrideViewFunction (a1, a2);
@@ -320,33 +331,38 @@ void HooksManager::ValidateInput::hValidateInput (CCSGOInput *csgoInput, __int64
 
 	Vec3 qangles;
 
-
-
 	if (globals::antiAim) {
 
-		qangles = csgoInput->angles;
-		iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64*)csgoInput,0,actualAngles);
-		iHelper->m_Console.printMessage (WARNING, "settingto backwards");
-		oValidateInput (csgoInput, a2);
-		iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64 *)csgoInput, 0, qangles);
-		iHelper->m_Console.printMessage (WARNING, "settingto normal");
+		// Backup Angles
+		//qangles = csgoInput->angles;
+		// Set Angles to Anti Aim 
+		//iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64 *)csgoInput, 0, antiAimAngles);
+		// Run Original
+		antiAimAngles = csgoInput->angles;
 
-
-
-	}
-	else {
 		oValidateInput (csgoInput, a2);
 
+		csgoInput->angles = antiAimAngles;
+
+		// Restore Originals
+		
+		//iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64 *)csgoInput, 0, qangles);
+	}else {
+		oValidateInput (csgoInput, a2);
 	}
-
-
 }
 
 
 void onMove (CCSGOInput *csgoInput) {
-
-	actualAngles = actualcmd->baseusercmd.qangles.msgqangle.angles;
+	//Store the viewangle for looking arround
+	antiAimAngles = actualcmd->baseusercmd.qangles.msgqangle.angles;
+	//set the view angle backwards
 	actualcmd->baseusercmd.qangles.msgqangle.angles  = *new Vec3(90,180,0);
+
+	actualcmd->baseusercmd.qangles.msgqangle.angles = antiAimAngles;
+
+	//csgoInput->angles = *new Vec3(90,180,0);
+ 
 }
 
 bool HooksManager::CreateMove::isPlayerInGame (void)
@@ -430,13 +446,16 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 	oCreateMove (csgoInput, nSlot, bActivate);
 
+	
 	iGameEntitySystem->getEnemisByFov ( );
 
-
 	if (globals::antiAim) {
-		//actualcmd = GetUserCmd ( );
+		//actualcmd = GetUserCmd();
+		
+		//iHelper->m_Console.printMessage (WARNING, actualcmd);
+		//onMove (csgoInput);
 
-		onMove (csgoInput);
+
 	}
 
 

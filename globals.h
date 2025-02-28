@@ -23,6 +23,12 @@ namespace globals {
     extern Vec3 viewAngles;
     extern bool lightModulation;
     extern bool worldModulation;
+    extern bool bhop;
+    extern bool antiAim;
+    extern bool thirdPerson;
+    extern float fov1;
+    extern float fov2;
+    extern float fov3;
 
     extern float smokeColorRGB[3];
     extern float lightModulationColor[3];

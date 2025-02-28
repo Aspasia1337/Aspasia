@@ -168,10 +168,13 @@ private:
 class CViewSetupTRY {
 public:
     union {
-        DEFINE_MEMBER_N (bool, thirdPerson, 0x6e);
-        DEFINE_MEMBER_N (bool, thirdPerson2, 0x6f);
-        DEFINE_MEMBER_N (bool, thirdPerson3, 0x6a);
-        DEFINE_MEMBER_N (bool, thirdPerson4, 0x6b);
+        DEFINE_MEMBER_N (float, fov, 0x4E8);
+        DEFINE_MEMBER_N (float, viewmodel, 0x4d8);
+        DEFINE_MEMBER_N (Vec3, viewAngles, 0x4DC);
+        DEFINE_MEMBER_N (float, fov2, 0x470);
+        DEFINE_MEMBER_N (Vec3, position, 0x4E0);
+
+
     };
 
 };
