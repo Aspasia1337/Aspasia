@@ -37,7 +37,7 @@ void *GameEntitySystem::GetEntityByIndexFunction (int Index)
 
 void GameEntitySystem::getGameEntities ( ) {
 
-	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5C6C8) + (uintptr_t)0x20F0);
+	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5D728) + (uintptr_t)0x20F0);
 
 	ControllerVector.clear ( );
 	PawnVector.clear ( );
@@ -86,7 +86,7 @@ void GameEntitySystem::getAllPlayers ( ) {
 	getGameEntities ( );
 	PlayersVector.clear ( );
 
-	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x1889F20);
+	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x188AF10);
 
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
 		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
@@ -123,7 +123,7 @@ void GameEntitySystem::getClosetEnemis ( )
 
 
 void GameEntitySystem::getEnemisByFov ( ) {
-	Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AABA40);
+	Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AACA60);
 	float distance;
 
 	if (!viewangles) return; 
