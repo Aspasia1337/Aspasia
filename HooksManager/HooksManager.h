@@ -147,10 +147,13 @@ public:
 class CAggregateSceneObject
 {
 public:
-    unsigned char pad_0[0xE4];
-    float red;
-    float green;
-    float blue;
+    union {
+
+        DEFINE_MEMBER_N (byte, lightType, 0xE0);
+        DEFINE_MEMBER_N (float, redColor, 0xE4);
+        DEFINE_MEMBER_N (float, greenColor, 0xE8);
+        DEFINE_MEMBER_N (float, blueColor, 0xEC);
+    };
 };
 
 class CAggregateSceneObjectDataWorld {

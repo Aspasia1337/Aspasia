@@ -35,9 +35,26 @@ namespace globals {
     float smoothing = 1;
     float maxFov = 50.0f;
     float aimbotFov = 50;
+    bool anti_aim = false;
+    bool lightModulation = false;
+    bool worldModulation = false;
+    bool bhop = false;
+    bool antiAim = false;
+    bool thirdPerson = false;
+
+    float fov1;
+    float fov2;
+    float fov3;
+
     Vec3 viewAngles;
 
+
     float smokeColorRGB[3] = { 0.0f, 0.0f, 0.0f }; // Inicializamos en negro
+    float lightModulationColor[3] = { 1.0f, 1.0f, 1.0f };
+    float worldModulationColor[3] = { 1.0f, 1.0f, 1.0f };
+
+    float lightIntensity = 1;
+    byte lightType = 0x02;
 }
 
 /*

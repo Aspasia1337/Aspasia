@@ -267,9 +267,10 @@ void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupT
 void* HooksManager::LightningModulation::hLightningModulation (__int64 a1, CAggregateSceneObject *a2, __int64 a3) {
 	
 	if (globals::lightModulation) {
-		a2->red = globals::lightModulationColor[0];
-		a2->green = globals::lightModulationColor[1];
-		a2->blue = globals::lightModulationColor[2];
+		a2->lightType = globals::lightType;
+		a2->redColor = globals::lightModulationColor[0] / globals::lightIntensity;
+		a2->greenColor = globals::lightModulationColor[1] / globals::lightIntensity;
+		a2->blueColor = globals::lightModulationColor[2] / globals::lightIntensity;
 	}
 	return oLightningModulation (a1, a2, a3);
 }

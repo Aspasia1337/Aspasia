@@ -33,5 +33,7 @@ namespace globals {
     extern float smokeColorRGB[3];
     extern float lightModulationColor[3];
     extern float worldModulationColor[3];
+    extern byte lightType;
+    extern float lightIntensity;
 
 };
