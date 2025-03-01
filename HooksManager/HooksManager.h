@@ -117,26 +117,20 @@ public:
 
 };
 
-class qAngles {
+
+class CBaseUserCmdPB {
 public:
     union {
-        DEFINE_MEMBER_N (CMsgQAngle, msgqangle, 0x80);
+        DEFINE_MEMBER_N (CMsgQAngle*, msgqangle, 0x40);
     };
-
 };
 
-class PBaseUserCmd {
-public:
-    union {
-        DEFINE_MEMBER_N (qAngles, qangles, 0x40);
-    };
 
-};
 
 class CUserCmd {
 public:
     union{
-        DEFINE_MEMBER_N (PBaseUserCmd, baseusercmd, 0x40);
+        DEFINE_MEMBER_N (CBaseUserCmdPB*, cbaseusercmd, 0x40);
         DEFINE_MEMBER_N (uint32_t, buttons, 0x60);
     };
 

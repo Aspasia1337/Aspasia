@@ -248,7 +248,9 @@ void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupT
 			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
 		));
 	}
-	if (globals::antiAim) {
+
+	/*
+		if (globals::antiAim) {
 
 		test = *(new Vec3 (
 			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
@@ -259,6 +261,8 @@ void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupT
 		a2->position = test;
 		a2->viewAngles = iGameEntitySystem->LocalPlayerPawn->v_angle;
 	}
+	*/
+
 
 	return oOverrideViewFunction (a1, a2);
 
@@ -271,6 +275,10 @@ void* HooksManager::LightningModulation::hLightningModulation (__int64 a1, CAggr
 		a2->redColor = globals::lightModulationColor[0] / globals::lightIntensity;
 		a2->greenColor = globals::lightModulationColor[1] / globals::lightIntensity;
 		a2->blueColor = globals::lightModulationColor[2] / globals::lightIntensity;
+
+
+
+
 	}
 	return oLightningModulation (a1, a2, a3);
 }
@@ -339,11 +347,13 @@ void HooksManager::ValidateInput::hValidateInput (CCSGOInput *csgoInput, __int64
 		// Set Angles to Anti Aim 
 		//iHooksManager->m_SetViewAngles.hSetViewAngles ((__int64 *)csgoInput, 0, antiAimAngles);
 		// Run Original
-		antiAimAngles = csgoInput->angles;
+		qangles = csgoInput->angles;
+
+		csgoInput->angles = antiAimAngles;
 
 		oValidateInput (csgoInput, a2);
 
-		csgoInput->angles = antiAimAngles;
+		csgoInput->angles = qangles;
 
 		// Restore Originals
 		
@@ -353,14 +363,18 @@ void HooksManager::ValidateInput::hValidateInput (CCSGOInput *csgoInput, __int64
 	}
 }
 
+float spinCounter = 0.f;
 
 void onMove (CCSGOInput *csgoInput) {
 	//Store the viewangle for looking arround
-	antiAimAngles = actualcmd->baseusercmd.qangles.msgqangle.angles;
-	//set the view angle backwards
-	actualcmd->baseusercmd.qangles.msgqangle.angles  = *new Vec3(90,180,0);
+	
+	antiAimAngles = actualcmd->cbaseusercmd->msgqangle->angles;
 
-	actualcmd->baseusercmd.qangles.msgqangle.angles = antiAimAngles;
+	spinCounter += 10;
+
+	//set the view angle backwards
+	actualcmd->cbaseusercmd->msgqangle->angles = *new Vec3{90,spinCounter,0};
+
 
 	//csgoInput->angles = *new Vec3(90,180,0);
  
@@ -379,64 +393,63 @@ bool HooksManager::CreateMove::isPlayerInGame (void)
 /////////////////////////
 
 
-class CBaseUserCmdPB {
-public:
-};
 
-
-CUserCmd *GetUserCmd ( )
+template <typename T = std::uint8_t>
+[[nodiscard]] T *GetAbsoluteAddress (T *pRelativeAddress, int nPreOffset = 0x0, int nPostOffset = 0x0)
 {
-	// Get the local player controller
-	if (!iGameEntitySystem->LocalPlayerController)
-		return nullptr;
-
-	// Define and resolve the GetCommandIndex function
-	using GetCommandIndexFn = void (__fastcall *)(void *controller, int *index);
-	static GetCommandIndexFn GetCommandIndex = reinterpret_cast<GetCommandIndexFn>(iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 20 4C 8B 41 10 48 8B DA 48 8B 0D ? ? ? ? 48 83 C1 10 E8 ? ? ? ?"));
-	if (!GetCommandIndex)
-		return nullptr;
-
-	// Get the command index
-	int index = 0;
-	GetCommandIndex (iGameEntitySystem->LocalPlayerController, &index);
-	int commandIndex = (index == 0 || index == -1) ? 0xFFFFFFFF : index - 1;
-
-	// Define and resolve the GetUserCmdBase function
-	using GetUserCmdBaseFn = void *(__fastcall *)(void *base, int index);
-	static GetUserCmdBaseFn GetUserCmdBase = reinterpret_cast<GetUserCmdBaseFn>(
-		iHelper->m_Mem.PatternScanner ("client.dll", "48 89 4C 24 ? 41 54 41 57 48 83 EC 48 4C 63 E2 4C 8B F9"));
-	if (!GetUserCmdBase)
-		return nullptr;
-
-	// Resolve the global offset
-	static void *userCmdBaseOffset = *reinterpret_cast<void **>(
-		iHelper->m_Mem.ResolveRip (
-			iHelper->m_Mem.PatternScanner ("client.dll", "48 8B 0D ? ? ? ? E8 ? ? ? ? 48 8B CF 4C 8B E8"),
-			0x3, 0x7));
-	if (!userCmdBaseOffset)
-		return nullptr;
-
-	// Retrieve the user command base
-	void *userCmdBase = GetUserCmdBase (userCmdBaseOffset, commandIndex);
-	if (!userCmdBase)
-		return nullptr;
-
-	// Get the sequence number
-	DWORD sequenceNumber = *reinterpret_cast<DWORD *>(reinterpret_cast<uintptr_t>(userCmdBase) + 23552);  // 0x5C00);
-
-	// Define and resolve the GetUserCmd function
-	using GetUserCmdFn = CUserCmd * (__fastcall *)(void *controller, DWORD sequenceNumber);
-	static GetUserCmdFn GetUserCmd = reinterpret_cast<GetUserCmdFn>(
-			iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 20 8B DA 85 D2 78 3C E8 ? ? ? ? 4C 8B C0 B8 ? ? ? ? F7"));
-	if (!GetUserCmd)
-		return nullptr;
-
-	// Retrieve the user command
-	CUserCmd *userCmd = GetUserCmd (iGameEntitySystem->LocalPlayerController, sequenceNumber);
-	return userCmd;
+	pRelativeAddress += nPreOffset;
+	pRelativeAddress += sizeof (std::int32_t) + *reinterpret_cast<std::int32_t *>(pRelativeAddress);
+	pRelativeAddress += nPostOffset;
+	return pRelativeAddress;
 }
 
+
+
+
 /////////////////////////
+
+uint8_t * ResolveRelativeAddress (std::uint8_t *nAddressBytes, std::uint32_t nRVAOffset, std::uint32_t nRIPOffset)
+{
+	std::uint32_t nRVA = *reinterpret_cast<std::uint32_t *>(nAddressBytes + nRVAOffset);
+	std::uint64_t nRIP = reinterpret_cast<std::uint64_t>(nAddressBytes) + nRIPOffset;
+
+	return reinterpret_cast<std::uint8_t *>(nRVA + nRIP);
+}
+
+CUserCmd *get_user_cmd ( )
+{
+	static auto get_command_index = reinterpret_cast<void *(__fastcall *)(void *, int *)>(GetAbsoluteAddress (iHelper->m_Mem.PatternScanner ("client.dll", "E8 ? ? ? ? 8B 8D ? ? ? ? 8D 51"), 1, 0));
+	if (!get_command_index)
+		return nullptr;
+
+	int index = 0;
+	get_command_index (iGameEntitySystem->LocalPlayerController, &index);
+	int command_index = index - 1;
+
+	if (command_index == -1)
+		command_index = 0xFFFFFFFFLL;
+
+	static auto get_user_cmd_base = reinterpret_cast<void *(__fastcall *)(void *, int)>(GetAbsoluteAddress (iHelper->m_Mem.PatternScanner ("client.dll", "E8 ? ? ? ? 48 8B CF 4C 8B E8 44 8B B8"), 1, 0));
+	if (!get_user_cmd_base)
+		return nullptr;
+
+	static void *cmd_base_address = *reinterpret_cast<void **>(ResolveRelativeAddress (iHelper->m_Mem.PatternScanner ("client.dll", "48 8B 0D ? ? ? ? E8 ? ? ? ? 48 8B CF 4C 8B E8"), 0x3, 0x7));
+	if (!cmd_base_address)
+		return nullptr;
+
+	auto user_cmd_base = get_user_cmd_base (cmd_base_address, command_index);
+	if (!user_cmd_base)
+		return nullptr;
+
+	DWORD sequence_number = *reinterpret_cast<DWORD *>((uintptr_t)user_cmd_base + 0x5C00);
+
+	static auto get_user_cmd = reinterpret_cast<CUserCmd * (__fastcall *)(void *, DWORD)>(GetAbsoluteAddress (iHelper->m_Mem.PatternScanner ("client.dll", "E8 ? ? ? ? 48 8B 0D ? ? ? ? 45 33 E4 48 89 44 24"), 1, 0));
+	if (!get_user_cmd)
+		return nullptr;
+
+	auto user_cmd = get_user_cmd (iGameEntitySystem->LocalPlayerController, sequence_number);
+	return user_cmd;
+}
 
 
 /////////////////////////
@@ -447,14 +460,20 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 	oCreateMove (csgoInput, nSlot, bActivate);
 
-	
+
 	iGameEntitySystem->getEnemisByFov ( );
+
+
+
+	//iGameEntitySystem->LocalPlayerPawn->m_pCameraServices->m_hActivePostProcessingVolume.m_bExposureControl = true;
+	//iGameEntitySystem->LocalPlayerPawn->m_pCameraServices->m_hActivePostProcessingVolume.m_flMaxExposure = 1;
+	//iGameEntitySystem->LocalPlayerPawn->m_pCameraServices->m_hActivePostProcessingVolume.m_flMinExposure = 1;
 
 	if (globals::antiAim) {
 		//actualcmd = GetUserCmd();
 		
 		//iHelper->m_Console.printMessage (WARNING, actualcmd);
-		//onMove (csgoInput);
+		onMove (csgoInput);
 
 
 	}
@@ -501,7 +520,6 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 // a2 = basecmd
 void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot, CUserCmd *a3) {
 	oCreateMoveTWO (a1, nSlot, a3);
-
 	actualcmd = a3;
 
 	if (globals::bhop) {
