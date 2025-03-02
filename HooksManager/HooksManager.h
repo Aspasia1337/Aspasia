@@ -5,7 +5,7 @@
 #define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
 
 #include "../math/vector.h"
-
+#include "../Classes/Classes.h"
 
 
 
@@ -84,108 +84,6 @@ enum class BoneIDs
     RightThumb3 = 76,
 };
 
-/*
-class CUserCmd
-{
-public:
-    MEM_PAD(0x8); // 0x0 VTABLE
-    MEM_PAD(0x10); // TODO: find out what this is, added 14.08.2024
-    CCSGOUserCmdPB csgoUserCmd; // 0x18
-    CInButtonState nButtons; // 0x58
-    MEM_PAD(0x20); // 0x78
-*/
-
-
-
-
-
-
-class CCSGOInput {
-public:
-    union {
-        DEFINE_MEMBER_N (Vec3, angles, 0x3D0);
-
-    };
-};
-
-
-class CMsgQAngle {
-public:
-    union {
-        DEFINE_MEMBER_N (Vec3, angles, 0x18);
-    };
-
-};
-
-
-class CBaseUserCmdPB {
-public:
-    union {
-        DEFINE_MEMBER_N (CMsgQAngle*, msgqangle, 0x40);
-    };
-};
-
-
-
-class CUserCmd {
-public:
-    union{
-        DEFINE_MEMBER_N (CBaseUserCmdPB*, cbaseusercmd, 0x40);
-        DEFINE_MEMBER_N (uint32_t, buttons, 0x60);
-    };
-
-};
-
-
-
-class CAggregateSceneObject
-{
-public:
-    union {
-
-        DEFINE_MEMBER_N (byte, lightType, 0xE0);
-        DEFINE_MEMBER_N (float, redColor, 0xE4);
-        DEFINE_MEMBER_N (float, greenColor, 0xE8);
-        DEFINE_MEMBER_N (float, blueColor, 0xEC);
-    };
-};
-
-class CAggregateSceneObjectDataWorld {
-private:
-    char pad_0000[0x38]; // 0x0
-public:
-    unsigned char r; // 0x38
-    unsigned char g; // 0x39
-    unsigned char b; // 0x3A
-private:
-    char pad_0038[0x9];
-};
-
-
-class CViewSetupTRY {
-public:
-    union {
-        DEFINE_MEMBER_N (float, fov, 0x4E8);
-        DEFINE_MEMBER_N (float, viewmodel, 0x4d8);
-        DEFINE_MEMBER_N (Vec3, viewAngles, 0x4DC);
-        DEFINE_MEMBER_N (float, fov2, 0x470);
-        DEFINE_MEMBER_N (Vec3, position, 0x4E0);
-
-
-    };
-
-};
-
-class CAggregateSceneObjectWorld {
-private:
-    char pad_0000[0x120];
-public:
-    int count; // 0x120
-private:
-    char pad_0120[0x4];
-public:
-    CAggregateSceneObjectDataWorld *array; // 0x128
-};
 
 
 class HooksManager
@@ -203,24 +101,8 @@ public:
 	bool initHook ( );
 
 
-	bool CreateHook (uint8_t *targetAddress, void *hookFunction, void **originalFunction, const char *hookName);
 
-	// void __fastcall RenderSmoke(__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6)
-	class SmokeEffect {
-	public:
-		typedef void (__fastcall *RenderSmokeParticlesFunction)(__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6);
-		static RenderSmokeParticlesFunction oRenderSmokeParticles;
-		static void __fastcall hRenderSmoke (__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6);
-	};
-	SmokeEffect m_SmokeEffect;
 
-	class FlashEffect {
-	public:
-		typedef void (__fastcall *FlashEffectFunction)(__int64 a1, __int64 a2, float* a3);
-		static FlashEffectFunction oFlashEffect;
-		static void __fastcall hFlashEffect (__int64 a1, __int64 a2, float *a3);
-	};
-	FlashEffect m_FlashEffect;
 
 	//void __fastcall createMove(__int64 *a1, int a2, char a3)
 	class CreateMove {
@@ -252,8 +134,6 @@ public:
     class ValidateInput {
 
     public:
-
-
         typedef void (__fastcall *ValidateInputFunction)(CCSGOInput *pInput, int unk);
         static ValidateInputFunction oValidateInput;
         static void __fastcall hValidateInput (CCSGOInput *csgoInput, __int64 a2);
@@ -274,14 +154,7 @@ public:
 	SetViewAngles m_SetViewAngles;
 	
 
-	class DrawObjectClass {
-	public:
-		typedef void (__fastcall *DrawObjectFunction)(void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8);
-		static DrawObjectFunction oDrawObject;
-		static void __fastcall hDrawObject (void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8);
-	};
 
-	DrawObjectClass m_DrawObject;
 
     class OverrideViewClass {
     public:
@@ -294,14 +167,7 @@ public:
    
 
 
-    class LightningModulation {
-    public:
 
-        typedef void *(__fastcall *LightningModulationFunction)(__int64 a1, CAggregateSceneObject *a2, __int64 a3); 
-        static LightningModulationFunction oLightningModulation;
-        static void* __fastcall hLightningModulation (__int64 a1, CAggregateSceneObject *a2, __int64 a3);
-    };
-    LightningModulation m_LightningModulation;
 
 
     class WorldModulation

@@ -1,6 +1,8 @@
 #pragma once
 
-namespace globals {
+#include "math/vector.h"
+
+namespace Globals {
     extern float chamsColor[4];
     extern int tab;
     extern int glowType;
@@ -24,7 +26,7 @@ namespace globals {
     extern bool lightModulation;
     extern bool worldModulation;
     extern bool bhop;
-    extern bool antiAim;
+    extern bool AntiAim;
     extern bool thirdPerson;
     extern float fov1;
     extern float fov2;
@@ -35,5 +37,8 @@ namespace globals {
     extern float worldModulationColor[3];
     extern byte lightType;
     extern float lightIntensity;
+
+    extern float AAPitch;
+    extern float AAJaw;
 
 };

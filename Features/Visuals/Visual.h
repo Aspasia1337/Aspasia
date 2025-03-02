@@ -1,0 +1,46 @@
+#pragma once
+
+#include "../../globals.h"
+#include "../../Classes/Classes.h"
+
+class Visual
+{
+public:
+
+
+    class LightningModulation {
+    public:
+        typedef void *(__fastcall *LightningModulationFunction)(__int64 a1, CAggregateSceneObject *a2, __int64 a3);
+        static LightningModulationFunction oLightningModulation;
+        static void *__fastcall hLightningModulation (__int64 a1, CAggregateSceneObject *a2, __int64 a3);
+    };
+    LightningModulation mLightningModulation;
+
+    class SmokeRender {
+    public:
+        typedef void (__fastcall *RenderSmokeParticlesFunction)(__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6);
+        static RenderSmokeParticlesFunction oRenderSmokeParticles;
+        static void __fastcall hRenderSmoke (__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6);
+    };
+    SmokeRender m_SmokeEffect;
+
+    class FlashEffect {
+    public:
+        typedef void (__fastcall *FlashEffectFunction)(__int64 a1, __int64 a2, float *a3);
+        static FlashEffectFunction oFlashEffect;
+        static void __fastcall hFlashEffect (__int64 a1, __int64 a2, float *a3);
+    };
+    FlashEffect m_FlashEffect;
+
+    class DrawObjectClass {
+    public:
+        typedef void (__fastcall *DrawObjectFunction)(void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+        static DrawObjectFunction oDrawObject;
+        static void __fastcall hDrawObject (void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+    };
+    DrawObjectClass m_DrawObject;
+
+};
+
+inline Visual *iVisual = new Visual ( );
+
