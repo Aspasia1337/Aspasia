@@ -69,7 +69,7 @@ bool HooksManager::initHook ( ) {
 	hookInit = MH_CreateHook (
 		flashEffect,
 		reinterpret_cast<LPVOID *>(iVisual->m_FlashEffect.hFlashEffect),
-		reinterpret_cast<LPVOID *>(&iVisual->m_FlashEffect.hFlashEffect));
+		reinterpret_cast<LPVOID *>(&iVisual->m_FlashEffect.oFlashEffect));
 
 	if (hookInit == MH_OK)
 		iHelper->m_Console.printMessage (DEBUG, "\t Flash Effect HOOKED! ");
@@ -121,28 +121,25 @@ bool HooksManager::initHook ( ) {
 	hookInit = MH_CreateHook (
 		drawObjectaddrr,
 		reinterpret_cast<LPVOID *>(iVisual->m_DrawObject.hDrawObject),
-		reinterpret_cast<LPVOID *>(&iVisual->m_DrawObject.hDrawObject));
+		reinterpret_cast<LPVOID *>(&iVisual->m_DrawObject.oDrawObject));
 
 	if (hookInit == MH_OK)
 		iHelper->m_Console.printMessage (DEBUG, "\t Draw Object HOOKED! ");
 	else
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Draw Object! ");
 
+	iVisual->m_CreateMaterial.CreateMaterialFunction = reinterpret_cast<decltype(iVisual->m_CreateMaterial.CreateMaterialFunction)>(iHelper->m_Mem.PatternScanner ("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05"));
 
 
-
-	int (__fastcall * CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
-
-	CreateMaterialFunction = reinterpret_cast<decltype(CreateMaterialFunction)>(iHelper->m_Mem.PatternScanner ("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05"));
-
-
-	if (!CreateMaterialFunction) {
+	if (!iVisual->m_CreateMaterial.CreateMaterialFunction) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Create Material! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t Create Material HOOKED! ");
 	}
 
 
 	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll","48 89 54 24 ? 53 41 56 41 57");
-
 
 
 	hookInit = MH_CreateHook (
@@ -154,8 +151,6 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (DEBUG, "\t Lightning HOOKED! ");
 	else
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Lightning! ");
-
-
 
 	uint8_t *WorldOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 4C 8B F9");
 
@@ -260,9 +255,6 @@ void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupT
 
 
 
-
-
-
 bool HooksManager::CreateMove::isPlayerInGame (void)
 {
 	int gameState = *(int*)(*(uintptr_t*)((uintptr_t)iGameEntitySystem->engine2Dll + (uintptr_t)0x53FCE0) + (uintptr_t)0x228);
@@ -333,14 +325,21 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot, CUserCmd *a3) {
 	oCreateMoveTWO (a1, nSlot, a3);
 
+	if (!a3)
+		return;
+
+
 	if (Globals::AntiAim) {
 		iAntiAim->OnMove (a1, a3);
 	}
 
+	
 	if (Globals::bhop) {
 		iMovement->BunnyHop ( a3, iGameEntitySystem->LocalPlayerPawn);
-		iHelper->m_Console.printMessage (WARNING, a3);
 	}
+
+	return;
+
 }
 
 

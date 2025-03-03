@@ -34,12 +34,19 @@ public:
 
     class DrawObjectClass {
     public:
-        typedef void (__fastcall *DrawObjectFunction)(void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+        typedef void (__fastcall *DrawObjectFunction)(void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
         static DrawObjectFunction oDrawObject;
-        static void __fastcall hDrawObject (void *a1, void *a2, void *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+        static void __fastcall hDrawObject (void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
     };
     DrawObjectClass m_DrawObject;
 
+    class CreateMaterial {
+    public:
+
+        int (__fastcall *CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
+
+    };
+    CreateMaterial m_CreateMaterial;
 };
 
 inline Visual *iVisual = new Visual ( );
