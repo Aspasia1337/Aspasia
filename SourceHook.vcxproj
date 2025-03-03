@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,6 +70,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)minhook;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -128,8 +136,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;SOURCEHOOK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,11 +149,72 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Features\Anti-Aim\AntiAim.cpp" />
+    <ClCompile Include="EntityManager\EntityManager.cpp" />
     <ClCompile Include="helper\helper.cpp" />
+    <ClCompile Include="HooksManager\HooksManager.cpp" />
+    <ClCompile Include="Interfaces\iManager.cpp" />
+    <ClCompile Include="includes\imgui\imgui.cpp" />
+    <ClCompile Include="includes\imgui\imgui_demo.cpp" />
+    <ClCompile Include="includes\imgui\imgui_draw.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="includes\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="includes\kiero\kiero.cpp" />
+    <ClCompile Include="includes\kiero\minhook\src\buffer.c" />
+    <ClCompile Include="includes\kiero\minhook\src\hde\hde32.c" />
+    <ClCompile Include="includes\kiero\minhook\src\hde\hde64.c" />
+    <ClCompile Include="includes\kiero\minhook\src\hook.c" />
+    <ClCompile Include="includes\kiero\minhook\src\trampoline.c" />
+    <ClCompile Include="Features\Legitbot\Legitbot.cpp" />
+    <ClCompile Include="math\vector.cpp" />
+    <ClCompile Include="Features\Movement\Movement.cpp" />
     <ClCompile Include="SourceHook.cpp" />
+    <ClCompile Include="Features\Visuals\Visual.cpp" />
+    <ClCompile Include="visuals\Visuals.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Classes.h" />
+    <ClInclude Include="Features\Anti-Aim\AntiAim.h" />
+    <ClInclude Include="EntityManager\EntityManager.h" />
+    <ClInclude Include="globals.h" />
     <ClInclude Include="helper\helper.h" />
+    <ClInclude Include="HooksManager\HooksManager.h" />
+    <ClInclude Include="Interfaces\iManager.h" />
+    <ClInclude Include="Features\Legitbot\Legitbot.h" />
+    <ClInclude Include="MainThread\font.h" />
+    <ClInclude Include="MainThread\mainHook.h" />
+    <ClInclude Include="includes\imgui\imconfig.h" />
+    <ClInclude Include="includes\imgui\imgui.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="includes\imgui\imgui_internal.h" />
+    <ClInclude Include="includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="includes\imgui\imstb_truetype.h" />
+    <ClInclude Include="includes\includes.h" />
+    <ClInclude Include="includes\kiero\kiero.h" />
+    <ClInclude Include="includes\kiero\minhook\include\MinHook.h" />
+    <ClInclude Include="includes\kiero\minhook\src\buffer.h" />
+    <ClInclude Include="includes\kiero\minhook\src\hde\hde32.h" />
+    <ClInclude Include="includes\kiero\minhook\src\hde\hde64.h" />
+    <ClInclude Include="includes\kiero\minhook\src\hde\pstdint.h" />
+    <ClInclude Include="includes\kiero\minhook\src\hde\table32.h" />
+    <ClInclude Include="includes\kiero\minhook\src\hde\table64.h" />
+    <ClInclude Include="includes\kiero\minhook\src\trampoline.h" />
+    <ClInclude Include="includes\minhook\MinHook.h" />
+    <ClInclude Include="Materials\materials.h" />
+    <ClInclude Include="math\vector.h" />
+    <ClInclude Include="Features\Movement\Movement.h" />
+    <ClInclude Include="structs.h" />
+    <ClInclude Include="Features\Visuals\Visual.h" />
+    <ClInclude Include="visuals\Visuals.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="includes\kiero\minhook\dll_resources\MinHook.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="includes\kiero\minhook\dll_resources\MinHook.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
