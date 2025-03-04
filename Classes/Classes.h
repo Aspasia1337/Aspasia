@@ -6,6 +6,12 @@
 
 #include "../math/vector.h"
 
+class C_BaseEntity {
+public:
+    union {
+        DEFINE_MEMBER_N (uint32_t, m_iHealth, 0x344);
+    };
+};
 
 struct Color {
     float x; //  (B)
@@ -14,25 +20,35 @@ struct Color {
     float w; //  (A)
 };
 
-
 class CMaterial2 {
 public:
 
 };
 
+class CBaseHandle {
+public:
+    union {
+        DEFINE_MEMBER_N (uint32_t, nIndex, 0xD0);
+    };
+};
+
 class CSceneAnimatableObject
 {
-public:
-
+public:    
+    union {
+        DEFINE_MEMBER_N (CBaseHandle, hOwner, 0xB0);
+    };
 };
+
+
 
 class CMeshData {
 public:
     union {
         //              Type     Name    Offset
         DEFINE_MEMBER_N (CSceneAnimatableObject *, SceneAnimatableObject, 0x18);   
-        DEFINE_MEMBER_N (CSceneAnimatableObject *, CMaterial2, 0x20);   
-        DEFINE_MEMBER_N (CSceneAnimatableObject *, CMaterial2Copy, 0x20);
+        DEFINE_MEMBER_N (CMaterial2*, CMaterial, 0x20);
+        DEFINE_MEMBER_N (CMaterial2*, CMaterialCopy, 0x28);
     };
 };
 
@@ -57,6 +73,8 @@ public:
         DEFINE_MEMBER_N (bool, pawnIsAlive, 0x814);
         DEFINE_MEMBER_N (uint32_t, pawnHealth, 0x818);
         DEFINE_MEMBER_N (uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); //linker!
+        DEFINE_MEMBER_N (char*, m_sSanitizedPlayerName, 0x770); //linker!
+
     };
 };
 
@@ -109,6 +127,13 @@ public:
     };
 };
 
+class CPlayer_ObserverServices {
+
+public:
+    union {
+        DEFINE_MEMBER_N (uint32_t, m_hObserverTarget, 0x44);
+    };
+};
 
 class C_PlayerPawn {
 public:
@@ -130,9 +155,8 @@ public:
         DEFINE_MEMBER_N (Vec3, m_vecViewOffset, 0xCB0);   //linker!
         DEFINE_MEMBER_N (Vec3, v_angle, 0x124c);   //linker!
         DEFINE_MEMBER_N (CPlayer_CameraServices *, m_pCameraServices, 0x11E0);   //linker!
-
-
-
+        DEFINE_MEMBER_N (CPlayer_ObserverServices*, m_pObserverServices, 0x11C0);
+    
 
     };
 
@@ -165,6 +189,8 @@ public:
 
 
 
+
+
 class CUserCmd {
 public:
     union {
@@ -193,9 +219,9 @@ public:
     union {
 
         DEFINE_MEMBER_N (byte, lightType, 0xE0);
-        DEFINE_MEMBER_N (float, redColor, 0xE4);
-        DEFINE_MEMBER_N (float, greenColor, 0xE8);
-        DEFINE_MEMBER_N (float, blueColor, 0xEC);
+        DEFINE_MEMBER_N (float, RedColor, 0xE4);
+        DEFINE_MEMBER_N (float, GreenColor, 0xE8);
+        DEFINE_MEMBER_N (float, BlueColor, 0xEC);
     };
 };
 

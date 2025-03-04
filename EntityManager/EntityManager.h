@@ -73,32 +73,6 @@ public:
 
 };
 
-class C_PlayerPawn {
-public:
-	union {
-		//              Type     Name    Offset
-		DEFINE_MEMBER_N (uint32_t, m_armor, 0x241C);   //linker!
-		DEFINE_MEMBER_N (CBodyComponent*, m_CBodyComponent, 0x38);   //linker!
-		DEFINE_MEMBER_N (CGameSceneNode*, m_pGameSceneNode, 0x328);   //linker!
-		DEFINE_MEMBER_N (int32_t, pawnHealth, 0x344);
-		DEFINE_MEMBER_N (uint8_t, isAlive, 0x348);
-		DEFINE_MEMBER_N (uint32_t, m_fFlags, 0x3EC);
-		DEFINE_MEMBER_N (Vec3, vOldOrigin, 0x1324);
-		DEFINE_MEMBER_N (char *, playerName, 0x660);
-		DEFINE_MEMBER_N (uintptr_t, CGlowProperty, 0xC00);
-		DEFINE_MEMBER_N (Color, m_glowColorOverride, 0x40);
-		DEFINE_MEMBER_N (bool, m_bGlowing, 0x51);
-		DEFINE_MEMBER_N (uint32_t, m_hOriginalController, 0x1508);   //linker!
-        DEFINE_MEMBER_N (Vec3, m_vecViewOffset, 0xCB0);   //linker!
-        DEFINE_MEMBER_N (Vec3, v_angle, 0x124c);   //linker!
-
-
-
-	};
-
-	bool isInFov = false;
-};
-
 
 class Players {
 public:
@@ -118,6 +92,7 @@ public:
 	uintptr_t clientDll;
 	uintptr_t engine2Dll;
 	DWORD pMaxIndex;
+    std::vector <C_BaseEntity *> CBaseEntityVector;
 	std::vector<C_PlayerController *> ControllerVector;
 	std::vector<C_PlayerPawn *> PawnVector;
 	std::vector<Players *> PlayersVector;
@@ -135,14 +110,14 @@ public:
 
 	void init ( ) {
 		clientDll = (uintptr_t)GetModuleHandle ("client.dll");
-		pEntityList = (uintptr_t)GetModuleHandle ("client.dll") + (uintptr_t)0x1A369E0;
-		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5D728) + (uintptr_t)0x20F0);
+		pEntityList = (uintptr_t)GetModuleHandle ("client.dll") + (uintptr_t)0x1A36A00;
+		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5D738) + (uintptr_t)0x20F0);
 		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip (iHelper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
 		engine2Dll = (uintptr_t)GetModuleHandle ("engine2.dll");
-        viewangles = (Vec3 *)(clientDll + 0x1AACA60);
+        viewangles = (Vec3 *)(clientDll + 0x1AACA70);
 	}
 
-	std::string GetSchemaName (void *entity);
+    std::string GetSchemaName (void *entity);
 
 	void *GetEntityByIndexFunction (int Index);
 

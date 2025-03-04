@@ -2,11 +2,15 @@
 
 #include "../../globals.h"
 #include "../../Classes/Classes.h"
+#include "../../EntityManager/EntityManager.h"
+
+#include <string.h>
 
 class Visual
 {
 public:
 
+    Visual ( );
 
     class LightningModulation {
     public:
@@ -47,6 +51,16 @@ public:
 
     };
     CreateMaterial m_CreateMaterial;
+    
+
+    class SetTypeKV3 {
+    public:
+
+        int (__fastcall *SetTypeKV3)(void *, unsigned int, unsigned int);
+
+    };
+    SetTypeKV3 m_SetTypeKV3;
+
 };
 
 inline Visual *iVisual = new Visual ( );

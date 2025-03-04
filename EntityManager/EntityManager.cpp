@@ -1,10 +1,5 @@
 #include "EntityManager.h"
-#include "../math/vector.h"
-#include "../includes/imgui/imgui.h"
-#include "../globals.h"
-#include <algorithm> 
-#include <iostream>
-#include <string>
+
 
 std::string GameEntitySystem::GetSchemaName (void *entity)
 {
@@ -13,6 +8,10 @@ std::string GameEntitySystem::GetSchemaName (void *entity)
 
 	const uintptr_t entity_class_info = *(uintptr_t *)(entity_identity + 0x8);
 	if (!entity_class_info)return "";
+
+
+	const char *distinguisher = *(char **)(entity_identity + 0x20);
+	if (!distinguisher || strcmp(distinguisher,"c_cs_observer_for_precache")==0) return "";
 
 	const uintptr_t schema_class_info_data = *(uintptr_t *)(entity_class_info + 0x30);
 	if (!schema_class_info_data)return "";
@@ -37,11 +36,12 @@ void *GameEntitySystem::GetEntityByIndexFunction (int Index)
 
 void GameEntitySystem::getGameEntities ( ) {
 
-	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5D728) + (uintptr_t)0x20F0);
+	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5D738) + (uintptr_t)0x20F0);
 
 	ControllerVector.clear ( );
 	PawnVector.clear ( );
 	SmokeGrenadeVector.clear ( );
+	CBaseEntityVector.clear ( );
 
 	for (unsigned int i = 0; i < pMaxIndex; i++) {
 
@@ -50,50 +50,58 @@ void GameEntitySystem::getGameEntities ( ) {
 		if (!Entity)
 			continue;
 
+		auto name = GetSchemaName (Entity);
+
 		if (GetSchemaName (Entity) == ("C_CSPlayerPawnBase")) {
 
 			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
-
-			if (Pawn->pawnHealth > 0 && Pawn->pawnHealth <= 100 && Pawn->isAlive == 0) {
-				PawnVector.push_back (Pawn);
-				continue;
-			}
+			PawnVector.push_back (Pawn);
 		}
 
 		if (GetSchemaName (Entity) == ("CBasePlayerController")) {
 
 			C_PlayerController *Controller = (C_PlayerController *)Entity;
-
-			if (Controller->pawnIsAlive)
-			{
-				ControllerVector.push_back (Controller);
-				continue;
-			}
+			ControllerVector.push_back (Controller);
 		}
 
+
 		if (GetSchemaName (Entity) == ("C_BaseCSGrenadeProjectile")) {
-			C_SmokeGrenadeProjectile *SmokeProjectile = (C_SmokeGrenadeProjectile *)Entity;
+			C_SmokeGrenadeProjectile *SmokeProjectile = (C_SmokeGrenadeProjectile *)Entity;		 
 			SmokeGrenadeVector.push_back (SmokeProjectile);
+		}
+
+		if (GetSchemaName (Entity) == ("C_BaseEntity")) {
+
+			C_BaseEntity *BaseEntity = (C_BaseEntity *)Entity;
+			CBaseEntityVector.push_back (BaseEntity);
+
+		}
+
+		if (GetSchemaName (Entity) == ("C_BaseEntity")) {
+
+			C_BaseEntity *BaseEntity = (C_BaseEntity *)Entity;
+			CBaseEntityVector.push_back (BaseEntity);
+
 		}
 	}
 
 }
 
 
-
+//It's taking every player Alive AND Dead
 void GameEntitySystem::getAllPlayers ( ) {
 
 	getGameEntities ( );
 	PlayersVector.clear ( );
 
-	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x188AF10);
+	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x188AF20);
 
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
 		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
 			if (PawnVector[i]->m_hOriginalController == ControllerVector[j]->m_hOriginalControllerOfCurrentPawn) {
 				if (PawnVector[i] == localPlayerPawn) {
 					LocalPlayerPawn = PawnVector[i];
-					LocalPlayerController = ControllerVector[i];
+					LocalPlayerController = ControllerVector[j];
 					continue;
 				}
 				PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j]));
@@ -101,7 +109,6 @@ void GameEntitySystem::getAllPlayers ( ) {
 			}
 		}
 	}
-
 }
 
 void GameEntitySystem::getClosetEnemis ( )
@@ -123,12 +130,12 @@ void GameEntitySystem::getClosetEnemis ( )
 
 
 void GameEntitySystem::getEnemisByFov ( ) {
-	Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AACA60);
+	Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AACA70);
 	float distance;
 
 	if (!viewangles) return; 
 
-	getAllPlayers ( ); 
+	getAllPlayers ( );
 
 	if (PlayersVector.size ( ) < 1) return; 
 
@@ -165,7 +172,7 @@ void GameEntitySystem::getEnemisByFov ( ) {
 
 			bool x = false, y = false;
 
-			if (IsTargetWithinFOV (targetX, targetY, viewangles->x, viewangles->y, globals::aimbotFov, distance)) {
+			if (IsTargetWithinFOV (targetX, targetY, viewangles->x, viewangles->y, Globals::aimbotFov, distance)) {
 				PlayersVector[j]->Pawn->isInFov = true;
 				x = true;
 			}
@@ -173,7 +180,7 @@ void GameEntitySystem::getEnemisByFov ( ) {
 				PlayersVector[j]->Pawn->isInFov = false;
 
 			}
-			if (IsTargetWithinFOV (targetXTWO, targetYTWO, viewangles->x, viewangles->y, globals::aimbotFov, distance)) {
+			if (IsTargetWithinFOV (targetXTWO, targetYTWO, viewangles->x, viewangles->y, Globals::aimbotFov, distance)) {
 				PlayersVector[j+1]->Pawn->isInFov = true;
 				y = true;
 			}
