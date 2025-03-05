@@ -78,10 +78,11 @@ class Players {
 public:
 	C_PlayerPawn *Pawn;
 	C_PlayerController *Controller;
+    C_PlayerPawn *ObserverPawn;
 
-	Players ( ) : Pawn (nullptr), Controller (nullptr) {}
-	Players (C_PlayerPawn *pawn, C_PlayerController *controller)
-		: Pawn (pawn), Controller (controller) {
+	Players ( ) : Pawn (nullptr), Controller (nullptr), ObserverPawn(nullptr) {}
+	Players (C_PlayerPawn *pawn, C_PlayerController *controller, C_PlayerPawn *observerPawn)
+		: Pawn (pawn), Controller (controller), ObserverPawn(observerPawn) {
 	}
 };
 
@@ -95,6 +96,7 @@ public:
     std::vector <C_BaseEntity *> CBaseEntityVector;
 	std::vector<C_PlayerController *> ControllerVector;
 	std::vector<C_PlayerPawn *> PawnVector;
+    std::vector<C_PlayerPawn *> ObserverPawnVector;
 	std::vector<Players *> PlayersVector;
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
 	float (*ViewMatrix)[4][4];
@@ -102,6 +104,7 @@ public:
     Vec3 *viewangles;
 
 	C_PlayerController *LocalPlayerController;
+    C_PlayerPawn *LocalPlayerObserver;
 	int indexes = 0;
 
 	GameEntitySystem ( ) {

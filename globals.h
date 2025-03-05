@@ -1,6 +1,8 @@
 #pragma once
 
 #include "math/vector.h"
+#include <vector>
+#include <iostream>
 
 namespace Globals {
     extern float chamsColor[4];
@@ -37,8 +39,11 @@ namespace Globals {
     extern float worldModulationColor[3];
     extern byte lightType;
     extern float lightIntensity;
+    
+    extern std::vector<std::string> Spectators;
 
     extern float AAPitch;
     extern float AAJaw;
+    extern bool ShowSpectators;
 
 };

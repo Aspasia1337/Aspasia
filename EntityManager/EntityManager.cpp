@@ -11,7 +11,11 @@ std::string GameEntitySystem::GetSchemaName (void *entity)
 
 
 	const char *distinguisher = *(char **)(entity_identity + 0x20);
-	if (!distinguisher || strcmp(distinguisher,"c_cs_observer_for_precache")==0) return "";
+	if (!distinguisher) return "";
+
+	if (strcmp (distinguisher, "c_cs_observer_for_precache") == 0) {
+		return "c_cs_observer_for_precache";
+	}
 
 	const uintptr_t schema_class_info_data = *(uintptr_t *)(entity_class_info + 0x30);
 	if (!schema_class_info_data)return "";
@@ -42,6 +46,7 @@ void GameEntitySystem::getGameEntities ( ) {
 	PawnVector.clear ( );
 	SmokeGrenadeVector.clear ( );
 	CBaseEntityVector.clear ( );
+	ObserverPawnVector.clear ( );
 
 	for (unsigned int i = 0; i < pMaxIndex; i++) {
 
@@ -64,6 +69,12 @@ void GameEntitySystem::getGameEntities ( ) {
 			ControllerVector.push_back (Controller);
 		}
 
+		// This means player is an Observer ~ Useful for Spectators
+		if (GetSchemaName (Entity) == "c_cs_observer_for_precache") {
+
+			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
+			ObserverPawnVector.push_back (Pawn);
+		}
 
 		if (GetSchemaName (Entity) == ("C_BaseCSGrenadeProjectile")) {
 			C_SmokeGrenadeProjectile *SmokeProjectile = (C_SmokeGrenadeProjectile *)Entity;		 
@@ -94,18 +105,24 @@ void GameEntitySystem::getAllPlayers ( ) {
 	getGameEntities ( );
 	PlayersVector.clear ( );
 
-	C_PlayerPawn* localPlayerPawn = *(C_PlayerPawn**)(clientDll + 0x188AF20);
+	C_PlayerController * localPlayerController = *(C_PlayerController**)(clientDll + 0x1A88080);
 
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
 		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
 			if (PawnVector[i]->m_hOriginalController == ControllerVector[j]->m_hOriginalControllerOfCurrentPawn) {
-				if (PawnVector[i] == localPlayerPawn) {
-					LocalPlayerPawn = PawnVector[i];
-					LocalPlayerController = ControllerVector[j];
-					continue;
+				for (int k = 0; k < ObserverPawnVector.size ( );k++) {
+					if (PawnVector[i]->m_hOriginalController == ObserverPawnVector[k]->m_hOriginalController) {
+						if (ControllerVector[j] == localPlayerController) {
+							LocalPlayerPawn = PawnVector[i];
+							LocalPlayerController = ControllerVector[j];
+							LocalPlayerObserver = ObserverPawnVector[k];
+							continue;
+						}
+						PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j], ObserverPawnVector[k]));
+						break;
+					}
 				}
-				PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j]));
-				break;
+
 			}
 		}
 	}
