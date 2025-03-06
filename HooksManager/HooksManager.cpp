@@ -289,6 +289,22 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 	if (iHooksManager->m_CreateMove.isPlayerInGame ( )) {
 		iGameEntitySystem->getEnemisByFov ( );
+	if (Globals::ShowSpectators) {
+		Globals::Spectators.clear ( );
+		for (int i = 0; i < iGameEntitySystem->PlayersVector.size ( );i++) {
+			if (iGameEntitySystem->LocalPlayerPawn->pawnHealth <= 0) {
+				continue;
+			}
+			if ( iGameEntitySystem->PlayersVector[i]->Pawn->pawnHealth == 0 && iGameEntitySystem->PlayersVector[i]->ObserverPawn->m_pObserverServices->m_hObserverTarget == iGameEntitySystem->LocalPlayerController->m_hPawn ) {
+				Globals::Spectators.push_back(iGameEntitySystem->PlayersVector[i]->Controller->m_sSanitizedPlayerName);
+			}
+		}
+	}
+
+
+
+	//if (iHooksManager->m_CreateMove.isPlayerInGame ( ) && iGameEntitySystem->LocalPlayerPawn->pawnHealth >0) {
+		/*iGameEntitySystem->getEnemisByFov ( );
 
 		if (iGameEntitySystem->PlayersVector.size ( ) >= 1 && Globals::CreateMoveHook && GetAsyncKeyState (RI_MOUSE_LEFT_BUTTON_DOWN & 1) && iGameEntitySystem->PlayersVector[0]->Pawn->isInFov) {
 			if (iGameEntitySystem->PlayersVector[0]->Pawn->pawnHealth > 0) {
