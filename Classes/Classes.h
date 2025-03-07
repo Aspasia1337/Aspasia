@@ -5,6 +5,7 @@
 #define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
 
 #include "../math/vector.h"
+#include <unordered_map>
 
 class C_BaseEntity {
 public:
@@ -75,6 +76,7 @@ public:
         DEFINE_MEMBER_N (uint32_t, pawnHealth, 0x818);
         DEFINE_MEMBER_N (uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); //linker!
         DEFINE_MEMBER_N (char*, m_sSanitizedPlayerName, 0x770); //linker!
+        DEFINE_MEMBER_N (uint32_t, ping, 0x740);
 
     };
 };
@@ -157,9 +159,13 @@ public:
         DEFINE_MEMBER_N (Vec3, v_angle, 0x124c);   //linker!
         DEFINE_MEMBER_N (CPlayer_CameraServices *, m_pCameraServices, 0x11E0);   //linker!
         DEFINE_MEMBER_N (CPlayer_ObserverServices*, m_pObserverServices, 0x11C0);
-    
-
+        DEFINE_MEMBER_N (uint32_t, ObserverEntityHandle, 0x1510); // m_hDetectParentChange TODO MAKE THIS C_PLAYEROBSERVER AND NOT PAWN
     };
+
+
+
+    C_PlayerPawn *GetSpectator (std::unordered_map < uint32_t, C_PlayerPawn *> PawnMap);
+    C_PlayerPawn *GetPawn (std::unordered_map < uint32_t, C_PlayerPawn *> SpectatorMap);
 
     bool isInFov = false;
 };
