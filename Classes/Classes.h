@@ -13,6 +13,7 @@ public:
     };
 };
 
+
 struct Color {
     float x; //  (B)
     float y; //  (G)
@@ -260,4 +261,16 @@ private:
     char pad_0120[0x4];
 public:
     CAggregateSceneObjectDataWorld *array; // 0x128
+};
+
+class Players {
+public:
+    C_PlayerPawn *Pawn;
+    C_PlayerController *Controller;
+    C_PlayerPawn *ObserverPawn;
+
+    Players ( ) : Pawn (nullptr), Controller (nullptr), ObserverPawn (nullptr) {}
+    Players (C_PlayerPawn *pawn, C_PlayerController *controller, C_PlayerPawn *observerPawn)
+        : Pawn (pawn), Controller (controller), ObserverPawn (observerPawn) {
+    }
 };
