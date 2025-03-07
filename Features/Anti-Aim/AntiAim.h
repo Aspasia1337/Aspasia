@@ -6,6 +6,9 @@ class AntiAim
 {
 	
 public:
+
+	float velocidad = 0.0f;
+
 	static Vec3 PlayerAngles;  // Store Player Angles
 
 	void OnMove (CCSGOInput *CCSGOInput, CUserCmd *UserCmd);

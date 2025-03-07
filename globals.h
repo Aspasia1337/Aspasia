@@ -46,4 +46,6 @@ namespace Globals {
     extern float AAJaw;
     extern bool ShowSpectators;
 
+    extern uint32_t ping;
+
 };

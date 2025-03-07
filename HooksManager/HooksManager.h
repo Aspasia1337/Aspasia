@@ -88,6 +88,8 @@ enum class BoneIDs
 
 class HooksManager
 {
+private:
+
 public:
 
     Vec3 storedViewAngles;
@@ -100,10 +102,6 @@ public:
 
 	bool initHook ( );
 
-
-
-
-
 	//void __fastcall createMove(__int64 *a1, int a2, char a3)
 	class CreateMove {
 
@@ -111,9 +109,7 @@ public:
 		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput * csgoInput, __int64 nSlot, bool bActivate);
 		static CreateMoveFunction oCreateMove;
 		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64 nSlot, bool bActivate);
-        bool isPlayerInGame (void);
-
-
+        static bool isPlayerInGame (void);
 	};
 	CreateMove m_CreateMove;
 
@@ -155,7 +151,6 @@ public:
 	
 
 
-
     class OverrideViewClass {
     public:
         typedef void (__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
@@ -165,16 +160,21 @@ public:
 
     OverrideViewClass m_OverrideViewFunction;
    
+    class FrameStageNotify {
+    public:
+        typedef int64_t (__fastcall *FrameStageNotifyFunction)(__int64, int);
+        static FrameStageNotifyFunction oFrameStageNotify;
+        static void __fastcall hFrameStageNotify (__int64 a1, int a2);
+    };
 
-
-
+    FrameStageNotify m_FrameStageNotify;
 
 
     class WorldModulation
     {
     public:
-        typedef void *(__fastcall *oModulateWorldColorFn)(CAggregateSceneObjectWorld *, void *);
-        static oModulateWorldColorFn oModulateWorldColor;
+        typedef void *(__fastcall *ModulateWorldColorFn)(CAggregateSceneObjectWorld *, void *);
+        static ModulateWorldColorFn oModulateWorldColor;
         static void *__fastcall hModulateWorldColor (CAggregateSceneObjectWorld *pAggregateSceneObject, void *a2);
     };
 
@@ -185,7 +185,27 @@ public:
     static calcBonesFunction calcBones;
 
 
+    class OnAddEntity {
+    public:
+        typedef int64_t (__fastcall *OnAddEntityFunction)(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
+        static OnAddEntityFunction oOnAddEntity;
+        static void __fastcall hOnAddEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
 
+    };
+
+    OnAddEntity m_OnAddEntity;
+
+
+
+    class OnRemoveEntity {
+    public:
+        typedef int64_t (__fastcall *OnRemoveEntityFunction)(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
+        static OnRemoveEntityFunction oOnRemoveEntity;
+        static void __fastcall hOnRemoveEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
+
+    };
+
+    OnRemoveEntity m_OnRemoveEntity;
 
 
 };

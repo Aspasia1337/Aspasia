@@ -31,6 +31,7 @@ void AntiAim::OnMove (CCSGOInput *CCSGOInput, CUserCmd* UserCmd) {
 
 	// Override angles with Anti Aim Angles
 	Vec3 TempAngles = *new Vec3 (Globals::AAPitch, Globals::AAJaw, 0.0f);
+
 	CorrectionFromView (TempAngles,PlayerAngles);
 	UserCmd->CBaseUserCmdPB->CMsgQAngle->ViewAngles = TempAngles;
 

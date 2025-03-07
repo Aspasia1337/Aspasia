@@ -65,7 +65,7 @@ public:
             iHelper->m_Console.printMessage (WARNING, "Failed to resolve address for", interfaceName);
         }
         else {
-            iHelper->m_Console.printMessage(WARNING,"Found", interfaceName, "at", resolvedAddress);
+            iHelper->m_Console.printMessage(DEBUG,"Found", interfaceName, "at", resolvedAddress);
         }
 
         return resolvedAddress;

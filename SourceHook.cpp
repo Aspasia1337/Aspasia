@@ -17,7 +17,7 @@
 
 
 
-namespace globals {
+namespace Globals {
     float chamsColor[4] = { 1, 1, 1, 1 };
     int tab = 0;
     int glowType = 0;
@@ -39,7 +39,7 @@ namespace globals {
     bool lightModulation = false;
     bool worldModulation = false;
     bool bhop = false;
-    bool antiAim = false;
+    bool AntiAim = false;
     bool thirdPerson = false;
 
     float fov1;
@@ -49,48 +49,21 @@ namespace globals {
     Vec3 viewAngles;
 
 
-    float smokeColorRGB[3] = { 0.0f, 0.0f, 0.0f }; // Inicializamos en negro
+    float smokeColorRGB[3] = { 0.0f, 0.0f, 0.0f }; 
     float lightModulationColor[3] = { 1.0f, 1.0f, 1.0f };
     float worldModulationColor[3] = { 1.0f, 1.0f, 1.0f };
+
+    float AAPitch = 0;
+    float AAJaw = 0;
+
+    bool ShowSpectators = 0;
+    std::vector<std::string> Spectators;
+
+    uint32_t ping = 0;
 
     float lightIntensity = 1;
     byte lightType = 0x02;
 }
-
-/*
-DWORD WINAPI mainThread(HMODULE hModule) {
-
-
-    bool glow = false;
-
-
-    while (1) {
-         if (GetAsyncKeyState(VK_NUMPAD0) & 1) {
-             glow = !glow;
-         }
-         if (GetAsyncKeyState(VK_INSERT) & 1)
-         {
-
-         }
-         if (GetAsyncKeyState(VK_NUMPAD1) & 1)
-         {
-             break;
-
-         }
-
-         if (glow) {
-
-             //cgame->glowPatch();
-             cgame->getAllPlayers ( );
-             cgame->renderDot ( );
-         }
-    }
-
-    FreeLibraryAndExitThread(hModule,0);
-    return 0;
-}
-
-*/
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved){
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {

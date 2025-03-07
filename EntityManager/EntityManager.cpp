@@ -122,11 +122,11 @@ void GameEntitySystem::getAllPlayers ( ) {
 						break;
 					}
 				}
-
 			}
 		}
 	}
 }
+
 
 void GameEntitySystem::getClosetEnemis ( )
 {
@@ -143,8 +143,6 @@ void GameEntitySystem::getClosetEnemis ( )
 	}
 
 }
-
-
 
 void GameEntitySystem::getEnemisByFov ( ) {
 	Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AACA70);
@@ -222,4 +220,46 @@ void GameEntitySystem::getEnemisByFov ( ) {
 		}
 	}
 }
+
+C_PlayerPawn *GameEntitySystem::GetPlayerPawn ( )
+{
+	C_PlayerPawn *LocalPlayerPawn;
+
+	LocalPlayerPawn = *(C_PlayerPawn **)(iGameEntitySystem->clientDll + 0x188AF20);
+
+	if (!LocalPlayerPawn) return nullptr;
+
+	return LocalPlayerPawn;
+}
+
+C_PlayerController *GameEntitySystem::GetPlayerController ( )
+{
+	C_PlayerController *LocalPlayerController;
+	LocalPlayerController = *(C_PlayerController **)(iGameEntitySystem->clientDll + 0x1A88080);
+
+	if(!LocalPlayerController) return nullptr;
+	
+	return LocalPlayerController;
+}
+
+C_PlayerController *GameEntitySystem::GetControllerFromPawn (C_PlayerPawn *Pawn)
+{
+	for (auto &controller : ControllerMap) {
+		if (controller.second->m_hOriginalControllerOfCurrentPawn == Pawn->m_hOriginalController)
+			return controller.second;
+	}
+
+	return nullptr;
+}
+
+C_PlayerPawn *GameEntitySystem::GetPawnFromObserver (C_PlayerPawn *Observer)
+{
+	for (auto &pawn : PawnMap) {
+		if (pawn.second->m_hOriginalController == Observer->m_hOriginalController)
+			return pawn.second;
+	}
+
+	return nullptr;
+}
+
 

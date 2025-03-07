@@ -9,7 +9,8 @@ void Visuals::glowPlayers (uint32_t glowType , float  chamsColor [4])
 {
 	for (unsigned i = 0; i < iGameEntitySystem->PawnVector.size ( );i++) {
 
-		if (iGameEntitySystem->PawnVector[i] == iGameEntitySystem->LocalPlayerPawn)
+		if (iGameEntitySystem->PawnVector[i] == iGameEntitySystem->LocalPlayerPawn 
+			|| iGameEntitySystem->PawnVector[i]->pawnHealth <=0 || iGameEntitySystem->PawnVector[i]->pawnHealth>100)
 			continue;
 
 		DWORD colorArgb = ((DWORD)(chamsColor[3] * 255) << 24) |  // Alpha

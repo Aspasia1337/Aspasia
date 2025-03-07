@@ -4,90 +4,28 @@
 #include <iostream>
 #include <vector>
 #include <type_traits>
+#include <algorithm> 
+#include <string>
 
 #include "../helper/helper.h"
-
+#include "../Classes/Classes.h"
+#include "../globals.h"
 #include "../math/vector.h"
+#include "../includes/imgui/imgui.h"
 
-#define STR_MERGE_IMPL(a, b) a##b
-#define STR_MERGE(a, b) STR_MERGE_IMPL(a, b)
-#define MAKE_PAD(size) STR_MERGE(_pad, __COUNTER__)[size]
-#define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
+#include <unordered_map>
 
-
-struct Color {
-	float x; //  (B)
-	float y; //  (G)
-	float z; //  (R)
-	float w; //  (A)
-};
-
-class C_PlayerController {
-public:
-	union {
-		//              Type     Name    Offset
-		DEFINE_MEMBER_N (uint32_t, m_hPawn, 0x62c);
-		DEFINE_MEMBER_N (char, m_iszPlayerName, 0x660);
-		DEFINE_MEMBER_N (bool, pawnIsAlive, 0x814);
-		DEFINE_MEMBER_N (uint32_t, pawnHealth, 0x818);
-		DEFINE_MEMBER_N (uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); //linker!
-
-	};
-};
-
-class C_SmokeGrenadeProjectile {
-public:
-	union {
-		DEFINE_MEMBER_N (bool, bDidSmokeEffect, 0x1214);
-		DEFINE_MEMBER_N (Vec3, smokeColor, 0x121C);
-
-	};
-};
-
-class CGameSceneNode {
-public:
-    union {
-        //              Type     Name    Offset
-        DEFINE_MEMBER_N (uint32_t, m_modelState, 0x170);   //linker!
     };
 
 };
 
-
-class CSkeletonInstance {
-
-};
-
-class CBodyComponent {
-	DEFINE_MEMBER_N (CSkeletonInstance *, m_skeletonInstance, 0x50);   //linker!
-
-};
-
-class CGameSceneNode {
-public:
-    union {
-        //              Type     Name    Offset
-        DEFINE_MEMBER_N (uint32_t, m_modelState, 0x170);   //linker!
-        DEFINE_MEMBER_N (Vec3, m_vecOrigin, 0x88);   //linker!
     };
 
-};
-
-
-class Players {
-public:
-	C_PlayerPawn *Pawn;
-	C_PlayerController *Controller;
-    C_PlayerPawn *ObserverPawn;
-
-	Players ( ) : Pawn (nullptr), Controller (nullptr), ObserverPawn(nullptr) {}
-	Players (C_PlayerPawn *pawn, C_PlayerController *controller, C_PlayerPawn *observerPawn)
-		: Pawn (pawn), Controller (controller), ObserverPawn(observerPawn) {
-	}
 };
 
 
 class GameEntitySystem {
+
 public:
 	uintptr_t pEntityList;
 	uintptr_t clientDll;
@@ -99,8 +37,16 @@ public:
     std::vector<C_PlayerPawn *> ObserverPawnVector;
 	std::vector<Players *> PlayersVector;
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
+
+    std::unordered_map <uint32_t, C_PlayerPawn *> PawnMap;
+    std::unordered_map <uint32_t, C_PlayerPawn *> ObserverMap;
+    std::unordered_map <uint32_t, C_PlayerController *> ControllerMap;
+
+
+
 	float (*ViewMatrix)[4][4];
 	C_PlayerPawn *LocalPlayerPawn;
+    C_PlayerPawn *Pawn;
     Vec3 *viewangles;
 
 	C_PlayerController *LocalPlayerController;
@@ -108,7 +54,7 @@ public:
 	int indexes = 0;
 
 	GameEntitySystem ( ) {
-		init ( );
+        init ( ); 
 	}
 
 	void init ( ) {
@@ -118,7 +64,7 @@ public:
 		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip (iHelper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
 		engine2Dll = (uintptr_t)GetModuleHandle ("engine2.dll");
         viewangles = (Vec3 *)(clientDll + 0x1AACA70);
-	}
+    }
 
     std::string GetSchemaName (void *entity);
 
@@ -132,6 +78,13 @@ public:
 
 	void getEnemisByFov ( );
 
+    C_PlayerPawn *GetPlayerPawn ( );
+    
+    C_PlayerController *GetPlayerController ( );
+    
+    C_PlayerController *GetControllerFromPawn (C_PlayerPawn *Pawn);
+
+    C_PlayerPawn *GetPawnFromObserver (C_PlayerPawn *Observer);
 };
 
 inline GameEntitySystem *iGameEntitySystem = new GameEntitySystem ( );

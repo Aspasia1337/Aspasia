@@ -11,21 +11,31 @@
 #include "../globals.h"
 #include "../math/vector.h"
 
-#include "../EntityManager/EntityManager.h"
 #include "../visuals/Visuals.h"
 #include "../Interfaces/iManager.h"
 
 #include "../Features/Anti-Aim/AntiAim.h"
 #include "../Features/Movement/Movement.h"
 #include "../Features/Visuals/Visual.h"
+#include "../Features/Legitbot/Legitbot.h"
+#include "../Features/Misc/Misc.h"
+
+#include "../EntityManager/EntityManager.h"
+
+
+
+
 
 HooksManager::CreateMove::CreateMoveFunction HooksManager::CreateMove::oCreateMove = nullptr;
 HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::oCreateMoveTWO = nullptr;
 
 HooksManager::SetViewAngles::SetViewAnglesFunction HooksManager::SetViewAngles::oSetViewAngles = nullptr;
-HooksManager::WorldModulation::oModulateWorldColorFn HooksManager::WorldModulation::oModulateWorldColor = nullptr;
+HooksManager::WorldModulation::ModulateWorldColorFn HooksManager::WorldModulation::oModulateWorldColor = nullptr;
 HooksManager::ValidateInput::ValidateInputFunction HooksManager::ValidateInput::oValidateInput = nullptr;
 HooksManager::OverrideViewClass::OverrideViewFunction HooksManager::OverrideViewClass::oOverrideViewFunction = nullptr;
+HooksManager::FrameStageNotify::FrameStageNotifyFunction HooksManager::FrameStageNotify::oFrameStageNotify = nullptr;
+HooksManager::OnAddEntity::OnAddEntityFunction HooksManager::OnAddEntity::oOnAddEntity = nullptr;
+HooksManager::OnRemoveEntity::OnRemoveEntityFunction HooksManager::OnRemoveEntity::oOnRemoveEntity = nullptr;
 
 
 AntiAim::ValidateInput::ValidateInputFunction AntiAim::ValidateInput::oValidateInput = nullptr;
@@ -34,13 +44,13 @@ Visual::SmokeRender::RenderSmokeParticlesFunction Visual::SmokeRender::oRenderSm
 Visual::FlashEffect::FlashEffectFunction Visual::FlashEffect::oFlashEffect = nullptr;
 Visual::DrawObjectClass::DrawObjectFunction Visual::DrawObjectClass::oDrawObject = nullptr;
 
-
 Vec3 AntiAim::PlayerAngles;
 
 HooksManager::calcBonesFunction calcBones = nullptr;
 Vec3 antiAimAngles;
 
 bool HooksManager::initHook ( ) {
+
 
 	iHelper->m_Console.printMessage (INFO, "Hoosk Manager Init");
 
@@ -138,6 +148,10 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t Create Material HOOKED! ");
 	}
 
+	iVisual->m_SetTypeKV3.SetTypeKV3 = reinterpret_cast<decltype(iVisual->m_SetTypeKV3.SetTypeKV3)>(iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 30 48 8B D9 49"));
+
+
+
 
 	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll","48 89 54 24 ? 53 41 56 41 57");
 
@@ -199,6 +213,43 @@ bool HooksManager::initHook ( ) {
 	}
 
 
+	uint8_t *frameStageNotify = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 5C 24 ? 56 48 83 EC 30 8B 05 ? ? ? ? ");
+
+	hookInit = MH_CreateHook (
+		frameStageNotify,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_FrameStageNotify.hFrameStageNotify),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_FrameStageNotify.oFrameStageNotify));
+
+	if (hookInit == MH_OK) {
+		iHelper->m_Console.printMessage (DEBUG, "\t FRAME STAGE NOTIFY HOOKED! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING FRAME STAGE NOTIFY! ");
+	}
+
+
+
+	uint8_t *onAddEntity = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 74 24 10 57 48 83 EC ? 48 8B F9 41 8B C0 B9 ? ? ? ?");
+
+	hookInit = MH_CreateHook (
+		onAddEntity,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_OnAddEntity.hOnAddEntity),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_OnAddEntity.oOnAddEntity));
+
+
+	uint8_t *onRemoveEntity = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 74 24 10 57 48 83 EC ? 48 8B F9 41 8B C0 25 ? ? ? ?");
+
+	hookInit = MH_CreateHook (
+		onRemoveEntity,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_OnRemoveEntity.hOnRemoveEntity),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_OnRemoveEntity.oOnRemoveEntity));
+
+	if (hookInit == MH_OK) {
+		iHelper->m_Console.printMessage (DEBUG, "\t OnRemoveEntity HOOKED! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING OnRemoveEntity! ");
+	}
 
 	uint8_t *overrideCamera = iHelper->m_Mem.PatternScanner ( "client.dll","48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B FA");
 
@@ -209,11 +260,17 @@ bool HooksManager::initHook ( ) {
 
 
 	if (hookInit == MH_OK) {
-		iHelper->m_Console.printMessage (DEBUG, "\t Override Camera HOOKED! ");
+		iHelper->m_Console.printMessage (DEBUG, "\t OnAddEntity HOOKED! ");
 	}
 	else {
-		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Override Camera! ");
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING OnAddEntity! ");
 	}
+
+
+
+	uint8_t *GetBonePosition = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 4D 8B F1");
+
+	iLegitBot->m_BonePosition.GetBonePositionFunction = reinterpret_cast<decltype(iLegitBot->m_BonePosition.GetBonePositionFunction)>(GetBonePosition);
 
 
 	MH_EnableHook (MH_ALL_HOOKS);
@@ -253,12 +310,13 @@ void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupT
 
 }
 
-
+void __fastcall HooksManager::FrameStageNotify::hFrameStageNotify (__int64 a1, int a2) {
+	oFrameStageNotify (a1, a2);
+}
 
 bool HooksManager::CreateMove::isPlayerInGame (void)
 {
 	int gameState = *(int*)(*(uintptr_t*)((uintptr_t)iGameEntitySystem->engine2Dll + (uintptr_t)0x53FCE0) + (uintptr_t)0x228);
-
 
 	if (gameState == 6)
 		return true;
@@ -267,12 +325,14 @@ bool HooksManager::CreateMove::isPlayerInGame (void)
 }
 
 
-// a2 = basecmd
 void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot, bool bActivate) {
 	float dist;
 
 	oCreateMove (csgoInput, nSlot, bActivate);
 
+	if (isPlayerInGame) {
+		Globals::ping = iGameEntitySystem->GetPlayerController ( )->ping;
+	}
 
 	//if (iHooksManager->m_CreateMove.isPlayerInGame ( ) && iGameEntitySystem->LocalPlayerPawn->pawnHealth >0) {
 		/*iGameEntitySystem->getEnemisByFov ( );
@@ -294,39 +354,78 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 				SetViewAngles::hSetViewAngles ((__int64 *)csgoInput, 0, CalculateAngles (tempMe, tempEnemy, Globals::aimbotFov));
 			}
-		}
+		}*/
 
+	//if (Globals::glow) {
+	//	//iVisuals->glowPlayers (Globals::glowType, Globals::chamsColor);
+	//	//iGameEntitySystem->getGameEntities ( );
 
-
-
-		if (Globals::glow) {
-			iVisuals->glowPlayers (Globals::glowType, Globals::chamsColor);
-		}
-
-
-
-	}
+	//	//uint32_t targetHook;
+	//	//C_PlayerPawn *localPlayerPawn = *(C_PlayerPawn **)(iGameEntitySystem->clientDll+ 0x188AF20);
+	//}
 }
 
+
+void HooksManager::OnAddEntity::hOnAddEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle) {
+	oOnAddEntity (CGameEntitySystem, entityPointer, entityHandle);
+
+	//std::cout << "CREATE" << iGameEntitySystem->GetSchemaName (entityPointer) << " - " << entityPointer <<  std::endl;
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "C_CSPlayerPawnBase")==0) {
+		iGameEntitySystem->PawnMap.insert (std::make_pair (entityHandle, (C_PlayerPawn *)entityPointer));
+		iHelper->m_Console.printMessage (DEBUG, "PAWN ADDED, Pawn size ", iGameEntitySystem->PawnMap.size ( ));
+	}
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "c_cs_observer_for_precache")==0) {
+		iGameEntitySystem->ObserverMap.insert (std::make_pair (entityHandle, (C_PlayerPawn *)entityPointer));
+		iHelper->m_Console.printMessage (DEBUG, "OBSERVER ADDED, Pawn size ", iGameEntitySystem->ObserverMap.size ( ), " ", entityHandle);
+
+	}
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "CBasePlayerController")==0) {
+		iGameEntitySystem->ControllerMap.insert (std::make_pair (entityHandle, (C_PlayerController *)entityPointer));
+		iHelper->m_Console.printMessage (DEBUG, "CONTROLLER ADDED, Pawn size ", iGameEntitySystem->ControllerMap.size ( ), " ", entityHandle);
+	}
+}
+void HooksManager::OnRemoveEntity::hOnRemoveEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle) {
+	oOnRemoveEntity (CGameEntitySystem, entityPointer, entityHandle);
+
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "C_CSPlayerPawnBase")==0) {
+		iGameEntitySystem->PawnMap.erase (entityHandle);
+		iHelper->m_Console.printMessage (DEBUG, "PAWN REMOVED, Pawn size ", iGameEntitySystem->PawnMap.size ( ));
+
+	}
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "c_cs_observer_for_precache")==0) {
+		iGameEntitySystem->ObserverMap.erase(entityHandle);
+		iHelper->m_Console.printMessage (DEBUG, "OBSERVER REMOVED, Pawn size ", iGameEntitySystem->ObserverMap.size ( ));
+	}
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "CBasePlayerController") == 0) {
+		iGameEntitySystem->ControllerMap.erase (entityHandle);
+		iHelper->m_Console.printMessage (DEBUG, "CONTROLLER REMOVED, Pawn size ", iGameEntitySystem->ControllerMap.size ( ));
+	}
+
+}
 
 void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot, CUserCmd *a3) {
 	oCreateMoveTWO (a1, nSlot, a3);
 
+
+
 	if (!a3)
 		return;
 
-
 	if (Globals::AntiAim) {
+		iGameEntitySystem->getAllPlayers ( );
+
 		iAntiAim->OnMove (a1, a3);
 	}
-
 	
 	if (Globals::bhop) {
-		iMovement->BunnyHop ( a3, iGameEntitySystem->LocalPlayerPawn);
+		iMovement->BunnyHop ( a3, iGameEntitySystem->GetPlayerPawn());
+	}
+
+	if (Globals::ShowSpectators) {
+		iMisc->m_Spectators.ShowSpectatorList (iGameEntitySystem->PawnMap, iGameEntitySystem->ControllerMap, iGameEntitySystem->ObserverMap, iGameEntitySystem->GetPlayerPawn(), iGameEntitySystem->GetPlayerController ());
 	}
 
 	return;
-
 }
 
 

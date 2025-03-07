@@ -2,9 +2,7 @@
 
 #include "../../globals.h"
 #include "../../Classes/Classes.h"
-#include "../../EntityManager/EntityManager.h"
 
-#include <string.h>
 
 class Visual
 {

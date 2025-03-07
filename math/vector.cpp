@@ -73,8 +73,8 @@ Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float
     if (!IsTargetWithinFOV (targetY, targetX, viewangles->y, viewangles->x, AimFov, returningDistance))
         return *viewangles;
 
-    qAngles.x = ApproachAngle (targetX, viewangles->x, globals::smoothing);
-    qAngles.y = ApproachAngle (targetY, viewangles->y, globals::smoothing);
+    qAngles.x = ApproachAngle (targetX, viewangles->x, Globals::smoothing);
+    qAngles.y = ApproachAngle (targetY, viewangles->y, Globals::smoothing);
     qAngles.z = 0.f;
 
     NormalizeAngles (qAngles);
