@@ -68,6 +68,8 @@ public:
 
     std::string GetSchemaName (void *entity);
 
+    uint32_t GetEntityHandle (void *entity);
+
 	void *GetEntityByIndexFunction (int Index);
 
 	void getGameEntities ( );

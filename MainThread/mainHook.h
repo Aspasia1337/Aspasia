@@ -178,10 +178,10 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 	}
 
 	if (Globals::ShowSpectators) {
-		ImGui::SetNextWindowPos (ImVec2 (15, 80), ImGuiCond_FirstUseEver);  // Cambiado a FirstUseEver
+		ImGui::SetNextWindowPos (ImVec2 (15, 80), ImGuiCond_FirstUseEver);  
 		ImGui::SetNextWindowBgAlpha (0.8f);
 
-		if (ImGui::Begin ("Spectators List", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize)) {
+		if (ImGui::Begin ("Spectators", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar)) {
 
 			ImGui::TextColored (ImVec4 (1.0f, 1.0f, 1.0f, 1.0f), "Spectators:");
 			ImGui::Separator ( );

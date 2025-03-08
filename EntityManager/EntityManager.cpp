@@ -29,6 +29,19 @@ std::string GameEntitySystem::GetSchemaName (void *entity)
 	return std::string (buffer);
 }
 
+
+uint32_t GameEntitySystem::GetEntityHandle (void *entity)
+{
+	const uintptr_t entity_identity = *(uintptr_t *)((uintptr_t)entity + 0x10);
+	if (!entity_identity)return 0;
+
+	const uint32_t* entityHandle = (uint32_t *)(entity_identity + 0x10);
+	if (!entityHandle)return 0;
+
+	return *(uint32_t *)entityHandle;
+}
+
+
 void *GameEntitySystem::GetEntityByIndexFunction (int Index)
 {
 	// sub_606B10 IDA returns the entity
@@ -60,20 +73,20 @@ void GameEntitySystem::getGameEntities ( ) {
 		if (GetSchemaName (Entity) == ("C_CSPlayerPawnBase")) {
 
 			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
-			PawnVector.push_back (Pawn);
+			PawnMap.insert (std::make_pair (GetEntityHandle (Entity), Pawn));
 		}
 
 		if (GetSchemaName (Entity) == ("CBasePlayerController")) {
 
 			C_PlayerController *Controller = (C_PlayerController *)Entity;
-			ControllerVector.push_back (Controller);
+			ControllerMap.insert (std::make_pair (GetEntityHandle (Entity), Controller));
 		}
 
 		// This means player is an Observer ~ Useful for Spectators
 		if (GetSchemaName (Entity) == "c_cs_observer_for_precache") {
 
 			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
-			ObserverPawnVector.push_back (Pawn);
+			ObserverMap.insert (std::make_pair (GetEntityHandle (Entity), Pawn));
 		}
 
 		if (GetSchemaName (Entity) == ("C_BaseCSGrenadeProjectile")) {

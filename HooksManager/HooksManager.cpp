@@ -100,7 +100,7 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Create Move! ");
 
 
-	uint8_t *createMoveTWO = iHelper->m_Mem.PatternScanner ("client.dll", "48 8B C4 4C 89 40 ? 48 89 48 ? 55 53 57");
+	uint8_t *createMoveTWO = iHelper->m_Mem.PatternScanner ("client.dll", "48 8B C4 4C 89 40 18 48 89 48 08 55 53 57");
 
 	hookInit = MH_CreateHook (
 		createMoveTWO,
@@ -332,6 +332,9 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 	if (isPlayerInGame) {
 		Globals::ping = iGameEntitySystem->GetPlayerController ( )->ping;
+		if (iGameEntitySystem->PawnMap.size ( ) == 0 && iGameEntitySystem->ObserverMap.size ( ) == 0 && iGameEntitySystem->ControllerMap.size()==0){
+			iGameEntitySystem->getGameEntities ( );
+		}
 	}
 
 	//if (iHooksManager->m_CreateMove.isPlayerInGame ( ) && iGameEntitySystem->LocalPlayerPawn->pawnHealth >0) {
@@ -407,13 +410,10 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot,
 	oCreateMoveTWO (a1, nSlot, a3);
 
 
-
 	if (!a3)
 		return;
 
 	if (Globals::AntiAim) {
-		iGameEntitySystem->getAllPlayers ( );
-
 		iAntiAim->OnMove (a1, a3);
 	}
 	
