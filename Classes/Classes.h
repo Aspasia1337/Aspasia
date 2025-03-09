@@ -183,12 +183,16 @@ public:
 class CInButtonStatePb {
 public:
     union {
+        DEFINE_MEMBER_N (uint64_t, nValue, 0x8);
+
     };
 };
 
 class CBaseUserCmdPB {
 public:
     union {
+        DEFINE_MEMBER_N (CInButtonStatePb *, ButtonState, 0x38);
+
         DEFINE_MEMBER_N (CMsgQAngle *, CMsgQAngle, 0x40);
 
     };
@@ -208,6 +212,26 @@ public:
 
     };
 
+};
+
+class ByteColor {
+public:
+    unsigned char r, g, b;
+
+    ByteColor (unsigned char _r = 0, unsigned char _g = 0, unsigned char _b = 0) {
+        r = _r;
+        g = _g;
+        b = _b;
+    }
+};
+
+class C_EnvSky {
+public:
+    union {
+        DEFINE_MEMBER_N (byte, m_vTintColor, 0xD39);
+        DEFINE_MEMBER_N (Color, m_vTintColorLightingOnly, 0xD3D);
+        DEFINE_MEMBER_N (float, m_flBrightnessScale, 0xD44);
+    };
 };
 
 

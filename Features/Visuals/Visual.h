@@ -2,11 +2,15 @@
 
 #include "../../globals.h"
 #include "../../Classes/Classes.h"
-
+#include <algorithm>
 
 class Visual
 {
 public:
+
+
+    static std::vector<C_EnvSky *> CEnvSkyVector;
+
 
     Visual ( );
 
@@ -58,6 +62,14 @@ public:
 
     };
     SetTypeKV3 m_SetTypeKV3;
+
+    class UpdateSkybox {
+    public:
+        void (__fastcall *UpdateSkyboxFunction)(C_EnvSky*);
+
+        void ChangeSkybox (  );
+    };
+    UpdateSkybox m_UpdateSkybox;
 
 };
 

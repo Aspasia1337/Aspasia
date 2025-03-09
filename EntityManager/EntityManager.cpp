@@ -1,5 +1,7 @@
 #include "EntityManager.h"
 
+std::vector<C_EnvSky *> Visual::CEnvSkyVector;
+
 
 std::string GameEntitySystem::GetSchemaName (void *entity)
 {
@@ -16,6 +18,12 @@ std::string GameEntitySystem::GetSchemaName (void *entity)
 	if (strcmp (distinguisher, "c_cs_observer_for_precache") == 0) {
 		return "c_cs_observer_for_precache";
 	}
+
+
+	if (strcmp (distinguisher, "env_sky") == 0) {
+		return "env_sky";
+	}
+	//	iHelper->m_Console.printMessage (WARNING, distinguisher);
 
 	const uintptr_t schema_class_info_data = *(uintptr_t *)(entity_class_info + 0x30);
 	if (!schema_class_info_data)return "";
@@ -60,6 +68,7 @@ void GameEntitySystem::getGameEntities ( ) {
 	SmokeGrenadeVector.clear ( );
 	CBaseEntityVector.clear ( );
 	ObserverPawnVector.clear ( );
+	Visual::CEnvSkyVector.clear ( );
 
 	for (unsigned int i = 0; i < pMaxIndex; i++) {
 
@@ -107,6 +116,14 @@ void GameEntitySystem::getGameEntities ( ) {
 			CBaseEntityVector.push_back (BaseEntity);
 
 		}
+
+		if (GetSchemaName (Entity) == ("env_sky")) {
+
+			C_EnvSky *SkyEnt = (C_EnvSky *)Entity;
+			Visual::CEnvSkyVector.push_back (SkyEnt);
+
+		}
+
 	}
 
 }

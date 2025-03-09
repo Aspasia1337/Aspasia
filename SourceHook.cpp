@@ -41,6 +41,11 @@ namespace Globals {
     bool bhop = false;
     bool AntiAim = false;
     bool thirdPerson = false;
+    bool ChangeSkyColor = false;
+    float SkyModulationColor [3] = {0, 0, 0.};
+    float SkyTintColor[3] = { 0, 0, 0 };
+
+
 
     float fov1;
     float fov2;

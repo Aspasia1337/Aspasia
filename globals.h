@@ -45,6 +45,9 @@ namespace Globals {
     extern float AAPitch;
     extern float AAJaw;
     extern bool ShowSpectators;
+    extern bool ChangeSkyColor;
+    extern float SkyModulationColor[3];
+    extern float SkyTintColor[3];
 
     extern uint32_t ping;
 

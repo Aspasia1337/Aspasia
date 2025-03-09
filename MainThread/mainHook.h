@@ -353,6 +353,21 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 				if (ImGui::Checkbox ("Show Spectators", &Globals::ShowSpectators)) {
 				}
+
+				if (ImGui::Checkbox ("Sky color", &Globals::ChangeSkyColor)) {
+
+				}
+
+				if (Globals::ChangeSkyColor) {
+
+					if (ImGui::ColorEdit3 ("Light Mod##SkyTint", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
+						// Convierte a bytes [0, 255] y guarda en Globals
+					}
+
+
+				}
+
+
 			}
 
 

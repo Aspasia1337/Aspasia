@@ -154,8 +154,8 @@ public:
     class OverrideViewClass {
     public:
         typedef void (__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
-        static OverrideViewFunction oOverrideViewFunction; //static because shared among all the instances of the class
-        static void __fastcall hookOverrideView (__int64 a1, CViewSetupTRY *a2);
+        static OverrideViewFunction oCameraServices; //static because shared among all the instances of the class
+        static void __fastcall hCameraServices (__int64 a1, CViewSetupTRY *a2);
     };
 
     OverrideViewClass m_OverrideViewFunction;
@@ -206,6 +206,9 @@ public:
     };
 
     OnRemoveEntity m_OnRemoveEntity;
+
+
+
 
 
 };

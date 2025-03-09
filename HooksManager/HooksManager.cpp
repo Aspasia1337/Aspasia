@@ -32,7 +32,7 @@ HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::
 HooksManager::SetViewAngles::SetViewAnglesFunction HooksManager::SetViewAngles::oSetViewAngles = nullptr;
 HooksManager::WorldModulation::ModulateWorldColorFn HooksManager::WorldModulation::oModulateWorldColor = nullptr;
 HooksManager::ValidateInput::ValidateInputFunction HooksManager::ValidateInput::oValidateInput = nullptr;
-HooksManager::OverrideViewClass::OverrideViewFunction HooksManager::OverrideViewClass::oOverrideViewFunction = nullptr;
+HooksManager::OverrideViewClass::OverrideViewFunction HooksManager::OverrideViewClass::oCameraServices = nullptr;
 HooksManager::FrameStageNotify::FrameStageNotifyFunction HooksManager::FrameStageNotify::oFrameStageNotify = nullptr;
 HooksManager::OnAddEntity::OnAddEntityFunction HooksManager::OnAddEntity::oOnAddEntity = nullptr;
 HooksManager::OnRemoveEntity::OnRemoveEntityFunction HooksManager::OnRemoveEntity::oOnRemoveEntity = nullptr;
@@ -213,6 +213,18 @@ bool HooksManager::initHook ( ) {
 	}
 
 
+
+
+	iVisual->m_UpdateSkybox.UpdateSkyboxFunction = reinterpret_cast<decltype(iVisual->m_UpdateSkybox.UpdateSkyboxFunction)>(iHelper->m_Mem.PatternScanner ("client.dll", "48 89 5C 24 08 57 48 83 EC 30 48 8B F9 E8 ?? ?? ?? ?? 48 8B 47"));
+
+	if (hookInit == MH_OK) {
+		iHelper->m_Console.printMessage (DEBUG, "\t UpdateSkybox HOOKED! ");
+	}
+	else {
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING UpdateSkybox! ");
+	}
+
+
 	uint8_t *frameStageNotify = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 5C 24 ? 56 48 83 EC 30 8B 05 ? ? ? ? ");
 
 	hookInit = MH_CreateHook (
@@ -251,12 +263,12 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING OnRemoveEntity! ");
 	}
 
-	uint8_t *overrideCamera = iHelper->m_Mem.PatternScanner ( "client.dll","48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B FA");
+	uint8_t *CameraServices = iHelper->m_Mem.PatternScanner ( "client.dll","48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B FA");
 
 	hookInit = MH_CreateHook (
-		overrideCamera,
-		reinterpret_cast<LPVOID *>(iHooksManager->m_OverrideViewFunction.hookOverrideView),
-		reinterpret_cast<LPVOID *>(&iHooksManager->m_OverrideViewFunction.oOverrideViewFunction));
+		CameraServices,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_OverrideViewFunction.hCameraServices),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_OverrideViewFunction.oCameraServices));
 
 
 	if (hookInit == MH_OK) {
@@ -265,6 +277,8 @@ bool HooksManager::initHook ( ) {
 	else {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING OnAddEntity! ");
 	}
+
+
 
 
 
@@ -295,18 +309,12 @@ void *HooksManager::WorldModulation::hModulateWorldColor(CAggregateSceneObjectWo
 	return oModulateWorldColor (a1, a2);
 }
 
-void  HooksManager::OverrideViewClass::hookOverrideView (__int64 a1, CViewSetupTRY * a2) {
+void  HooksManager::OverrideViewClass::hCameraServices (__int64 a1, CViewSetupTRY * a2) {
 	Vec3 test;
-	if (Globals::thirdPerson) {
 
-		//a2->fov = globals::fov1;
-		//a2->fov2 = globals::fov2;
-		//a2->viewmodel = globals::fov3;
-		//test = a2->viewAngles;
+	float exposure;
 
-	}
-
-	return oOverrideViewFunction (a1, a2);
+	return oCameraServices (a1, a2);
 
 }
 
@@ -325,6 +333,7 @@ bool HooksManager::CreateMove::isPlayerInGame (void)
 }
 
 
+
 void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot, bool bActivate) {
 	float dist;
 
@@ -332,10 +341,13 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 	if (isPlayerInGame) {
 		Globals::ping = iGameEntitySystem->GetPlayerController ( )->ping;
-		if (iGameEntitySystem->PawnMap.size ( ) == 0 && iGameEntitySystem->ObserverMap.size ( ) == 0 && iGameEntitySystem->ControllerMap.size()==0){
+		if (iGameEntitySystem->PawnMap.size ( ) <= 1 && iGameEntitySystem->ObserverMap.size ( ) <= 1 && iGameEntitySystem->ControllerMap.size() <= 1){
 			iGameEntitySystem->getGameEntities ( );
 		}
 	}
+
+
+
 
 	//if (iHooksManager->m_CreateMove.isPlayerInGame ( ) && iGameEntitySystem->LocalPlayerPawn->pawnHealth >0) {
 		/*iGameEntitySystem->getEnemisByFov ( );
@@ -423,6 +435,10 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot,
 
 	if (Globals::ShowSpectators) {
 		iMisc->m_Spectators.ShowSpectatorList (iGameEntitySystem->PawnMap, iGameEntitySystem->ControllerMap, iGameEntitySystem->ObserverMap, iGameEntitySystem->GetPlayerPawn(), iGameEntitySystem->GetPlayerController ());
+	}
+
+	if (Globals::ChangeSkyColor) {
+		iVisual->m_UpdateSkybox.ChangeSkybox ( );
 	}
 
 	return;

@@ -66,3 +66,30 @@ Visual::Visual ( )
 {
 
 }
+
+ByteColor ToByteColor (float *floatColor) {
+	return ByteColor (
+		static_cast<unsigned char>(std::clamp (floatColor[0], 0.0f, 1.0f) * 255.0f + 0.5f),
+		static_cast<unsigned char>(std::clamp (floatColor[1], 0.0f, 1.0f) * 255.0f + 0.5f),
+		static_cast<unsigned char>(std::clamp (floatColor[2], 0.0f, 1.0f) * 255.0f + 0.5f)
+	);
+}
+
+
+void Visual::UpdateSkybox::ChangeSkybox ( )
+{
+		for (auto &sky : CEnvSkyVector) {
+			ByteColor color = ToByteColor (Globals::SkyTintColor);
+
+			unsigned char *p = reinterpret_cast<unsigned char *>(&sky->m_vTintColor);
+
+			p[0] = color.r;  
+			p[1] = color.g;  
+			p[2] = color.b;  
+			p[3] = 255;
+
+			sky->m_flBrightnessScale = 1.f;
+			iVisual->m_UpdateSkybox.UpdateSkyboxFunction (sky);
+		}
+	
+}
