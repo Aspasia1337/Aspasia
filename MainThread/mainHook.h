@@ -90,25 +90,25 @@ void InitImGui ( )
 LRESULT __stdcall WndProc (const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	if (ImGui_ImplWin32_WndProcHandler (hWnd, uMsg, wParam, lParam))
-		return true; 
+		return true;
 
 	if (Globals::showMenu) {
 		ImGuiIO &io = ImGui::GetIO ( );
 
 		if (io.WantCaptureKeyboard && (uMsg == WM_KEYDOWN || uMsg == WM_KEYUP || uMsg == WM_CHAR))
-			return 1; 
+			return 1;
 
 		if (io.WantCaptureMouse && (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP ||
 			uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP ||
 			uMsg == WM_MOUSEMOVE || uMsg == WM_MOUSEWHEEL))
-			return 1; 
+			return 1;
 
 		POINT cursorPos;
 		GetCursorPos (&cursorPos);
 		ScreenToClient (hWnd, &cursorPos);
 
 		if (!ImGui::IsAnyItemHovered ( ) && !ImGui::IsWindowHovered (ImGuiHoveredFlags_AnyWindow)) {
-			return 1; 
+			return 1;
 		}
 	}
 
@@ -123,13 +123,14 @@ void DrawFovCircle ( ) {
 	float fovRadius = (Globals::aimbotFov / 90.0f) * (screenSize.x / 2.0f);
 
 	ImGui::GetBackgroundDrawList ( )->AddCircle (
-		screenCenter,  
-		fovRadius,     
-		IM_COL32 (255, 0, 0, 255), 
-		64,            
-		2.0f           
+		screenCenter,
+		fovRadius,
+		IM_COL32 (255, 0, 0, 255),
+		64,
+		2.0f
 	);
 }
+
 
 bool init = false;
 HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags)
@@ -178,7 +179,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 	}
 
 	if (Globals::ShowSpectators) {
-		ImGui::SetNextWindowPos (ImVec2 (15, 80), ImGuiCond_FirstUseEver);  
+		ImGui::SetNextWindowPos (ImVec2 (15, 80), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowBgAlpha (0.8f);
 
 		if (ImGui::Begin ("Spectators", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar)) {
@@ -228,7 +229,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 			ImGui::Separator ( );
 
-			ImGui::Dummy (ImVec2 (0.0f, 10.0f)); 
+			ImGui::Dummy (ImVec2 (0.0f, 10.0f));
 
 			if (Globals::tab == 0) {
 
@@ -241,7 +242,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 					ImGui::InputInt ("Glow Type ", &Globals::glowType);
 
 					ImGui::ColorEdit4 ("Glow Visuals", Globals::chamsColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions);
-					
+
 				}
 
 
@@ -255,13 +256,13 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				}
 				if (Globals::smokeVisuals) {
 					if (ImGui::ColorEdit3 ("Smoke Color", &Globals::smokeColorRGB[0], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
-					
+
 					}
 				}
 
 
 				if (ImGui::Checkbox ("No Smoke", &Globals::noSmoke)) {
-					
+
 				}
 
 			}
@@ -295,26 +296,9 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				if (ImGui::Checkbox ("Anti Aim", &Globals::anti_aim)) {
 				}
 
-				if (ImGui::Checkbox ("Light Modulation", &Globals::lightModulation)) {
 
-				}
 
-				if (Globals::lightModulation) {
-					// ImGuiColorEditFlags_HDR
-					if (ImGui::ColorEdit3 ("Light Mod", &Globals::lightModulationColor[0], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_HDR)) {
 
-					}
-				}
-
-				if (ImGui::Checkbox ("World Modulation", &Globals::worldModulation)) {
-
-				}
-
-				if (Globals::worldModulation) {
-					if (ImGui::ColorEdit3 ("Light Mod", &Globals::worldModulationColor[0], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
-
-					}
-				}
 
 				if (ImGui::Checkbox ("bhop", &Globals::bhop)) {
 
@@ -335,18 +319,14 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				if (ImGui::DragFloat ("fov3", &Globals::fov3, 0.1f, 0.1f, 180.0f)) {
 				}
 
-				if (ImGui::DragFloat ("intensity", &Globals::lightIntensity, 0.001f, 0.0f, 1.0f, "%.3f")) {
+				if (ImGui::DragFloat ("intensity", &Globals::lightIntensity, 0.001f, 0.0f, 10.0f, "%.3f")) {
 				}
-
-
-
-
 			}
 
 
 			if (Globals::tab == 2) {
 
-				if (ImGui::DragFloat ("Pitch Angle",&Globals::AAPitch,15.f,-90.0f,90.0f,"%.2f")) {
+				if (ImGui::DragFloat ("Pitch Angle", &Globals::AAPitch, 15.f, -90.0f, 90.0f, "%.2f")) {
 				}
 				if (ImGui::DragFloat ("Jaw Angle", &Globals::AAJaw, 15.f, -180.0f, 180.0f, "%.2f")) {
 				}
@@ -359,21 +339,33 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				}
 
 				if (Globals::ChangeSkyColor) {
+					if (ImGui::ColorEdit3 ("Sky Color##SkyTint", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
 
-					if (ImGui::ColorEdit3 ("Light Mod##SkyTint", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
-						// Convierte a bytes [0, 255] y guarda en Globals
 					}
+				}
 
+				if (ImGui::Checkbox ("World Modulation", &Globals::worldModulation)) {
 
 				}
 
+				if (Globals::worldModulation) {
+					if (ImGui::ColorEdit3 ("World Modulation##Color", Globals::worldModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
 
+					}
+				}
+
+				if (ImGui::Checkbox ("Light Modulation", &Globals::lightModulation)) {
+
+				}
+
+				if (Globals::lightModulation) {
+					// ImGuiColorEditFlags_HDR
+					if (ImGui::ColorEdit3 ("Light Mod", Globals::lightModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_HDR)) {
+
+					}
+				}
 			}
-
-
-
 		}
-
 		ImGui::End ( );
 	}
 
@@ -382,7 +374,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 	}
 
 	if (Globals::smokeVisuals) {
-		iVisuals->changeSmokeColor ( Globals::smokeColorRGB);
+		iVisuals->changeSmokeColor (Globals::smokeColorRGB);
 	}
 
 	if (Globals::CreateMoveHook) {

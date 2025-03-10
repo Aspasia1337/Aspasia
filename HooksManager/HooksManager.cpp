@@ -30,12 +30,14 @@ HooksManager::CreateMove::CreateMoveFunction HooksManager::CreateMove::oCreateMo
 HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::oCreateMoveTWO = nullptr;
 
 HooksManager::SetViewAngles::SetViewAnglesFunction HooksManager::SetViewAngles::oSetViewAngles = nullptr;
-HooksManager::WorldModulation::ModulateWorldColorFn HooksManager::WorldModulation::oModulateWorldColor = nullptr;
 HooksManager::ValidateInput::ValidateInputFunction HooksManager::ValidateInput::oValidateInput = nullptr;
 HooksManager::OverrideViewClass::OverrideViewFunction HooksManager::OverrideViewClass::oCameraServices = nullptr;
 HooksManager::FrameStageNotify::FrameStageNotifyFunction HooksManager::FrameStageNotify::oFrameStageNotify = nullptr;
 HooksManager::OnAddEntity::OnAddEntityFunction HooksManager::OnAddEntity::oOnAddEntity = nullptr;
 HooksManager::OnRemoveEntity::OnRemoveEntityFunction HooksManager::OnRemoveEntity::oOnRemoveEntity = nullptr;
+HooksManager::IsRelativeMouseMode::IsRelativeMouseModeFunction HooksManager::IsRelativeMouseMode::oIsRelativeMouseMode = nullptr;
+HooksManager::IsRelativeMouseMode::MouseInputFunction HooksManager::IsRelativeMouseMode::oMouseInput = nullptr;
+
 
 
 AntiAim::ValidateInput::ValidateInputFunction AntiAim::ValidateInput::oValidateInput = nullptr;
@@ -43,6 +45,7 @@ Visual::LightningModulation::LightningModulationFunction Visual::LightningModula
 Visual::SmokeRender::RenderSmokeParticlesFunction Visual::SmokeRender::oRenderSmokeParticles = nullptr;
 Visual::FlashEffect::FlashEffectFunction Visual::FlashEffect::oFlashEffect = nullptr;
 Visual::DrawObjectClass::DrawObjectFunction Visual::DrawObjectClass::oDrawObject = nullptr;
+Visual::WorldModulation::ModulateWorldColorFn Visual::WorldModulation::oModulateWorldColor = nullptr;
 
 Vec3 AntiAim::PlayerAngles;
 
@@ -59,17 +62,17 @@ bool HooksManager::initHook ( ) {
 	MH_Initialize ( );
 
 	uint8_t *smokeEffectAddress = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B 9C 24 ? ? ? ? 4D 8B F8 ");
-	
+
 	if (smokeEffectAddress == nullptr)
 		return false;
 
 	hookInit = MH_CreateHook (
 		smokeEffectAddress,
-		reinterpret_cast<LPVOID *>(iVisual->m_SmokeEffect.hRenderSmoke), 
+		reinterpret_cast<LPVOID *>(iVisual->m_SmokeEffect.hRenderSmoke),
 		reinterpret_cast<LPVOID *>(&iVisual->m_SmokeEffect.oRenderSmokeParticles));
-	
-	if(hookInit==MH_OK)
-	iHelper->m_Console.printMessage (DEBUG, "\t Smoke Effect HOOKED! ");
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t Smoke Effect HOOKED! ");
 	else
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING SmokeEffect! ");
 
@@ -153,7 +156,7 @@ bool HooksManager::initHook ( ) {
 
 
 
-	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll","48 89 54 24 ? 53 41 56 41 57");
+	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 89 54 24 ? 53 41 56 41 57");
 
 
 	hookInit = MH_CreateHook (
@@ -170,8 +173,8 @@ bool HooksManager::initHook ( ) {
 
 	hookInit = MH_CreateHook (
 		WorldOverrideAddress,
-		reinterpret_cast<LPVOID *>(iHooksManager->m_WorldModulation.hModulateWorldColor),
-		reinterpret_cast<LPVOID *>(&iHooksManager->m_WorldModulation.oModulateWorldColor));
+		reinterpret_cast<LPVOID *>(iVisual->m_WorldModulation.hModulateWorldColor),
+		reinterpret_cast<LPVOID *>(&iVisual->m_WorldModulation.oModulateWorldColor));
 
 	if (hookInit == MH_OK)
 		iHelper->m_Console.printMessage (DEBUG, "\t World Modulation HOOKED! ");
@@ -192,6 +195,32 @@ bool HooksManager::initHook ( ) {
 	}
 
 
+	uint8_t *isRelativeMouse = (uint8_t *)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 76);
+
+	hookInit = MH_CreateHook (
+		isRelativeMouse,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_IsRelativeMouseMode.hIsRelativeMouseFunction),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_IsRelativeMouseMode.oIsRelativeMouseMode));
+
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t IsRelativeMouseMode HOOKED! ");
+	else
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING IsRelativeMouseMode! ");
+
+
+
+	uint8_t *mouseInput = (uint8_t *)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 17);
+
+	hookInit = MH_CreateHook (
+		mouseInput,
+		reinterpret_cast<LPVOID *>(iHooksManager->m_IsRelativeMouseMode.hMouseInput),
+		reinterpret_cast<LPVOID *>(&iHooksManager->m_IsRelativeMouseMode.oMouseInput));
+
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage (DEBUG, "\t MouseInput HOOKED! ");
+	else
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING MouseInput! ");
 
 
 	//uint8_t * validateInput = (uint8_t*)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 7);
@@ -203,7 +232,7 @@ bool HooksManager::initHook ( ) {
 		reinterpret_cast<LPVOID *>(iAntiAim->mValidateInput.hValidateInput),
 		reinterpret_cast<LPVOID *>(&iAntiAim->mValidateInput.oValidateInput));
 
-	
+
 
 	if (hookInit == MH_OK) {
 		iHelper->m_Console.printMessage (DEBUG, "\t VALIDATE INPUT HOOKED! ");
@@ -263,7 +292,7 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING OnRemoveEntity! ");
 	}
 
-	uint8_t *CameraServices = iHelper->m_Mem.PatternScanner ( "client.dll","48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B FA");
+	uint8_t *CameraServices = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B FA");
 
 	hookInit = MH_CreateHook (
 		CameraServices,
@@ -279,9 +308,6 @@ bool HooksManager::initHook ( ) {
 	}
 
 
-
-
-
 	uint8_t *GetBonePosition = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 4D 8B F1");
 
 	iLegitBot->m_BonePosition.GetBonePositionFunction = reinterpret_cast<decltype(iLegitBot->m_BonePosition.GetBonePositionFunction)>(GetBonePosition);
@@ -291,25 +317,10 @@ bool HooksManager::initHook ( ) {
 	return hookInit;
 }
 
-void *HooksManager::WorldModulation::hModulateWorldColor(CAggregateSceneObjectWorld *a1, void *a2) {
 
 
-	if (Globals::worldModulation) {
-		int count = a1->count;
-		for (int i = 0; i < count; i++) {
-			CAggregateSceneObjectDataWorld *pAggregateSceneObjectData = &a1->array[i];
 
-			pAggregateSceneObjectData->r = Globals::worldModulationColor[0];
-			pAggregateSceneObjectData->g = Globals::worldModulationColor[1];
-			pAggregateSceneObjectData->b = Globals::worldModulationColor[2];
-		}
-
-	}
-
-	return oModulateWorldColor (a1, a2);
-}
-
-void  HooksManager::OverrideViewClass::hCameraServices (__int64 a1, CViewSetupTRY * a2) {
+void  HooksManager::OverrideViewClass::hCameraServices (__int64 a1, CViewSetupTRY *a2) {
 	Vec3 test;
 
 	float exposure;
@@ -324,7 +335,7 @@ void __fastcall HooksManager::FrameStageNotify::hFrameStageNotify (__int64 a1, i
 
 bool HooksManager::CreateMove::isPlayerInGame (void)
 {
-	int gameState = *(int*)(*(uintptr_t*)((uintptr_t)iGameEntitySystem->engine2Dll + (uintptr_t)0x53FCE0) + (uintptr_t)0x228);
+	int gameState = *(int *)(*(uintptr_t *)((uintptr_t)iGameEntitySystem->engine2Dll + (uintptr_t)0x53FCE0) + (uintptr_t)0x228);
 
 	if (gameState == 6)
 		return true;
@@ -341,7 +352,7 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 
 	if (isPlayerInGame) {
 		Globals::ping = iGameEntitySystem->GetPlayerController ( )->ping;
-		if (iGameEntitySystem->PawnMap.size ( ) <= 1 && iGameEntitySystem->ObserverMap.size ( ) <= 1 && iGameEntitySystem->ControllerMap.size() <= 1){
+		if (iGameEntitySystem->PawnMap.size ( ) <= 1 && iGameEntitySystem->ObserverMap.size ( ) <= 1 && iGameEntitySystem->ControllerMap.size ( ) <= 1) {
 			iGameEntitySystem->getGameEntities ( );
 		}
 	}
@@ -371,30 +382,48 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 			}
 		}*/
 
-	//if (Globals::glow) {
-	//	//iVisuals->glowPlayers (Globals::glowType, Globals::chamsColor);
-	//	//iGameEntitySystem->getGameEntities ( );
+		//if (Globals::glow) {
+		//	//iVisuals->glowPlayers (Globals::glowType, Globals::chamsColor);
+		//	//iGameEntitySystem->getGameEntities ( );
 
-	//	//uint32_t targetHook;
-	//	//C_PlayerPawn *localPlayerPawn = *(C_PlayerPawn **)(iGameEntitySystem->clientDll+ 0x188AF20);
-	//}
+		//	//uint32_t targetHook;
+		//	//C_PlayerPawn *localPlayerPawn = *(C_PlayerPawn **)(iGameEntitySystem->clientDll+ 0x188AF20);
+		//}
 }
 
+
+void* HooksManager::IsRelativeMouseMode::hIsRelativeMouseFunction (void *pThisptr, bool bActive) {
+	
+	if (Globals::showMenu) {
+		return oIsRelativeMouseMode (pThisptr, false);
+	}
+	return oIsRelativeMouseMode (pThisptr, true);
+
+}
+
+void HooksManager::IsRelativeMouseMode::hMouseInput (void *pThisptr)
+{
+	if (Globals::showMenu) {
+		return;
+	}
+	oMouseInput (pThisptr);
+	return;
+}
 
 void HooksManager::OnAddEntity::hOnAddEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle) {
 	oOnAddEntity (CGameEntitySystem, entityPointer, entityHandle);
 
 	//std::cout << "CREATE" << iGameEntitySystem->GetSchemaName (entityPointer) << " - " << entityPointer <<  std::endl;
-	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "C_CSPlayerPawnBase")==0) {
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "C_CSPlayerPawnBase") == 0) {
 		iGameEntitySystem->PawnMap.insert (std::make_pair (entityHandle, (C_PlayerPawn *)entityPointer));
 		iHelper->m_Console.printMessage (DEBUG, "PAWN ADDED, Pawn size ", iGameEntitySystem->PawnMap.size ( ));
 	}
-	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "c_cs_observer_for_precache")==0) {
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "c_cs_observer_for_precache") == 0) {
 		iGameEntitySystem->ObserverMap.insert (std::make_pair (entityHandle, (C_PlayerPawn *)entityPointer));
 		iHelper->m_Console.printMessage (DEBUG, "OBSERVER ADDED, Pawn size ", iGameEntitySystem->ObserverMap.size ( ), " ", entityHandle);
 
 	}
-	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "CBasePlayerController")==0) {
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "CBasePlayerController") == 0) {
 		iGameEntitySystem->ControllerMap.insert (std::make_pair (entityHandle, (C_PlayerController *)entityPointer));
 		iHelper->m_Console.printMessage (DEBUG, "CONTROLLER ADDED, Pawn size ", iGameEntitySystem->ControllerMap.size ( ), " ", entityHandle);
 	}
@@ -402,13 +431,13 @@ void HooksManager::OnAddEntity::hOnAddEntity (__int64 CGameEntitySystem, void *e
 void HooksManager::OnRemoveEntity::hOnRemoveEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle) {
 	oOnRemoveEntity (CGameEntitySystem, entityPointer, entityHandle);
 
-	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "C_CSPlayerPawnBase")==0) {
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "C_CSPlayerPawnBase") == 0) {
 		iGameEntitySystem->PawnMap.erase (entityHandle);
 		iHelper->m_Console.printMessage (DEBUG, "PAWN REMOVED, Pawn size ", iGameEntitySystem->PawnMap.size ( ));
 
 	}
-	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "c_cs_observer_for_precache")==0) {
-		iGameEntitySystem->ObserverMap.erase(entityHandle);
+	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "c_cs_observer_for_precache") == 0) {
+		iGameEntitySystem->ObserverMap.erase (entityHandle);
 		iHelper->m_Console.printMessage (DEBUG, "OBSERVER REMOVED, Pawn size ", iGameEntitySystem->ObserverMap.size ( ));
 	}
 	if (strcmp (iGameEntitySystem->GetSchemaName (entityPointer).c_str ( ), "CBasePlayerController") == 0) {
@@ -428,18 +457,20 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot,
 	if (Globals::AntiAim) {
 		iAntiAim->OnMove (a1, a3);
 	}
-	
+
 	if (Globals::bhop) {
-		iMovement->BunnyHop ( a3, iGameEntitySystem->GetPlayerPawn());
+		iMovement->BunnyHop (a3, iGameEntitySystem->GetPlayerPawn ( ));
 	}
 
 	if (Globals::ShowSpectators) {
-		iMisc->m_Spectators.ShowSpectatorList (iGameEntitySystem->PawnMap, iGameEntitySystem->ControllerMap, iGameEntitySystem->ObserverMap, iGameEntitySystem->GetPlayerPawn(), iGameEntitySystem->GetPlayerController ());
+		iMisc->m_Spectators.ShowSpectatorList (iGameEntitySystem->PawnMap, iGameEntitySystem->ControllerMap, iGameEntitySystem->ObserverMap, iGameEntitySystem->GetPlayerPawn ( ), iGameEntitySystem->GetPlayerController ( ));
 	}
 
 	if (Globals::ChangeSkyColor) {
 		iVisual->m_UpdateSkybox.ChangeSkybox ( );
 	}
+	
+	
 
 	return;
 }

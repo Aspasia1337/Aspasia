@@ -19,3 +19,5 @@ C_PlayerPawn *C_PlayerPawn::GetSpectator (std::unordered_map<uint32_t, C_PlayerP
 	}
 	return nullptr;
 }
+
+
