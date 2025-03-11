@@ -4,6 +4,8 @@
 #include "../../Classes/Classes.h"
 #include <algorithm>
 
+
+
 class Visual
 {
 public:
@@ -48,22 +50,6 @@ public:
 	};
 	DrawObjectClass m_DrawObject;
 
-	class CreateMaterial {
-	public:
-
-		int (__fastcall *CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
-
-	};
-	CreateMaterial m_CreateMaterial;
-
-
-	class SetTypeKV3 {
-	public:
-
-		int (__fastcall *SetTypeKV3)(void *, unsigned int, unsigned int);
-
-	};
-	SetTypeKV3 m_SetTypeKV3;
 
 	class UpdateSkybox {
 	private:
@@ -86,8 +72,19 @@ public:
 		static ModulateWorldColorFn oModulateWorldColor;
 		static void* __fastcall hModulateWorldColor (CAggregateSceneObjectWorld *pAggregateSceneObject, void *a2);
 	};
-
 	WorldModulation m_WorldModulation;
+
+	class Chams {
+	public:
+		void *CreateMaterial (const char *szMaterialName, const char szVmatBuffer[]);
+		static bool LoadKV3 (const char buffer[], CKeyValues3 *CkeyVal);
+		static CKeyValues3 *CreateMaterialResource ( );
+
+		static CKeyValues3 *(__fastcall *SetTypeKV3)(CKeyValues3 *, int, unsigned int);
+		static bool (__fastcall *LoadKeyValues)(CKeyValues3 *, void *, const char[], KV3ID_t *, void *, void *, void *, void *, const char *);
+		static int64_t (__fastcall *CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
+	};
+	Chams m_Chams;
 
 };
 

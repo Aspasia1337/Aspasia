@@ -47,9 +47,18 @@ Visual::FlashEffect::FlashEffectFunction Visual::FlashEffect::oFlashEffect = nul
 Visual::DrawObjectClass::DrawObjectFunction Visual::DrawObjectClass::oDrawObject = nullptr;
 Visual::WorldModulation::ModulateWorldColorFn Visual::WorldModulation::oModulateWorldColor = nullptr;
 
+
+CKeyValues3 *(__fastcall *Visual::Chams::SetTypeKV3)(CKeyValues3 *, int, unsigned int) = nullptr;
+bool (__fastcall *Visual::Chams::LoadKeyValues)(CKeyValues3 *, void *, const char[], KV3ID_t *, void *, void *, void *, void *, const char *) = nullptr;
+int64_t (__fastcall *Visual::Chams::CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int) = nullptr;
+
+
+
 Vec3 AntiAim::PlayerAngles;
+ 
 
 HooksManager::calcBonesFunction calcBones = nullptr;
+
 Vec3 antiAimAngles;
 
 bool HooksManager::initHook ( ) {
@@ -140,21 +149,6 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (DEBUG, "\t Draw Object HOOKED! ");
 	else
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Draw Object! ");
-
-	iVisual->m_CreateMaterial.CreateMaterialFunction = reinterpret_cast<decltype(iVisual->m_CreateMaterial.CreateMaterialFunction)>(iHelper->m_Mem.PatternScanner ("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05"));
-
-
-	if (!iVisual->m_CreateMaterial.CreateMaterialFunction) {
-		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Create Material! ");
-	}
-	else {
-		iHelper->m_Console.printMessage (WARNING, "\t Create Material HOOKED! ");
-	}
-
-	iVisual->m_SetTypeKV3.SetTypeKV3 = reinterpret_cast<decltype(iVisual->m_SetTypeKV3.SetTypeKV3)>(iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 30 48 8B D9 49"));
-
-
-
 
 	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 89 54 24 ? 53 41 56 41 57");
 
@@ -307,11 +301,36 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING OnAddEntity! ");
 	}
 
-
 	uint8_t *GetBonePosition = iHelper->m_Mem.PatternScanner ("client.dll", "48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 4D 8B F1");
 
 	iLegitBot->m_BonePosition.GetBonePositionFunction = reinterpret_cast<decltype(iLegitBot->m_BonePosition.GetBonePositionFunction)>(GetBonePosition);
 
+	uint8_t *SetKV3 = iHelper->m_Mem.PatternScanner ("client.dll", "40 53 48 83 EC 30 48 8B D9 49");
+
+	iVisual->m_Chams.SetTypeKV3 = reinterpret_cast<decltype(iVisual->m_Chams.SetTypeKV3)>(SetKV3);
+
+	if (iVisual->m_Chams.SetTypeKV3)
+		iHelper->m_Console.printMessage (DEBUG, "SetTypeKV3 HOOKED!");
+	else
+		iHelper->m_Console.printMessage (WARNING, "Error HOOKING SetTypeKV3!");
+
+	uint8_t *LoadKeyValues = iHelper->m_Mem.GetAbsoluteAddress (iHelper->m_Mem.PatternScanner ("tier0.dll", "E8 ? ? ? ? EB 36 8B 43 10"), 0x1, 0x0);
+
+	iVisual->m_Chams.LoadKeyValues = reinterpret_cast<decltype(iVisual->m_Chams.LoadKeyValues)>(LoadKeyValues);
+	
+	if (iVisual->m_Chams.LoadKeyValues)
+		iHelper->m_Console.printMessage (DEBUG, "LoadKeyValues HOOKED!");
+	else
+		iHelper->m_Console.printMessage (WARNING, "Error HOOKING LoadKeyValues!");
+
+	uint8_t *CreateMaterialFunction = iHelper->m_Mem.PatternScanner ("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05");
+
+	iVisual->m_Chams.CreateMaterialFunction = reinterpret_cast<decltype(iVisual->m_Chams.CreateMaterialFunction)>(CreateMaterialFunction);
+
+	if (iVisual->m_Chams.CreateMaterialFunction)
+		iHelper->m_Console.printMessage (DEBUG, "CreateMaterial HOOKED!");
+	else
+		iHelper->m_Console.printMessage (WARNING, "Error HOOKING CreateMaterial!");
 
 	MH_EnableHook (MH_ALL_HOOKS);
 	return hookInit;

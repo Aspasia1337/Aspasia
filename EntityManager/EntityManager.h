@@ -42,6 +42,7 @@ public:
     std::unordered_map <uint32_t, C_PlayerPawn *> ObserverMap;
     std::unordered_map <uint32_t, C_PlayerController *> ControllerMap;
 
+    //std::vector<C_EnvSky *> CEnvSkyVector;
 
 
 	float (*ViewMatrix)[4][4];

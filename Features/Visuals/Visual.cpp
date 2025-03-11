@@ -117,3 +117,29 @@ void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *
 	}
 	return oModulateWorldColor (pAggregateSceneObject, a2);
 }
+
+void *Visual::Chams::CreateMaterial (const char *szMaterialName, const char szVmatBuffer[])
+{
+	CKeyValues3 *pKeyValue = CreateMaterialResource ( );
+
+	LoadKV3 (szVmatBuffer, pKeyValue);
+
+	void *pCustomMate = {};
+
+	CreateMaterialFunction (nullptr, &pCustomMate, szMaterialName, pKeyValue, 0, 1);
+
+	return pCustomMate;
+}
+
+CKeyValues3 *Visual::Chams::CreateMaterialResource ( )
+{
+	CKeyValues3 *pKeyValue = new CKeyValues3[0x10];
+	return SetTypeKV3 (pKeyValue, 1U, 6U);
+}
+
+bool Visual::Chams::LoadKV3 (const char buffer[], CKeyValues3 *CkeyVal)
+{
+	KV3ID_t kv3ID = KV3ID_t ("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
+
+	return LoadKeyValues (CkeyVal, nullptr, buffer, &kv3ID, nullptr, nullptr, nullptr, nullptr,"");
+}

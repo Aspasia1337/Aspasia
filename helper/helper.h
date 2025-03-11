@@ -66,6 +66,15 @@ public:
 			void **vtable = *static_cast<void ***>(pointer);
 			return vtable[index];
 		}
+
+		template <typename T = std::uint8_t*>
+		T *GetAbsoluteAddress (T *pRelativeAddress, int nPreOffset = 0x0, int nPostOffset = 0x0)
+		{
+			pRelativeAddress += nPreOffset;
+			pRelativeAddress += sizeof (std::int32_t) + *reinterpret_cast<std::int32_t *>(pRelativeAddress);
+			pRelativeAddress += nPostOffset;
+			return pRelativeAddress;
+		}
 	};
 	Memory m_Mem;
 };

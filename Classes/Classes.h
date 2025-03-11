@@ -310,3 +310,17 @@ public:
 		: Pawn (pawn), Controller (controller), ObserverPawn (observerPawn) {
 	}
 };
+
+class CKeyValues3 {
+public:
+	char pad_0100 [0x100];
+	std::uint64_t uKey;
+	void *pValue;
+};
+
+struct KV3ID_t
+{
+	const char *szName;
+	std::uint64_t unk0;
+	std::uint64_t unk1;
+};
