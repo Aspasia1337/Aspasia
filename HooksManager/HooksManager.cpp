@@ -24,8 +24,6 @@
 
 
 
-
-
 HooksManager::CreateMove::CreateMoveFunction HooksManager::CreateMove::oCreateMove = nullptr;
 HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::oCreateMoveTWO = nullptr;
 
@@ -49,10 +47,13 @@ Visual::WorldModulation::ModulateWorldColorFn Visual::WorldModulation::oModulate
 
 
 CKeyValues3 *(__fastcall *Visual::Chams::SetTypeKV3)(CKeyValues3 *, int, unsigned int) = nullptr;
-bool (__fastcall *Visual::Chams::LoadKeyValues)(CKeyValues3 *, void *, const char[], KV3ID_t *, void *, void *, void *, void *, const char *) = nullptr;
+bool (__fastcall *Visual::Chams::LoadKeyValues)(CKeyValues3 *, void *, CUtilsBuff* , KV3ID_t *, void *, void *, void *, void *, const char *) = nullptr;
 int64_t (__fastcall *Visual::Chams::CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int) = nullptr;
 
+ CUtilsBuff *(__fastcall *Visual::Chams::BuffInit)(int a1, int nSize, int a3) = nullptr;
+ void (__fastcall *Visual::Chams::BuffPutString)(CUtilsBuff *, const char *) = nullptr;
 
+void (__fastcall *CUtilsBuff::BufferInit)(CUtilsBuff *, const char *);
 
 Vec3 AntiAim::PlayerAngles;
  
@@ -138,7 +139,7 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING Set View Angles! ");
 
 
-	uint8_t *drawObjectaddrr = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 8B C4 48 89 50 ? 53");
+	uint8_t *drawObjectaddrr = iHelper->m_Mem.PatternScanner ("scenesystem.dll", "48 83 EC 48 48 8B 84 24 ? ? ? ? 48 8D 0D ? ? ? ?");
 
 	hookInit = MH_CreateHook (
 		drawObjectaddrr,
@@ -331,6 +332,18 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (DEBUG, "CreateMaterial HOOKED!");
 	else
 		iHelper->m_Console.printMessage (WARNING, "Error HOOKING CreateMaterial!");
+
+
+	iVisual->m_Chams.InitChams ( );
+	iHelper->m_Console.printMessage (WARNING, "MATERIAL CREATED!");
+
+	uint8_t *BufInit = iHelper->m_Mem.PatternScanner ("tier0.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC 20 33 DB 44 89 41 08");
+
+	iVisual->m_Chams.BuffInit = reinterpret_cast<decltype(iVisual->m_Chams.BuffInit)>(BufInit);
+
+	uint8_t *BuffCopy = iHelper->m_Mem.PatternScanner ("tier0.dll", "E8 ? ? ? ? EB 5F");
+
+	iVisual->m_Chams.BuffPutString = reinterpret_cast<decltype(iVisual->m_Chams.BuffPutString)>(BuffCopy);
 
 	MH_EnableHook (MH_ALL_HOOKS);
 	return hookInit;

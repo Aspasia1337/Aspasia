@@ -33,27 +33,59 @@ void Visual::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float *a3) {
 
 
 void Visual::DrawObjectClass::hDrawObject (void *a1, void *a2, CMeshData *arrayMeshData, int a4, void *a5, void *a6, void *a7, void *a8) {
+void* Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2)
+{
 
-	//CBaseHandle hOwner = arrayMeshData->SceneAnimatableObject->hOwner;
+	if (!arrMeshDraw) {
+		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+	}
 
-	//if (hOwner.nIndex == 0xFFFFFFFF)
-	//	return;
+	auto *sceneObject = arrMeshDraw->SceneAnimatableObject;
+	if (!sceneObject) {
+		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+	}
 
-	//auto pEntity = iGameEntitySystem->GetEntityByIndexFunction (hOwner.nIndex);
-	//
-	//if (pEntity == nullptr) {
-	//	return;
-	//}
+	auto *object = &arrMeshDraw->SceneAnimatableObject->hOwner;
 
-	//auto schemaName = iGameEntitySystem->GetSchemaName (pEntity);
-	//
-	//if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawn").c_str( )) == 0) {
-	//	return;
-	//}
+	if (object == nullptr) {
+		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+	}
 
-	//iHelper->m_Console.printMessage (WARNING, "a");
+	auto *index = &arrMeshDraw->SceneAnimatableObject->hOwner.nIndex;
 
-	return oDrawObject (a1, a2, arrayMeshData, a4, a5, a6, a7, a8);
+	if (index == nullptr) {
+		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+	}
+
+	// Obtener una copia segura del propietario antes de continuar
+	CBaseHandle hOwner = sceneObject->hOwner;
+
+	auto pEntity = iGameEntitySystem->GetEntityByIndexFunction (hOwner.nIndex & 0x7FFF);
+	
+	if (pEntity == nullptr) {
+		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+	}
+	auto schemaName = iGameEntitySystem->GetSchemaName (pEntity);
+
+	
+	if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str( )) == 0) {
+
+		if (pEntity == iGameEntitySystem->GetPlayerPawn()) {
+			if (strcmp(arrMeshDraw->CMaterial->GetName ( ) , "characters/models/shared/arms/glove_hardknuckle/materials/glove_hardknuckle_black.vmat")==0)
+			{
+				arrMeshDraw->CMaterial = iVisual->m_Chams.Material.pMaterial;
+			}
+
+
+			//byte *p = &arrMeshDraw->colVal;
+			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+
+		}
+
+
+	}
+
+	return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }
 
 
@@ -118,13 +150,52 @@ void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *
 	return oModulateWorldColor (pAggregateSceneObject, a2);
 }
 
-void *Visual::Chams::CreateMaterial (const char *szMaterialName, const char szVmatBuffer[])
+
+static constexpr char szVMatBufferGlow2Visible[] =
+R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
+            format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+            {
+                shader = "csgo_effects.vfx"
+                g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
+                g_tNormal = resource:"materials/default/default_normal_tga_7652cb.vtex"
+                g_tMask1 = resource:"materials/default/default_mask_tga_344101f8.vtex"
+                g_tMask2 = resource:"materials/default/default_mask_tga_344101f8.vtex"
+                g_tMask3 = resource:"materials/default/default_mask_tga_344101f8.vtex"
+                g_flOpacityScale = 0.45
+                g_flFresnelExponent = 0.75
+                g_flFresnelFalloff = 1
+                g_flFresnelMax = 0.0
+                g_flFresnelMin = 1
+                F_ADDITIVE_BLEND = 1
+                F_BLEND_MODE = 1	
+                F_TRANSLUCENT = 1
+                F_IGNOREZ = 0
+                F_DISABLE_Z_WRITE = 0
+                F_DISABLE_Z_BUFFERING = 0
+                F_RENDER_BACKFACES = 1
+                g_vColorTint = [1.0, 1.0, 1.0, 0.0]
+})";
+
+
+
+void Visual::Chams::InitChams ( )
+{
+	 Material = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlow2Visible),
+		.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlow2Visible)
+	};
+
+}
+
+CMaterial2 *Visual::Chams::CreateMaterial (const char *szMaterialName, const char szVmatBuffer[])
 {
 	CKeyValues3 *pKeyValue = CreateMaterialResource ( );
+	if (!pKeyValue || !szVmatBuffer) return nullptr;  
 
-	LoadKV3 (szVmatBuffer, pKeyValue);
+	CUtilsBuff* buff = iVisual->m_Chams.BuffInit (0, strlen (szVmatBuffer) + 10, 1);
+	iVisual->m_Chams.BuffPutString (buff, szVmatBuffer);
+	LoadKV3 (buff,pKeyValue);
 
-	void *pCustomMate = {};
+	CMaterial2 *pCustomMate = {};
 
 	CreateMaterialFunction (nullptr, &pCustomMate, szMaterialName, pKeyValue, 0, 1);
 
@@ -137,9 +208,10 @@ CKeyValues3 *Visual::Chams::CreateMaterialResource ( )
 	return SetTypeKV3 (pKeyValue, 1U, 6U);
 }
 
-bool Visual::Chams::LoadKV3 (const char buffer[], CKeyValues3 *CkeyVal)
+bool Visual::Chams::LoadKV3 (CUtilsBuff *buff, CKeyValues3 *CkeyVal) 
 {
+
 	KV3ID_t kv3ID = KV3ID_t ("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
 
-	return LoadKeyValues (CkeyVal, nullptr, buffer, &kv3ID, nullptr, nullptr, nullptr, nullptr,"");
+	return LoadKeyValues (CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr,"");
 }

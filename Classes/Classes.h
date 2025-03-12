@@ -7,6 +7,14 @@
 #include "../math/vector.h"
 #include <unordered_map>
 
+
+class CUtilsBuff {
+public:
+	using BufferInitFunc = void (__fastcall *)(CUtilsBuff *, const char *);  // Alias para claridad
+
+	static BufferInitFunc BufferInit;  // Declaración del puntero a función
+};
+
 class C_BaseEntity {
 public:
 	union {
@@ -24,21 +32,20 @@ struct Color {
 
 class CMaterial2 {
 public:
-
+	virtual const char *GetName ( ) = 0;
+	virtual const char *GetShareName ( ) = 0;
 };
 
 class CBaseHandle {
 public:
-	union {
-		DEFINE_MEMBER_N (uint32_t, nIndex, 0xD0);
-	};
+	uint32_t nIndex;
 };
 
 class CSceneAnimatableObject
 {
 public:
 	union {
-		DEFINE_MEMBER_N (CBaseHandle, hOwner, 0xB0);
+		DEFINE_MEMBER_N (CBaseHandle, hOwner, 0xB8);
 	};
 };
 
@@ -50,7 +57,7 @@ public:
 		//              Type     Name    Offset
 		DEFINE_MEMBER_N (CSceneAnimatableObject *, SceneAnimatableObject, 0x18);
 		DEFINE_MEMBER_N (CMaterial2 *, CMaterial, 0x20);
-		DEFINE_MEMBER_N (CMaterial2 *, CMaterialCopy, 0x28);
+		DEFINE_MEMBER_N (byte, colVal, 0x40);
 	};
 };
 
@@ -309,6 +316,12 @@ public:
 	Players (C_PlayerPawn *pawn, C_PlayerController *controller, C_PlayerPawn *observerPawn)
 		: Pawn (pawn), Controller (controller), ObserverPawn (observerPawn) {
 	}
+};
+
+class CustomMaterial_t {
+public:
+	CMaterial2* pMaterial;
+	CMaterial2* pMaterialVisible;
 };
 
 class CKeyValues3 {

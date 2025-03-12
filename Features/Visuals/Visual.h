@@ -44,9 +44,11 @@ public:
 
 	class DrawObjectClass {
 	public:
-		typedef void (__fastcall *DrawObjectFunction)(void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+		typedef void* (__fastcall *DrawObjectFunction)(void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
 		static DrawObjectFunction oDrawObject;
-		static void __fastcall hDrawObject (void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+		static void* __fastcall hDrawObject (void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+
+
 	};
 	DrawObjectClass m_DrawObject;
 
@@ -76,13 +78,20 @@ public:
 
 	class Chams {
 	public:
-		void *CreateMaterial (const char *szMaterialName, const char szVmatBuffer[]);
-		static bool LoadKV3 (const char buffer[], CKeyValues3 *CkeyVal);
+
+		CustomMaterial_t Material;
+
+		void InitChams ( );
+		CMaterial2 *CreateMaterial (const char *szMaterialName, const char szVmatBuffer[]);
+		static bool LoadKV3 (CUtilsBuff *buff, CKeyValues3 *CkeyVal);
 		static CKeyValues3 *CreateMaterialResource ( );
 
 		static CKeyValues3 *(__fastcall *SetTypeKV3)(CKeyValues3 *, int, unsigned int);
-		static bool (__fastcall *LoadKeyValues)(CKeyValues3 *, void *, const char[], KV3ID_t *, void *, void *, void *, void *, const char *);
+		static bool (__fastcall *LoadKeyValues)(CKeyValues3 *, void *, CUtilsBuff *buffer, KV3ID_t *, void *, void *, void *, void *, const char *);
 		static int64_t (__fastcall *CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
+
+		static CUtilsBuff *(__fastcall *BuffInit)(int a1, int nSize, int a3);
+		static void (__fastcall *BuffPutString)(CUtilsBuff *, const char *);
 	};
 	Chams m_Chams;
 
