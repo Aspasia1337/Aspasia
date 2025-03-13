@@ -4,7 +4,15 @@
 #include "../../Classes/Classes.h"
 #include <algorithm>
 
+class CUtilsBuff {
+public:
+	char pad[0x80];
 
+	CUtilsBuff (int a1, int nSize, int a3);
+
+	void PutString (const char *szString);
+
+};
 
 class Visual
 {
@@ -14,7 +22,6 @@ public:
 	static std::vector<C_EnvSky *> CEnvSkyVector;
 
 
-	Visual ( );
 
 	static ByteColor ToByteColor (float *floatColor);
 
@@ -44,9 +51,9 @@ public:
 
 	class DrawObjectClass {
 	public:
-		typedef void* (__fastcall *DrawObjectFunction)(void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+		typedef void (__fastcall *DrawObjectFunction)(void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
 		static DrawObjectFunction oDrawObject;
-		static void* __fastcall hDrawObject (void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
+		static void __fastcall hDrawObject (void *a1, void *a2, CMeshData *a3, int a4, void *a5, void *a6, void *a7, void *a8);
 
 
 	};
@@ -76,10 +83,13 @@ public:
 	};
 	WorldModulation m_WorldModulation;
 
+
+
+
 	class Chams {
 	public:
 
-		CustomMaterial_t Material;
+		CustomMaterial_t Material [4];
 
 		void InitChams ( );
 		CMaterial2 *CreateMaterial (const char *szMaterialName, const char szVmatBuffer[]);
@@ -90,12 +100,18 @@ public:
 		static bool (__fastcall *LoadKeyValues)(CKeyValues3 *, void *, CUtilsBuff *buffer, KV3ID_t *, void *, void *, void *, void *, const char *);
 		static int64_t (__fastcall *CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
 
-		static CUtilsBuff *(__fastcall *BuffInit)(int a1, int nSize, int a3);
+		static CUtilsBuff *(__fastcall *BuffInit)(CUtilsBuff *, int a1, int nSize, int a3);
 		static void (__fastcall *BuffPutString)(CUtilsBuff *, const char *);
 	};
 	Chams m_Chams;
 
+
+
 };
 
 inline Visual *iVisual = new Visual ( );
+
+
+
+
 

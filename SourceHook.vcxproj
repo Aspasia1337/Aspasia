@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Classes\Classes.cpp" />
     <ClCompile Include="Features\Anti-Aim\AntiAim.cpp" />
     <ClCompile Include="EntityManager\EntityManager.cpp" />
     <ClCompile Include="helper\helper.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Features\Legitbot\Legitbot.cpp" />
     <ClCompile Include="math\vector.cpp" />
     <ClCompile Include="Features\Movement\Movement.cpp" />
+    <ClCompile Include="Features\Misc\Misc.cpp" />
     <ClCompile Include="SourceHook.cpp" />
     <ClCompile Include="Features\Visuals\Visual.cpp" />
     <ClCompile Include="visuals\Visuals.cpp" />
@@ -206,12 +208,14 @@
     <ClInclude Include="Materials\materials.h" />
     <ClInclude Include="math\vector.h" />
     <ClInclude Include="Features\Movement\Movement.h" />
+    <ClInclude Include="Features\Misc\Misc.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Features\Visuals\Visual.h" />
     <ClInclude Include="visuals\Visuals.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="includes\kiero\minhook\dll_resources\MinHook.def" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="includes\kiero\minhook\dll_resources\MinHook.rc" />

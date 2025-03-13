@@ -1,4 +1,5 @@
 #include "Visual.h"
+#include "../../EntityManager/EntityManager.h"
 
 ByteColor Visual::WorldModulation::ColorCache;
 ByteColor Visual::UpdateSkybox::ColorCache;
@@ -32,61 +33,76 @@ void Visual::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float *a3) {
 
 
 
-void Visual::DrawObjectClass::hDrawObject (void *a1, void *a2, CMeshData *arrayMeshData, int a4, void *a5, void *a6, void *a7, void *a8) {
-void* Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2)
+void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2)
 {
-
-	if (!arrMeshDraw) {
-		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-	}
-
-	auto *sceneObject = arrMeshDraw->SceneAnimatableObject;
-	if (!sceneObject) {
-		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-	}
-
-	auto *object = &arrMeshDraw->SceneAnimatableObject->hOwner;
-
-	if (object == nullptr) {
-		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-	}
-
-	auto *index = &arrMeshDraw->SceneAnimatableObject->hOwner.nIndex;
-
-	if (index == nullptr) {
-		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-	}
-
-	// Obtener una copia segura del propietario antes de continuar
-	CBaseHandle hOwner = sceneObject->hOwner;
-
-	auto pEntity = iGameEntitySystem->GetEntityByIndexFunction (hOwner.nIndex & 0x7FFF);
-	
-	if (pEntity == nullptr) {
-		return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-	}
-	auto schemaName = iGameEntitySystem->GetSchemaName (pEntity);
-
-	
-	if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str( )) == 0) {
-
-		if (pEntity == iGameEntitySystem->GetPlayerPawn()) {
-			if (strcmp(arrMeshDraw->CMaterial->GetName ( ) , "characters/models/shared/arms/glove_hardknuckle/materials/glove_hardknuckle_black.vmat")==0)
-			{
-				arrMeshDraw->CMaterial = iVisual->m_Chams.Material.pMaterial;
-			}
-
-
-			//byte *p = &arrMeshDraw->colVal;
+	if (Globals::Chams) {
+		if (!arrMeshDraw) {
 			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		}
+
+		// Crear una copia local del puntero a SceneAnimatableObject para evitar cambios concurrentes
+		auto *sceneObject = arrMeshDraw->SceneAnimatableObject;
+		if (!sceneObject) {
+			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		}
+
+		auto *object = &arrMeshDraw->SceneAnimatableObject->hOwner;
+
+		if (object == nullptr) {
+			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		}
+
+		auto *index = &arrMeshDraw->SceneAnimatableObject->hOwner.nIndex;
+
+		if (index == nullptr) {
+			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		}
+
+		// Obtener una copia segura del propietario antes de continuar
+		CBaseHandle hOwner = sceneObject->hOwner;
+
+		auto pEntity = iGameEntitySystem->GetEntityByIndexFunction (hOwner.nIndex & 0x7FFF);
+
+		if (pEntity == nullptr) {
+			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		}
+		auto schemaName = iGameEntitySystem->GetSchemaName (pEntity);
+
+		//iHelper->m_Console.printMessage (WARNING, schemaName);
+
+		if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str ( )) == 0) {
+			ByteColor Color = ToByteColor (Globals::ChamsColor);
+			//if (pEntity == iGameEntitySystem->GetPlayerPawn ( )) {
+				//if (strcmp (arrMeshDraw->CMaterial->GetName ( ), "characters/models/shared/arms/glove_hardknuckle/materials/glove_hardknuckle_black.vmat") == 0)
+				//{
+					arrMeshDraw->CMaterial = *(CMaterial2**)iVisual->m_Chams.Material[Globals::ChamsType].pMaterial;
+					
+					*(byte*)((uintptr_t)arrMeshDraw+ 0x50) = Color.r;
+					*(byte*)((uintptr_t)arrMeshDraw+ 0x51) = Color.g;
+					*(byte*)((uintptr_t)arrMeshDraw+ 0x52) = Color.b;
+					*(byte*)((uintptr_t)arrMeshDraw+ 0x53) = (byte)255;
+
+			//}
+		}
+		if (std::strcmp (schemaName.c_str ( ), std::string ("C_PredictedViewModel").c_str ( )) == 0) {
+
+			ByteColor Color = ToByteColor (Globals::ChamsColor);
+			//if (pEntity == iGameEntitySystem->GetPlayerPawn ( )) {
+				//if (strcmp (arrMeshDraw->CMaterial->GetName ( ), "characters/models/shared/arms/glove_hardknuckle/materials/glove_hardknuckle_black.vmat") == 0)
+				//{
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.Material[Globals::ChamsType].pMaterial;
+
+			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 
 		}
 
-
 	}
-
 	return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }
+
 
 
 void OverrideMaterial (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2) {
@@ -95,9 +111,6 @@ void OverrideMaterial (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData 
 
 }
 
-Visual::Visual ( )
-{
-}
 
 ByteColor Visual::ToByteColor (float *floatColor) {
 	return ByteColor (
@@ -133,7 +146,7 @@ void Visual::UpdateSkybox::ChangeSkybox ( )
 
 void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *pAggregateSceneObject, void *a2) {
 
-	ByteColor Color = ToByteColor (Globals::worldModulationColor);
+	ByteColor Color = Visual::ToByteColor (Globals::worldModulationColor);
 
 	if (Globals::worldModulation && Color != ColorCache) {
 		int count = pAggregateSceneObject->count;
@@ -150,39 +163,98 @@ void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *
 	return oModulateWorldColor (pAggregateSceneObject, a2);
 }
 
-
-static constexpr char szVMatBufferGlow2Visible[] =
+static constexpr char szVMatBufferLatexVisible[] =
 R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
-            format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
-            {
-                shader = "csgo_effects.vfx"
-                g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
-                g_tNormal = resource:"materials/default/default_normal_tga_7652cb.vtex"
-                g_tMask1 = resource:"materials/default/default_mask_tga_344101f8.vtex"
-                g_tMask2 = resource:"materials/default/default_mask_tga_344101f8.vtex"
-                g_tMask3 = resource:"materials/default/default_mask_tga_344101f8.vtex"
-                g_flOpacityScale = 0.45
-                g_flFresnelExponent = 0.75
-                g_flFresnelFalloff = 1
-                g_flFresnelMax = 0.0
-                g_flFresnelMin = 1
-                F_ADDITIVE_BLEND = 1
-                F_BLEND_MODE = 1	
-                F_TRANSLUCENT = 1
-                F_IGNOREZ = 0
-                F_DISABLE_Z_WRITE = 0
-                F_DISABLE_Z_BUFFERING = 0
-                F_RENDER_BACKFACES = 1
-                g_vColorTint = [1.0, 1.0, 1.0, 0.0]
+    			format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    			{
+                    shader = "csgo_character.vfx"
+                    F_BLEND_MODE = 1
+                    g_vColorTint = [1.0, 1.0, 1.0, 1.0]
+                    g_bFogEnabled = 0
+                    g_flMetalness = 0.000
+                    g_tMetalness = resource:"materials/default/default_metal_tga_8fbc2820.vtex"
+                    g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
+                    g_tAmbientOcclusion = resource:"materials/default/default_ao_tga_79a2e0d0.vtex"
+                    g_tNormal = resource:"materials/default/default_normal_tga_1b833b2a.vtex"
+    			})";
+
+static constexpr char szVMatBufferLatexInvisible[] =
+R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
+    			format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    			{
+                    shader = "csgo_character.vfx"
+                    F_DISABLE_Z_BUFFERING = 1
+                    F_DISABLE_Z_PREPASS = 1
+                    F_DISABLE_Z_WRITE = 1
+                    F_BLEND_MODE = 1
+                    g_vColorTint = [1.0, 1.0, 1.0, 1.0]
+                    g_bFogEnabled = 0
+                    g_flMetalness = 0.000
+                    g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
+                    g_tAmbientOcclusion = resource:"materials/default/default_ao_tga_79a2e0d0.vtex"
+                    g_tNormal = resource:"materials/default/default_normal_tga_1b833b2a.vtex"
+                    g_tMetalness = resource:"materials/default/default_metal_tga_8fbc2820.vtex"
+    			})";
+
+
+static constexpr char szVMatBufferWhiteVisible[] =
+R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	shader = "csgo_unlitgeneric.vfx"
+
+	F_PAINT_VERTEX_COLORS = 1
+	F_TRANSLUCENT = 1
+	F_BLEND_MODE = 1
+
+	g_vColorTint = [1, 1, 1, 1]
+
+	TextureAmbientOcclusion = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	g_tAmbientOcclusion = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	g_tColor = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	g_tNormal = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	g_tTintMask = resource:"materials/default/default_mask_tga_fde710a5.vtex"
 })";
 
+static constexpr char szVMatBufferGlowVisible[] =
+R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	shader = "csgo_complex.vfx"
+
+	F_SELF_ILLUM = 1
+	F_PAINT_VERTEX_COLORS = 1
+	F_TRANSLUCENT = 1
+
+	g_vColorTint = [ 1.000000, 1.000000, 1.000000, 1.000000 ]
+	g_flSelfIllumScale = [ 3.000000, 3.000000, 3.000000, 3.000000 ]
+	g_flSelfIllumBrightness = [ 3.000000, 3.000000, 3.000000, 3.000000 ]
+    g_vSelfIllumTint = [ 10.000000, 10.000000, 10.000000, 10.000000 ]
+
+	g_tColor = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	g_tNormal = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	g_tSelfIllumMask = resource:"materials/default/default_mask_tga_fde710a5.vtex"
+	TextureAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
+	g_tAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
+})";
 
 
 void Visual::Chams::InitChams ( )
 {
-	 Material = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlow2Visible),
-		.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlow2Visible)
+	 Material[0] = CustomMaterial_t{.pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexVisible),
+		.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexVisible)
 	};
+
+	 Material[1] = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexInvisible),
+	.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexInvisible)
+	 };
+
+	 Material[2] = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferWhiteVisible),
+	.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferWhiteVisible)
+	 };
+
+	 Material[3] = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlowVisible),
+	.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlowVisible)
+	 };
+
 
 }
 
@@ -191,9 +263,11 @@ CMaterial2 *Visual::Chams::CreateMaterial (const char *szMaterialName, const cha
 	CKeyValues3 *pKeyValue = CreateMaterialResource ( );
 	if (!pKeyValue || !szVmatBuffer) return nullptr;  
 
-	CUtilsBuff* buff = iVisual->m_Chams.BuffInit (0, strlen (szVmatBuffer) + 10, 1);
-	iVisual->m_Chams.BuffPutString (buff, szVmatBuffer);
-	LoadKV3 (buff,pKeyValue);
+	CUtilsBuff buffer (0, strlen (szVmatBuffer) + 10, 1);
+
+	buffer.PutString (szVmatBuffer);
+
+	LoadKV3 (&buffer,pKeyValue);
 
 	CMaterial2 *pCustomMate = {};
 
@@ -214,4 +288,14 @@ bool Visual::Chams::LoadKV3 (CUtilsBuff *buff, CKeyValues3 *CkeyVal)
 	KV3ID_t kv3ID = KV3ID_t ("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
 
 	return LoadKeyValues (CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr,"");
+}
+
+CUtilsBuff::CUtilsBuff (int a1, int nSize, int a3)
+{
+	iVisual->m_Chams.BuffInit (this, a1, nSize, a3);
+}
+
+void CUtilsBuff::PutString (const char *szString)
+{
+	iVisual->m_Chams.BuffPutString (this, szString);
 }

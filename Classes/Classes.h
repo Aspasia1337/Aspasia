@@ -8,12 +8,7 @@
 #include <unordered_map>
 
 
-class CUtilsBuff {
-public:
-	using BufferInitFunc = void (__fastcall *)(CUtilsBuff *, const char *);  // Alias para claridad
 
-	static BufferInitFunc BufferInit;  // Declaración del puntero a función
-};
 
 class C_BaseEntity {
 public:
@@ -57,7 +52,7 @@ public:
 		//              Type     Name    Offset
 		DEFINE_MEMBER_N (CSceneAnimatableObject *, SceneAnimatableObject, 0x18);
 		DEFINE_MEMBER_N (CMaterial2 *, CMaterial, 0x20);
-		DEFINE_MEMBER_N (byte, colVal, 0x40);
+		DEFINE_MEMBER_N (byte , colVal, 0x40);
 	};
 };
 
@@ -237,6 +232,8 @@ public:
 			&& ColorA.b == this->b);
 	}
 };
+
+
 
 class C_EnvSky {
 public:

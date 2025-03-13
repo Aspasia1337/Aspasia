@@ -306,7 +306,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 
 				if (ImGui::Checkbox ("AntiAim", &Globals::AntiAim)) {
-
+					iVisual->m_Chams.InitChams ( );
 				}
 				if (ImGui::Checkbox ("Third Person", &Globals::thirdPerson)) {
 
@@ -364,6 +364,26 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 					}
 				}
+
+				if (ImGui::Checkbox ("Chams", &Globals::Chams)) {
+					
+				}
+
+				if (Globals::Chams) {
+					if (ImGui::ColorEdit3 ("Chams##Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
+
+					}
+					const char *ChamsTypeSelector[] = { "1", "2", "3", "4" };
+					if (ImGui::Combo ("Chams Type", &Globals::ChamsType, ChamsTypeSelector, IM_ARRAYSIZE (ChamsTypeSelector))) {
+
+
+					}
+
+
+				}
+
+				
+
 			}
 		}
 		ImGui::End ( );

@@ -5,12 +5,12 @@
 #include "../EntityManager/EntityManager.h"
 #include "../includes/imgui/imgui.h"
 
-void Visuals::glowPlayers (uint32_t glowType , float  chamsColor [4])
+void Visuals::glowPlayers (uint32_t glowType, float  chamsColor[4])
 {
 	for (unsigned i = 0; i < iGameEntitySystem->PawnVector.size ( );i++) {
 
-		if (iGameEntitySystem->PawnVector[i] == iGameEntitySystem->LocalPlayerPawn 
-			|| iGameEntitySystem->PawnVector[i]->pawnHealth <=0 || iGameEntitySystem->PawnVector[i]->pawnHealth>100)
+		if (iGameEntitySystem->PawnVector[i] == iGameEntitySystem->LocalPlayerPawn
+			|| iGameEntitySystem->PawnVector[i]->pawnHealth <= 0 || iGameEntitySystem->PawnVector[i]->pawnHealth > 100)
 			continue;
 
 		DWORD colorArgb = ((DWORD)(chamsColor[3] * 255) << 24) |  // Alpha
@@ -68,7 +68,7 @@ void Visuals::NoSmoke ( ) {
 void Visuals::changeSmokeColor (float smokeColor[3])
 {
 	for (unsigned int i = 0; i < iGameEntitySystem->SmokeGrenadeVector.size ( );i++) {
-		iGameEntitySystem->SmokeGrenadeVector[i]->smokeColor = *(Vec3*)(new Vec3 (smokeColor[0], smokeColor[1], smokeColor[2]));
+		iGameEntitySystem->SmokeGrenadeVector[i]->smokeColor = *(Vec3 *)(new Vec3 (smokeColor[0], smokeColor[1], smokeColor[2]));
 	}
 
 }

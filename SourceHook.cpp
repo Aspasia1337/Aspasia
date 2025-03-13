@@ -45,6 +45,7 @@ namespace Globals {
     float SkyModulationColor [3] = {0, 0, 0.};
     float SkyTintColor[3] = { 0, 0, 0 };
 
+    int ChamsType = 0;
 
 
     float fov1;
@@ -68,6 +69,10 @@ namespace Globals {
 
     float lightIntensity = 1;
     byte lightType = 0x02;
+
+    bool Chams = 0;
+    float ChamsColor [3] = { 0.5f, 0.5f, 1.0f };
+
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved){

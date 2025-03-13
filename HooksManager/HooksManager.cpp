@@ -50,10 +50,9 @@ CKeyValues3 *(__fastcall *Visual::Chams::SetTypeKV3)(CKeyValues3 *, int, unsigne
 bool (__fastcall *Visual::Chams::LoadKeyValues)(CKeyValues3 *, void *, CUtilsBuff* , KV3ID_t *, void *, void *, void *, void *, const char *) = nullptr;
 int64_t (__fastcall *Visual::Chams::CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int) = nullptr;
 
- CUtilsBuff *(__fastcall *Visual::Chams::BuffInit)(int a1, int nSize, int a3) = nullptr;
+CUtilsBuff *(__fastcall *Visual::Chams::BuffInit)(CUtilsBuff *, int a1, int nSize, int a3) = nullptr;
  void (__fastcall *Visual::Chams::BuffPutString)(CUtilsBuff *, const char *) = nullptr;
 
-void (__fastcall *CUtilsBuff::BufferInit)(CUtilsBuff *, const char *);
 
 Vec3 AntiAim::PlayerAngles;
  
@@ -334,16 +333,28 @@ bool HooksManager::initHook ( ) {
 		iHelper->m_Console.printMessage (WARNING, "Error HOOKING CreateMaterial!");
 
 
-	iVisual->m_Chams.InitChams ( );
-	iHelper->m_Console.printMessage (WARNING, "MATERIAL CREATED!");
+
 
 	uint8_t *BufInit = iHelper->m_Mem.PatternScanner ("tier0.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC 20 33 DB 44 89 41 08");
 
 	iVisual->m_Chams.BuffInit = reinterpret_cast<decltype(iVisual->m_Chams.BuffInit)>(BufInit);
 
-	uint8_t *BuffCopy = iHelper->m_Mem.PatternScanner ("tier0.dll", "E8 ? ? ? ? EB 5F");
+	if (iVisual->m_Chams.BuffInit)
+		iHelper->m_Console.printMessage (DEBUG, "BuffInit HOOKED!");
+	else
+		iHelper->m_Console.printMessage (WARNING, "Error HOOKING BuffInit!");
+
+	uint8_t *BuffCopy = iHelper->m_Mem.PatternScanner ("tier0.dll", "48 89 5C 24 ? 57 48 83 EC 20 0F B6 41 19");
 
 	iVisual->m_Chams.BuffPutString = reinterpret_cast<decltype(iVisual->m_Chams.BuffPutString)>(BuffCopy);
+
+	if (iVisual->m_Chams.BuffPutString)
+		iHelper->m_Console.printMessage (DEBUG, "BuffPutString HOOKED!");
+	else
+		iHelper->m_Console.printMessage (WARNING, "Error HOOKING BuffPutString!");
+
+	iVisual->m_Chams.InitChams ( );
+	iHelper->m_Console.printMessage (WARNING, "MATERIAL CREATED!");
 
 	MH_EnableHook (MH_ALL_HOOKS);
 	return hookInit;
