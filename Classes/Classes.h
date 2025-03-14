@@ -319,6 +319,8 @@ class CustomMaterial_t {
 public:
 	CMaterial2* pMaterial;
 	CMaterial2* pMaterialVisible;
+
+	CustomMaterial_t (CMaterial2 *Material1, CMaterial2 *Material2) : pMaterial (Material1), pMaterialVisible (Material2) { };
 };
 
 class CKeyValues3 {

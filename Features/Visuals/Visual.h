@@ -2,7 +2,11 @@
 
 #include "../../globals.h"
 #include "../../Classes/Classes.h"
+
+#include "Materials.h"
+
 #include <algorithm>
+#include <unordered_map>
 
 class CUtilsBuff {
 public:
@@ -88,8 +92,13 @@ public:
 
 	class Chams {
 	public:
-
-		CustomMaterial_t Material [4];
+		std::unordered_map<const char *, CustomMaterial_t>  CustomMaterialMap;
+		std::vector <const char *> MaterialInfo = { 
+		szVMatBufferWhiteVisible,szVMatBufferWhiteInvisible,
+		szVMatBufferIlluminateVisible,szVMatBufferIlluminateInvisible,
+		szVMatBufferIlatex, szVMatBufferIlatexInvisible,
+		szVMatBufferMetalic,szVMatBufferMetalicInvisible,
+		szVMatBufferGlowVisible, szVMatBufferGlowInvisible};
 
 		void InitChams ( );
 		CMaterial2 *CreateMaterial (const char *szMaterialName, const char szVmatBuffer[]);
@@ -110,6 +119,7 @@ public:
 };
 
 inline Visual *iVisual = new Visual ( );
+
 
 
 

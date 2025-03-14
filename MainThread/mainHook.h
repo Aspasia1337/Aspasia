@@ -306,7 +306,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 
 				if (ImGui::Checkbox ("AntiAim", &Globals::AntiAim)) {
-					iVisual->m_Chams.InitChams ( );
+					
 				}
 				if (ImGui::Checkbox ("Third Person", &Globals::thirdPerson)) {
 
@@ -370,12 +370,36 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				}
 
 				if (Globals::Chams) {
-					if (ImGui::ColorEdit3 ("Chams##Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
+
+					if (ImGui::Checkbox ("PlayerChams", &Globals::PlayersChams)) {
 
 					}
-					const char *ChamsTypeSelector[] = { "1", "2", "3", "4" };
-					if (ImGui::Combo ("Chams Type", &Globals::ChamsType, ChamsTypeSelector, IM_ARRAYSIZE (ChamsTypeSelector))) {
 
+					if (Globals::PlayersChams) {
+
+						if (ImGui::ColorEdit3 ("Chams##Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
+
+						}
+
+						if (ImGui::Combo ("Chams Type Player", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames))) {
+
+						}
+
+					}
+
+					if (ImGui::Checkbox ("Weapon Chams", &Globals::WeaponChams)) {
+
+					}
+
+					if (Globals::WeaponChams) {
+
+						if (ImGui::ColorEdit3 ("Chams##ColorGun", Globals::ChamsColorGun, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions)) {
+
+						}
+
+						if (ImGui::Combo ("Chams Type Gun", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames))) {
+
+						}
 
 					}
 

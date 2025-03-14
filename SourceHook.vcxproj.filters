@@ -200,6 +200,9 @@
     <ClInclude Include="Features\Misc\Misc.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Features\Visuals\Materials.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="includes\kiero\minhook\dll_resources\MinHook.def">

@@ -133,9 +133,9 @@ void GameEntitySystem::getGameEntities ( ) {
 void GameEntitySystem::getAllPlayers ( ) {
 
 	getGameEntities ( );
-	PlayersVector.clear ( );
+	PlayersMap.clear ( );
 
-	C_PlayerController * localPlayerController = *(C_PlayerController**)(clientDll + 0x188BF30);
+	C_PlayerController * localPlayerController = *(C_PlayerController**)(clientDll + 0x1A890C0);
 
 	for (unsigned int i = 0; i < PawnVector.size ( ); i++) {
 		for (unsigned int j = 0; j < ControllerVector.size ( ); j++) {
@@ -148,7 +148,7 @@ void GameEntitySystem::getAllPlayers ( ) {
 							LocalPlayerObserver = ObserverPawnVector[k];
 							continue;
 						}
-						PlayersVector.emplace_back (new Players (PawnVector[i], ControllerVector[j], ObserverPawnVector[k]));
+						PlayersMap.emplace_back (new Players (PawnVector[i], ControllerVector[j], ObserverPawnVector[k]));
 						break;
 					}
 				}
@@ -163,11 +163,11 @@ void GameEntitySystem::getClosetEnemis ( )
 	getAllPlayers ( );
 	
 	//bubble sort
-	for (unsigned int i = 0; i < PlayersVector.size ( ) - 1;i++) {
-		for (unsigned int j = 0; j < PlayersVector.size ( ) - 1 - i; j++) {
-			if (CalculateDistance (LocalPlayerPawn->vOldOrigin, PlayersVector[j]->Pawn->vOldOrigin) > 
-				CalculateDistance (LocalPlayerPawn->vOldOrigin, PlayersVector[j+1]->Pawn->vOldOrigin)) {
-				std::swap (PlayersVector[j], PlayersVector[j + 1]);
+	for (unsigned int i = 0; i < PlayersMap.size ( ) - 1;i++) {
+		for (unsigned int j = 0; j < PlayersMap.size ( ) - 1 - i; j++) {
+			if (CalculateDistance (LocalPlayerPawn->vOldOrigin, PlayersMap[j]->Pawn->vOldOrigin) > 
+				CalculateDistance (LocalPlayerPawn->vOldOrigin, PlayersMap[j+1]->Pawn->vOldOrigin)) {
+				std::swap (PlayersMap[j], PlayersMap[j + 1]);
 			}
 		}
 	}
@@ -182,7 +182,7 @@ void GameEntitySystem::getEnemisByFov ( ) {
 
 	getAllPlayers ( );
 
-	if (PlayersVector.size ( ) < 1) return; 
+	if (PlayersMap.size ( ) < 1) return; 
 
 	/*
 			iHelper->m_Console.printMessage (WARNING,
@@ -193,18 +193,18 @@ void GameEntitySystem::getEnemisByFov ( ) {
 	*/
 
 
-	for (unsigned int i = 0; i < PlayersVector.size ( ) - 1; i++) {
-		for (unsigned j = 0; j < PlayersVector.size ( ) - 1 - i; j++) {
+	for (unsigned int i = 0; i < PlayersMap.size ( ) - 1; i++) {
+		for (unsigned j = 0; j < PlayersMap.size ( ) - 1 - i; j++) {
 
 			Vec3 playerToMe = Vec3 (
-				PlayersVector[j]->Pawn->m_pGameSceneNode->m_vecOrigin.x + PlayersVector[j]->Pawn->m_vecViewOffset.x - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
-				PlayersVector[j]->Pawn->m_pGameSceneNode->m_vecOrigin.y + PlayersVector[j]->Pawn->m_vecViewOffset.y - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
-				PlayersVector[j]->Pawn->m_pGameSceneNode->m_vecOrigin.z + PlayersVector[j]->Pawn->m_vecViewOffset.z - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+				PlayersMap[j]->Pawn->m_pGameSceneNode->m_vecOrigin.x + PlayersMap[j]->Pawn->m_vecViewOffset.x - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+				PlayersMap[j]->Pawn->m_pGameSceneNode->m_vecOrigin.y + PlayersMap[j]->Pawn->m_vecViewOffset.y - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+				PlayersMap[j]->Pawn->m_pGameSceneNode->m_vecOrigin.z + PlayersMap[j]->Pawn->m_vecViewOffset.z - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
 				);
 			Vec3 playerToMeTwo = Vec3 (
-				PlayersVector[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.x + PlayersVector[j+1]->Pawn->m_vecViewOffset.x - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
-				PlayersVector[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.y + PlayersVector[j+1]->Pawn->m_vecViewOffset.y - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
-				PlayersVector[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.z + PlayersVector[j+1]->Pawn->m_vecViewOffset.z - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
+				PlayersMap[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.x + PlayersMap[j+1]->Pawn->m_vecViewOffset.x - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
+				PlayersMap[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.y + PlayersMap[j+1]->Pawn->m_vecViewOffset.y - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
+				PlayersMap[j+1]->Pawn->m_pGameSceneNode->m_vecOrigin.z + PlayersMap[j+1]->Pawn->m_vecViewOffset.z - LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
 			);
 
 			double hyp = sqrtf (playerToMe.x * playerToMe.x + playerToMe.y * playerToMe.y);
@@ -218,24 +218,24 @@ void GameEntitySystem::getEnemisByFov ( ) {
 			bool x = false, y = false;
 
 			if (IsTargetWithinFOV (targetX, targetY, viewangles->x, viewangles->y, Globals::aimbotFov, distance)) {
-				PlayersVector[j]->Pawn->isInFov = true;
+				PlayersMap[j]->Pawn->isInFov = true;
 				x = true;
 			}
 			else {
-				PlayersVector[j]->Pawn->isInFov = false;
+				PlayersMap[j]->Pawn->isInFov = false;
 
 			}
 			if (IsTargetWithinFOV (targetXTWO, targetYTWO, viewangles->x, viewangles->y, Globals::aimbotFov, distance)) {
-				PlayersVector[j+1]->Pawn->isInFov = true;
+				PlayersMap[j+1]->Pawn->isInFov = true;
 				y = true;
 			}
 			else {
-				PlayersVector[j + 1]->Pawn->isInFov = false;
+				PlayersMap[j + 1]->Pawn->isInFov = false;
 
 			}
 
 			if (!x && y) {
-				std::swap (PlayersVector[j], PlayersVector[j + 1]);
+				std::swap (PlayersMap[j], PlayersMap[j + 1]);
 			}
 
 			else if (x && y) {
@@ -244,7 +244,7 @@ void GameEntitySystem::getEnemisByFov ( ) {
 				float angleDiff2 = fabs (targetXTWO - viewangles->x) + fabs (targetYTWO - viewangles->y);
 
 				if (angleDiff2 < angleDiff1) {
-					std::swap (PlayersVector[j], PlayersVector[j + 1]);
+					std::swap (PlayersMap[j], PlayersMap[j + 1]);
 				}
 			}
 		}

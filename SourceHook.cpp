@@ -45,7 +45,13 @@ namespace Globals {
     float SkyModulationColor [3] = {0, 0, 0.};
     float SkyTintColor[3] = { 0, 0, 0 };
 
-    int ChamsType = 0;
+
+    const char *MaterialNames[5] = { "WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow" };
+    int MaterialSelected = 0;
+    int MaterialGunSelected = 0;
+
+    bool PlayersChams = 0;
+    bool WeaponChams = 0;
 
 
     float fov1;
@@ -72,6 +78,7 @@ namespace Globals {
 
     bool Chams = 0;
     float ChamsColor [3] = { 0.5f, 0.5f, 1.0f };
+    float ChamsColorGun[3] = { 0.5f, 0.5f, 1.0f };
 
 }
 

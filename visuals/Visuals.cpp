@@ -27,9 +27,9 @@ void Visuals::glowPlayers (uint32_t glowType, float  chamsColor[4])
 
 void Visuals::renderWithImgui ( ) {
 
-	for (unsigned i = 0; i < iGameEntitySystem->PlayersVector.size ( );i++) {
+	for (unsigned i = 0; i < iGameEntitySystem->PlayersMap.size ( );i++) {
 
-		Vec3 feetPosition = (iGameEntitySystem->PlayersVector[i]->Pawn->vOldOrigin);
+		Vec3 feetPosition = (iGameEntitySystem->PlayersMap[i]->Pawn->vOldOrigin);
 
 		Vec3 headPos = { feetPosition.x + 0.0f,feetPosition.y + 0.0f,feetPosition.z + 65.0f };
 
@@ -41,14 +41,14 @@ void Visuals::renderWithImgui ( ) {
 
 			char playername[128] = {};
 
-			std::memcpy (playername, &iGameEntitySystem->PlayersVector[i]->Controller->m_iszPlayerName, sizeof (playername));
+			std::memcpy (playername, &iGameEntitySystem->PlayersMap[i]->Controller->m_iszPlayerName, sizeof (playername));
 
 
 			// Add health bar
 
 			ImGui::GetBackgroundDrawList ( )->AddRect ({ (feet.x - width),head.y }, { (feet.x - width / 2) + width,head.y + height }, ImColor (255, 255, 255));
-			ImGui::GetBackgroundDrawList ( )->AddText ({ feet.x - width, feet.y }, ImColor (0, 255, 0), std::to_string (iGameEntitySystem->PlayersVector[i]->Pawn->pawnHealth).c_str ( ));
-			ImGui::GetBackgroundDrawList ( )->AddText ({ feet.x - width, feet.y - 20 }, ImColor (255, 200, 0), std::to_string (iGameEntitySystem->PlayersVector[i]->Pawn->m_armor).c_str ( ));
+			ImGui::GetBackgroundDrawList ( )->AddText ({ feet.x - width, feet.y }, ImColor (0, 255, 0), std::to_string (iGameEntitySystem->PlayersMap[i]->Pawn->pawnHealth).c_str ( ));
+			ImGui::GetBackgroundDrawList ( )->AddText ({ feet.x - width, feet.y - 20 }, ImColor (255, 200, 0), std::to_string (iGameEntitySystem->PlayersMap[i]->Pawn->m_armor).c_str ( ));
 			ImGui::GetBackgroundDrawList ( )->AddText ({ feet.x - width, feet.y - 40 }, ImColor (0, 150, 255), playername);
 
 			//ImGui::GetBackgroundDrawList()->AddText({ feet.x, feet.y }, ImColor(0, 255, 0), playername);

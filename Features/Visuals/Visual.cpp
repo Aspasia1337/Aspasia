@@ -1,4 +1,5 @@
 #include "Visual.h"
+#include "Materials.h"
 #include "../../EntityManager/EntityManager.h"
 
 ByteColor Visual::WorldModulation::ColorCache;
@@ -58,7 +59,6 @@ void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, voi
 			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
 
-		// Obtener una copia segura del propietario antes de continuar
 		CBaseHandle hOwner = sceneObject->hOwner;
 
 		auto pEntity = iGameEntitySystem->GetEntityByIndexFunction (hOwner.nIndex & 0x7FFF);
@@ -70,12 +70,12 @@ void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, voi
 
 		//iHelper->m_Console.printMessage (WARNING, schemaName);
 
-		if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str ( )) == 0) {
+		if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str ( )) == 0 && Globals::PlayersChams) {
 			ByteColor Color = ToByteColor (Globals::ChamsColor);
 			//if (pEntity == iGameEntitySystem->GetPlayerPawn ( )) {
 				//if (strcmp (arrMeshDraw->CMaterial->GetName ( ), "characters/models/shared/arms/glove_hardknuckle/materials/glove_hardknuckle_black.vmat") == 0)
 				//{
-					arrMeshDraw->CMaterial = *(CMaterial2**)iVisual->m_Chams.Material[Globals::ChamsType].pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
 					
 					*(byte*)((uintptr_t)arrMeshDraw+ 0x50) = Color.r;
 					*(byte*)((uintptr_t)arrMeshDraw+ 0x51) = Color.g;
@@ -84,13 +84,13 @@ void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, voi
 
 			//}
 		}
-		if (std::strcmp (schemaName.c_str ( ), std::string ("C_PredictedViewModel").c_str ( )) == 0) {
+		if (std::strcmp (schemaName.c_str ( ), std::string ("C_PredictedViewModel").c_str ( )) == 0 && Globals::WeaponChams) {
 
-			ByteColor Color = ToByteColor (Globals::ChamsColor);
+			ByteColor Color = ToByteColor (Globals::ChamsColorGun);
 			//if (pEntity == iGameEntitySystem->GetPlayerPawn ( )) {
 				//if (strcmp (arrMeshDraw->CMaterial->GetName ( ), "characters/models/shared/arms/glove_hardknuckle/materials/glove_hardknuckle_black.vmat") == 0)
 				//{
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.Material[Globals::ChamsType].pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
@@ -163,98 +163,21 @@ void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *
 	return oModulateWorldColor (pAggregateSceneObject, a2);
 }
 
-static constexpr char szVMatBufferLatexVisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
-    			format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
-    			{
-                    shader = "csgo_character.vfx"
-                    F_BLEND_MODE = 1
-                    g_vColorTint = [1.0, 1.0, 1.0, 1.0]
-                    g_bFogEnabled = 0
-                    g_flMetalness = 0.000
-                    g_tMetalness = resource:"materials/default/default_metal_tga_8fbc2820.vtex"
-                    g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
-                    g_tAmbientOcclusion = resource:"materials/default/default_ao_tga_79a2e0d0.vtex"
-                    g_tNormal = resource:"materials/default/default_normal_tga_1b833b2a.vtex"
-    			})";
-
-static constexpr char szVMatBufferLatexInvisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
-    			format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
-    			{
-                    shader = "csgo_character.vfx"
-                    F_DISABLE_Z_BUFFERING = 1
-                    F_DISABLE_Z_PREPASS = 1
-                    F_DISABLE_Z_WRITE = 1
-                    F_BLEND_MODE = 1
-                    g_vColorTint = [1.0, 1.0, 1.0, 1.0]
-                    g_bFogEnabled = 0
-                    g_flMetalness = 0.000
-                    g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
-                    g_tAmbientOcclusion = resource:"materials/default/default_ao_tga_79a2e0d0.vtex"
-                    g_tNormal = resource:"materials/default/default_normal_tga_1b833b2a.vtex"
-                    g_tMetalness = resource:"materials/default/default_metal_tga_8fbc2820.vtex"
-    			})";
 
 
-static constexpr char szVMatBufferWhiteVisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
-{
-	shader = "csgo_unlitgeneric.vfx"
 
-	F_PAINT_VERTEX_COLORS = 1
-	F_TRANSLUCENT = 1
-	F_BLEND_MODE = 1
-
-	g_vColorTint = [1, 1, 1, 1]
-
-	TextureAmbientOcclusion = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	g_tAmbientOcclusion = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	g_tColor = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	g_tNormal = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	g_tTintMask = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-})";
-
-static constexpr char szVMatBufferGlowVisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
-{
-	shader = "csgo_complex.vfx"
-
-	F_SELF_ILLUM = 1
-	F_PAINT_VERTEX_COLORS = 1
-	F_TRANSLUCENT = 1
-
-	g_vColorTint = [ 1.000000, 1.000000, 1.000000, 1.000000 ]
-	g_flSelfIllumScale = [ 3.000000, 3.000000, 3.000000, 3.000000 ]
-	g_flSelfIllumBrightness = [ 3.000000, 3.000000, 3.000000, 3.000000 ]
-    g_vSelfIllumTint = [ 10.000000, 10.000000, 10.000000, 10.000000 ]
-
-	g_tColor = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	g_tNormal = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	g_tSelfIllumMask = resource:"materials/default/default_mask_tga_fde710a5.vtex"
-	TextureAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
-	g_tAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
-})";
 
 
 void Visual::Chams::InitChams ( )
 {
-	 Material[0] = CustomMaterial_t{.pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexVisible),
-		.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexVisible)
-	};
+	const char *MaterialNames [5] = {"WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow"};
 
-	 Material[1] = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexInvisible),
-	.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferLatexInvisible)
-	 };
-
-	 Material[2] = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferWhiteVisible),
-	.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferWhiteVisible)
-	 };
-
-	 Material[3] = CustomMaterial_t{ .pMaterial = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlowVisible),
-	.pMaterialVisible = CreateMaterial ("materials/dev/glowproperty.vmat",szVMatBufferGlowVisible)
-	 };
-
+	int i = 0;
+	for (auto &MaterialName : MaterialNames) {
+		CustomMaterialMap.emplace (MaterialName, CustomMaterial_t (CreateMaterial ("materials/dev/glowproperty.vmat", MaterialInfo[i]),
+			CreateMaterial ("materials/dev/glowproperty.vmat", MaterialInfo[i+1])));
+		i += 2;
+	}
 
 }
 

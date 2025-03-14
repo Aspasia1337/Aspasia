@@ -179,6 +179,7 @@
     <ClInclude Include="Classes\Classes.h" />
     <ClInclude Include="Features\Anti-Aim\AntiAim.h" />
     <ClInclude Include="EntityManager\EntityManager.h" />
+    <ClInclude Include="Features\Visuals\Materials.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="helper\helper.h" />
     <ClInclude Include="HooksManager\HooksManager.h" />

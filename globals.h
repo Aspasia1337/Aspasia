@@ -48,13 +48,21 @@ namespace Globals {
 	extern bool ChangeSkyColor;
 	extern float SkyModulationColor[3];
 	extern float SkyTintColor[3];
+
+	extern const char *MaterialNames[5];
 	
-	extern int ChamsType;
+	extern int  MaterialSelected;
+	extern int MaterialGunSelected;
+
+
+	extern bool PlayersChams;
+	extern bool WeaponChams;
 
 	extern uint32_t ping;
 
 	extern bool Chams;
 	extern float ChamsColor[3];
+	extern float ChamsColorGun[3];
 	extern float SkyTintColor[3];
 
 };
