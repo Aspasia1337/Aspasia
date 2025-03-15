@@ -1,4 +1,4 @@
-
+﻿
 #include "font.h"
 
 #include "../visuals/Visuals.h"
@@ -158,8 +158,12 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 
 
-	if (GetAsyncKeyState (VK_INSERT) & 1)
+	if (GetAsyncKeyState (VK_INSERT) & 1) {
+		ImGui::GetIO ( ).MouseDrawCursor = !ImGui::GetIO ( ).MouseDrawCursor;
 		Globals::showMenu = !Globals::showMenu;
+		if (Globals::MouseEvent)
+			iHooksManager->m_IsRelativeMouseMode.hIsRelativeMouseFunction (Globals::MouseEvent, Globals::LastMode);
+	}
 
 	ImGui_ImplDX11_NewFrame ( );
 	ImGui_ImplWin32_NewFrame ( );
@@ -168,27 +172,122 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 	std::time_t now = std::time (nullptr);
 	std::tm localTime;
 
-	if (localtime_s (&localTime, &now) == 0) {
-		ImGui::SetNextWindowPos ({ 15,15 });
-		ImGui::SetNextWindowSize ({ 230,30 });
+	static float gradientOffset = 0.0f;
 
-		ImGui::Begin ("Watermark", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
-		ImGui::Text ("Aspasia.win | %d:%d:%d | %d ms", localTime.tm_hour, localTime.tm_min, localTime.tm_sec, Globals::ping);
+	if (localtime_s (&localTime, &now) == 0) {
+		ImGui::SetNextWindowPos ({ 15, 15 });
+		ImGui::SetNextWindowSize ({ 230, 35 });
+		ImGui::PushStyleVar (ImGuiStyleVar_WindowRounding, 6.0f);
+
+		ImGui::Begin ("Watermark", NULL,
+			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoScrollbar);
+
+		ImGui::Text ("Aspasia.win | %02d:%02d:%02d | %d ms",
+			localTime.tm_hour, localTime.tm_min, localTime.tm_sec, Globals::ping);
 
 		ImGui::End ( );
+		ImGui::PopStyleVar ( );
+
+		ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+
+		ImVec2 p = ImVec2 (15, 47);
+		float width = 230.0f;
+		float height = 4.0f;
+		float rounding = 6.0f;
+
+		ImColor color1 = ImColor::HSV (fmod (0.08f + gradientOffset, 1.0f), 0.8f, 0.9f); 
+		ImColor color2 = ImColor::HSV (fmod (0.12f + gradientOffset, 1.0f), 0.9f, 1.0f); 
+
+		drawList->AddRectFilledMultiColor (
+			ImVec2 (p.x, p.y),
+			ImVec2 (p.x + width, p.y + height),
+			color1, color2, color2, color1 
+		);
+
+		gradientOffset += 0.002f;
+		if (gradientOffset > 1.0f) gradientOffset = 0.0f;
 	}
 
+
+	static float spectatorsGradientOffset = 0.0f;
+
+
+
+	static float featuresGradientOffset = 0.0f;
+
+	ImGui::SetNextWindowPos (ImVec2 (15, 100), ImGuiCond_FirstUseEver); 
+	ImGui::SetNextWindowBgAlpha (0.85f);
+	ImGui::PushStyleVar (ImGuiStyleVar_WindowRounding, 6.0f);
+
+	if (ImGui::Begin ("Features", NULL,
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoScrollbar))
+	{
+		ImGui::TextColored (ImVec4 (1.0f, 1.0f, 1.0f, 1.0f), "Features:"); 
+		ImGui::Separator ( );
+
+		if (Globals::Features.empty ( )) {
+			ImGui::TextColored (ImVec4 (0.8f, 0.8f, 0.8f, 1.0f), "No features available.");
+		}
+		else {
+			for (const auto &feature : Globals::Features) {
+				if(*feature.bFeature)
+				ImGui::BulletText ("%s", feature.FeatureName);
+			}
+		}
+
+		ImVec2 windowPos = ImGui::GetWindowPos ( );
+		ImVec2 windowSize = ImGui::GetWindowSize ( );
+
+		ImGui::End ( );
+
+		ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+		float width = windowSize.x;
+		float height = 5.0f;
+		float rounding = 6.0f;
+
+		ImColor color1 = ImColor::HSV (fmod (0.08f + featuresGradientOffset, 1.0f), 0.8f, 0.9f); 
+		ImColor color2 = ImColor::HSV (fmod (0.12f + featuresGradientOffset, 1.0f), 0.9f, 1.0f); 
+
+		drawList->AddRectFilledMultiColor (
+			ImVec2 (windowPos.x, windowPos.y + windowSize.y - height),
+			ImVec2 (windowPos.x + width, windowPos.y + windowSize.y),
+			color1, color2, color2, color1
+		);
+
+		drawList->AddRectFilled (
+			ImVec2 (windowPos.x, windowPos.y + windowSize.y - height),
+			ImVec2 (windowPos.x + width, windowPos.y + windowSize.y),
+			ImColor (0, 0, 0, 50),
+			rounding
+		);
+
+		featuresGradientOffset += 0.002f;
+		if (featuresGradientOffset > 1.0f) featuresGradientOffset = 0.0f;
+	}
+
+	ImGui::PopStyleVar ( );
+
+
+
 	if (Globals::ShowSpectators) {
-		ImGui::SetNextWindowPos (ImVec2 (15, 80), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowBgAlpha (0.8f);
+		ImGui::SetNextWindowPos (ImVec2 (15, 250));
+		ImGui::SetNextWindowBgAlpha (0.85f);
+		ImGui::PushStyleVar (ImGuiStyleVar_WindowRounding, 6.0f);
 
-		if (ImGui::Begin ("Spectators", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar)) {
-
+		if (ImGui::Begin ("Spectators", NULL,
+			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoScrollbar))
+		{
 			ImGui::TextColored (ImVec4 (1.0f, 1.0f, 1.0f, 1.0f), "Spectators:");
 			ImGui::Separator ( );
 
 			if (Globals::Spectators.empty ( )) {
-				ImGui::TextColored (ImVec4 (1.0f, 1.0f, 1.0f, 1.0f), "No spectators.");
+				ImGui::TextColored (ImVec4 (0.8f, 0.8f, 0.8f, 1.0f), "No spectators.");
 			}
 			else {
 				for (const auto &name : Globals::Spectators) {
@@ -196,12 +295,42 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				}
 			}
 
+			ImVec2 windowPos = ImGui::GetWindowPos ( );
+			ImVec2 windowSize = ImGui::GetWindowSize ( );
+
 			ImGui::End ( );
+
+			ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+			float width = windowSize.x;  
+			float height = 5.0f;
+			float rounding = 6.0f; 
+
+			ImColor color1 = ImColor::HSV (fmod (0.08f + spectatorsGradientOffset, 1.0f), 0.8f, 0.9f); 
+			ImColor color2 = ImColor::HSV (fmod (0.12f + spectatorsGradientOffset, 1.0f), 0.9f, 1.0f); 
+
+			drawList->AddRectFilledMultiColor (
+				ImVec2 (windowPos.x, windowPos.y + windowSize.y - height),
+				ImVec2 (windowPos.x + width, windowPos.y + windowSize.y),
+				color1, color2, color2, color1
+			);
+
+			// 🔹 Bordes redondeados
+			drawList->AddRectFilled (
+				ImVec2 (windowPos.x, windowPos.y + windowSize.y - height),
+				ImVec2 (windowPos.x + width, windowPos.y + windowSize.y),
+				ImColor (0, 0, 0, 50), 
+				rounding
+			);
+
+			// 🔹 Animación fluida del gradiente
+			spectatorsGradientOffset += 0.002f;
+			if (spectatorsGradientOffset > 1.0f) spectatorsGradientOffset = 0.0f;
 		}
+
+		ImGui::PopStyleVar ( );
 	}
 
-
-	ImGui::SetNextWindowSize (ImVec2 (800, 800)); // Window Size
+	ImGui::SetNextWindowSize (ImVec2 (800, 800)); 
 	if (Globals::showMenu)
 	{
 		ImGui::Begin (("Aspasia 1337 : dev"), NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
@@ -295,10 +424,6 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 				if (ImGui::Checkbox ("Anti Aim", &Globals::anti_aim)) {
 				}
-
-
-
-
 
 				if (ImGui::Checkbox ("bhop", &Globals::bhop)) {
 

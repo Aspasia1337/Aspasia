@@ -7,7 +7,13 @@
 #include "../math/vector.h"
 #include <unordered_map>
 
+class Feature {
+public:
+	bool *bFeature;
+	const char *FeatureName;
 
+	Feature (bool *bFeat,const char *FeatName) : bFeature (bFeat), FeatureName (FeatName) {};
+};
 
 
 class C_BaseEntity {

@@ -22,6 +22,7 @@ namespace Globals {
     int tab = 0;
     int glowType = 0;
     bool showMenu = false;
+    bool LastMode = true;
 
     bool glow = false;
     bool ShowInfo = false;
@@ -79,6 +80,15 @@ namespace Globals {
     bool Chams = 0;
     float ChamsColor [3] = { 0.5f, 0.5f, 1.0f };
     float ChamsColorGun[3] = { 0.5f, 0.5f, 1.0f };
+
+    void *MouseEvent = nullptr;
+
+    std::vector <Feature> Features = {
+        Feature (&bhop,"BunnyHop"),
+        Feature (&PlayersChams,"Player Chams"),
+        Feature (&WeaponChams,"Weapon Chams"),
+        Feature (&AntiAim,"AntiAim"),
+    };
 
 }
 

@@ -4,11 +4,14 @@
 #include <vector>
 #include <iostream>
 
+#include "Classes/Classes.h"
+
 namespace Globals {
 	extern float chamsColor[4];
 	extern int tab;
 	extern int glowType;
 	extern bool showMenu;
+	extern bool LastMode;
 
 	extern bool glow;
 	extern bool ShowInfo;
@@ -64,5 +67,9 @@ namespace Globals {
 	extern float ChamsColor[3];
 	extern float ChamsColorGun[3];
 	extern float SkyTintColor[3];
+
+	extern  void *MouseEvent;
+
+	extern std::vector <Feature> Features;
 
 };
