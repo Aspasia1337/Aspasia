@@ -54,6 +54,8 @@ namespace Globals {
     bool PlayersChams = 0;
     bool WeaponChams = 0;
 
+    bool HealthBar = 0;
+
 
     float fov1;
     float fov2;

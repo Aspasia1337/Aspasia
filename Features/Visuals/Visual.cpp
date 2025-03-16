@@ -1,6 +1,10 @@
-#include "Visual.h"
+﻿#include "Visual.h"
 #include "Materials.h"
+#include "../../includes/imgui/imgui.h"
 #include "../../EntityManager/EntityManager.h"
+#include "../../math/vector.h"
+
+#include <algorithm>
 
 ByteColor Visual::WorldModulation::ColorCache;
 ByteColor Visual::UpdateSkybox::ColorCache;
@@ -100,6 +104,7 @@ void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, voi
 		}
 
 	}
+
 	return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }
 
@@ -221,4 +226,46 @@ CUtilsBuff::CUtilsBuff (int a1, int nSize, int a3)
 void CUtilsBuff::PutString (const char *szString)
 {
 	iVisual->m_Chams.BuffPutString (this, szString);
+}
+
+
+void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
+{
+	if (!Player || Player->pawnHealth <= 0)
+		return;
+
+	Vec3 worldPos = Player->vOldOrigin;
+	Vec2 screenPos;
+
+	if (!worldPos.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
+		return;
+
+	ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+
+	float width = 60.0f;
+	float height = 3.0f;
+	float offsetY = 12.0f;
+
+	int health = Player->pawnHealth;
+	float healthPerc = static_cast<float>(health) / 100.0f;
+
+	ImU32 healthColor = IM_COL32 (
+		(1.0f - healthPerc) * 200,
+		healthPerc * 230,
+		50, 255
+	);
+
+	ImVec2 pos (screenPos.x - width / 2, screenPos.y + offsetY);
+
+	drawList->AddRectFilled (
+		ImVec2 (pos.x - 0.5f, pos.y - 0.5f),
+		ImVec2 (pos.x + width + 0.5f, pos.y + height + 0.5f),
+		IM_COL32 (30, 30, 30, 180)
+	);
+
+	drawList->AddRectFilled (
+		ImVec2 (pos.x, pos.y),
+		ImVec2 (pos.x + (width * healthPerc), pos.y + height),
+		healthColor
+	);
 }

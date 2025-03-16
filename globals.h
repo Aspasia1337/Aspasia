@@ -61,6 +61,8 @@ namespace Globals {
 	extern bool PlayersChams;
 	extern bool WeaponChams;
 
+	extern bool HealthBar;
+
 	extern uint32_t ping;
 
 	extern bool Chams;

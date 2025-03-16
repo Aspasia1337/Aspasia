@@ -115,6 +115,13 @@ public:
 	Chams m_Chams;
 
 
+	class OverlayRender {
+	public:
+
+		static void RenderHealth (C_PlayerPawn *Player);
+
+	};
+	OverlayRender m_OverlayRender;
 
 };
 

@@ -494,6 +494,10 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 					
 				}
 
+				if (ImGui::Checkbox ("HealtBar", &Globals::HealthBar)) {
+
+				}
+
 				if (Globals::Chams) {
 
 					if (ImGui::Checkbox ("PlayerChams", &Globals::PlayersChams)) {
@@ -525,7 +529,6 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 						if (ImGui::Combo ("Chams Type Gun", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames))) {
 
 						}
-
 					}
 
 
@@ -548,6 +551,12 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 	if (Globals::CreateMoveHook) {
 		DrawFovCircle ( );
+	}
+
+	if (Globals::HealthBar) {
+		for (auto &pawn : iGameEntitySystem->PawnMap) {
+			iVisual->m_OverlayRender.RenderHealth (pawn.second);
+		}
 	}
 
 	ImGui::Render ( );
