@@ -35,7 +35,7 @@ public:
 	std::vector<C_PlayerController *> ControllerVector;
 	std::vector<C_PlayerPawn *> PawnVector;
     std::vector<C_PlayerPawn *> ObserverPawnVector;
-	std::vector<Players *> PlayersVector;
+	std::vector<Players *> PlayersMap;
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
 
     std::unordered_map <uint32_t, C_PlayerPawn *> PawnMap;
