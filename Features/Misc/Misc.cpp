@@ -6,6 +6,7 @@ void Misc::Spectators::ShowSpectatorList (std::unordered_map<uint32_t, C_PlayerP
 	std::vector<std::string> TempSpectators; // To avoid flickering on ImGui
 
 	for (const auto &obs : ObserverMap) {
+		
 		if (LocalPlayerPawn->pawnHealth <= 0 || (obs.second->GetPawn (PawnMap))->pawnHealth > 0) {
 			continue;
 		}

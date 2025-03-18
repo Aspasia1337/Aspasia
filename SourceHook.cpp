@@ -47,9 +47,13 @@ namespace Globals {
     float SkyTintColor[3] = { 0, 0, 0 };
 
 
-    const char *MaterialNames[5] = { "WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow" };
+    const char *MaterialNames[6] = { "WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow", "Blom"};
+    const char *BoneNames[7] = { "Head", "Torso", "Right Hand", "Left Hand" , "Pelvis", "Right Feet", "Left Feet"};
+
     int MaterialSelected = 0;
     int MaterialGunSelected = 0;
+
+    int BoneSelected = 6;
 
     bool PlayersChams = 0;
     bool WeaponChams = 0;
@@ -91,6 +95,19 @@ namespace Globals {
         Feature (&WeaponChams,"Weapon Chams"),
         Feature (&AntiAim,"AntiAim"),
     };
+
+    bool RenderPlayerBones = false;
+
+    std::unordered_map<const char *, terroristBones::tBones> boneMap = {
+    {"Head", terroristBones::head_0},
+    {"Torso", terroristBones::spine_3},
+    {"Right Hand", terroristBones::hand_r},
+    {"Left Hand", terroristBones::hand_l},
+    {"Pelvis", terroristBones::pelvis},
+    {"Right Feet", terroristBones::ankle_r},
+    {"Left Feet", terroristBones::ankle_l}
+    };
+
 
 }
 

@@ -189,7 +189,7 @@ bool HooksManager::initHook ( ) {
 	}
 
 
-	uint8_t *isRelativeMouse = (uint8_t *)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 76);
+	uint8_t *isRelativeMouse = (uint8_t *)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 77);
 
 	hookInit = MH_CreateHook (
 		isRelativeMouse,
@@ -400,50 +400,54 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 		}
 	}
 
+	if (Globals::CreateMoveHook) {
 
-
-
-	//if (iHooksManager->m_CreateMove.isPlayerInGame ( ) && iGameEntitySystem->LocalPlayerPawn->pawnHealth >0) {
-		/*iGameEntitySystem->getEnemisByFov ( );
-
-		if (iGameEntitySystem->PlayersVector.size ( ) >= 1 && Globals::CreateMoveHook && GetAsyncKeyState (RI_MOUSE_LEFT_BUTTON_DOWN & 1) && iGameEntitySystem->PlayersVector[0]->Pawn->isInFov) {
-			if (iGameEntitySystem->PlayersVector[0]->Pawn->pawnHealth > 0) {
-
-				Vec3 tempEnemy = *(new Vec3 (
-					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.x,
-					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.y,
-					iGameEntitySystem->PlayersVector[0]->Pawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->PlayersVector[0]->Pawn->m_vecViewOffset.z
-				));
-
-				Vec3 tempMe = *(new Vec3{
-					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
-					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
-					iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z - iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
-					});
-
-				SetViewAngles::hSetViewAngles ((__int64 *)csgoInput, 0, CalculateAngles (tempMe, tempEnemy, Globals::aimbotFov));
+		C_PlayerPawn *EnemyTemp = nullptr;
+			for(auto &anyenemy: iGameEntitySystem->PawnMap){
+				if (anyenemy.second != iGameEntitySystem->GetPlayerPawn ( ) && anyenemy.second->pawnHealth >0)
+				{
+					EnemyTemp = anyenemy.second;
+					break;
+				}
 			}
-		}*/
 
-		//if (Globals::glow) {
-		//	//iVisuals->glowPlayers (Globals::glowType, Globals::chamsColor);
-		//	//iGameEntitySystem->getGameEntities ( );
+			Vec3 tempMe = Vec3 (
+				iGameEntitySystem->GetPlayerPawn ( )->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->GetPlayerPawn ( )->m_vecViewOffset.x,
+				iGameEntitySystem->GetPlayerPawn ( )->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->GetPlayerPawn ( )->m_vecViewOffset.y,
+				iGameEntitySystem->GetPlayerPawn ( )->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->GetPlayerPawn ( )->m_vecViewOffset.z
+			);
 
-		//	//uint32_t targetHook;
-		//	//C_PlayerPawn *localPlayerPawn = *(C_PlayerPawn **)(iGameEntitySystem->clientDll+ 0x188AF20);
-		//}
+			Vec3 pos = iLegitBot->m_BonePosition.GetBonePosFromIndex (Globals::boneMap.at(Globals::BoneNames[Globals::BoneSelected]), EnemyTemp, iGameEntitySystem->GetPlayerPawn ());
+
+			Vec3 tempEnemy = Vec3 (
+				pos.x, 
+				pos.y,
+				pos.z
+			);
+
+			iHelper->m_Console.printMessage (WARNING, tempEnemy.x, " ", tempEnemy.y, " ", tempEnemy.z);
+
+			SetViewAngles::hSetViewAngles ((__int64 *)csgoInput, 0, CalculateAngles (tempMe, tempEnemy, Globals::aimbotFov));
+
+
+		}
+
 }
 
 
 void* HooksManager::IsRelativeMouseMode::hIsRelativeMouseFunction (void *pThisptr, bool bActive) {
-	
+
+	Globals::MouseEvent = pThisptr;
+	Globals::LastMode = bActive;
 	if (Globals::showMenu) {
 		return oIsRelativeMouseMode (pThisptr, false);
 	}
-	return oIsRelativeMouseMode (pThisptr, true);
+
+	return oIsRelativeMouseMode (pThisptr, bActive);
 
 }
 
+void *savedPtr;
 void HooksManager::IsRelativeMouseMode::hMouseInput (void *pThisptr)
 {
 	if (Globals::showMenu) {
@@ -493,7 +497,6 @@ void HooksManager::OnRemoveEntity::hOnRemoveEntity (__int64 CGameEntitySystem, v
 void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot, CUserCmd *a3) {
 	oCreateMoveTWO (a1, nSlot, a3);
 
-
 	if (!a3)
 		return;
 
@@ -512,8 +515,6 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO (CCSGOInput *a1, __int64 nSlot,
 	if (Globals::ChangeSkyColor) {
 		iVisual->m_UpdateSkybox.ChangeSkybox ( );
 	}
-	
-	
 
 	return;
 }

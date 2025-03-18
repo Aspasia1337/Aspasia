@@ -13,15 +13,10 @@
 #include "../math/vector.h"
 #include "../includes/imgui/imgui.h"
 
+#include "../Features/Visuals/Visual.h"
+
 #include <unordered_map>
 
-    };
-
-};
-
-    };
-
-};
 
 
 class GameEntitySystem {

@@ -3,13 +3,13 @@
 
 // Correct angle from actual view, without this
 // angles are referenced to the center of the map and not players point of view
-void AntiAim::CorrectionFromView (Vec3 &Angle, Vec3 PlayerAngles) { 
+void AntiAim::CorrectionFromView (Vec3 &Angle, Vec3 PlayerAngles) {
 
 	float TempJaw = Globals::AAJaw - fabs (PlayerAngles.y);
 	float TempPitch = Globals::AAPitch - fabs (PlayerAngles.x);
 
 	if (PlayerAngles.y > 0) {
-		Angle.y = - TempJaw;
+		Angle.y = -TempJaw;
 	}
 	else {
 		Angle.y = TempJaw;
@@ -24,7 +24,7 @@ void AntiAim::CorrectionFromView (Vec3 &Angle, Vec3 PlayerAngles) {
 
 }
 
-void AntiAim::OnMove (CCSGOInput *CCSGOInput, CUserCmd* UserCmd) {
+void AntiAim::OnMove (CCSGOInput *CCSGOInput, CUserCmd *UserCmd) {
 
 	// Save player angles, mandatory for moving camera arround when calling ValidateInput()
 	PlayerAngles = UserCmd->CBaseUserCmdPB->CMsgQAngle->ViewAngles;
@@ -32,7 +32,7 @@ void AntiAim::OnMove (CCSGOInput *CCSGOInput, CUserCmd* UserCmd) {
 	// Override angles with Anti Aim Angles
 	Vec3 TempAngles = *new Vec3 (Globals::AAPitch, Globals::AAJaw, 0.0f);
 
-	CorrectionFromView (TempAngles,PlayerAngles);
+	CorrectionFromView (TempAngles, PlayerAngles);
 	UserCmd->CBaseUserCmdPB->CMsgQAngle->ViewAngles = TempAngles;
 
 }

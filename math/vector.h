@@ -26,6 +26,16 @@ struct Vec3 {
 };
 
 
+struct Vector4D_t
+{
+	constexpr Vector4D_t (const float x = 0.0f, const float y = 0.0f, const float z = 0.0f, const float w = 0.0f) :
+		x (x), y (y), z (z), w (w) {
+	}
+
+	float x = 0.0f, y = 0.0f, z = 0.0f, w = 0.0f;
+};
+
+
 double CalculateDistance (Vec3 Source, Vec3 Dest);
 Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float fov);
 bool IsTargetWithinFOV (float targetYaw, float targetPitch, float playerYaw, float playerPitch, float AimFov, float &resultingDistance);

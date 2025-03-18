@@ -56,7 +56,6 @@ Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float
     Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AADAA0);
 
     float returningDistance;
-
     Vec3 qAngles;
 
     Vec3 playerToEnemyVec = Vec3 (
@@ -67,8 +66,9 @@ Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float
 
     double hyp = sqrtf (playerToEnemyVec.x * playerToEnemyVec.x + playerToEnemyVec.y * playerToEnemyVec.y);
 
-    float targetX = (float)(atan (playerToEnemyVec.z / hyp) * (180.0 / std::numbers::pi)); // Pitch
-    float targetY = (float)(atan2 (playerToEnemyVec.y, playerToEnemyVec.x) * (180.0 / std::numbers::pi)); // Yaw
+    float targetX = -atan2 (playerToEnemyVec.z, hyp) * (180.0 / std::numbers::pi);
+    float targetY = atan2 (playerToEnemyVec.y, playerToEnemyVec.x) * (180.0 / std::numbers::pi);
+
 
     if (!IsTargetWithinFOV (targetY, targetX, viewangles->y, viewangles->x, AimFov, returningDistance))
         return *viewangles;
@@ -81,6 +81,7 @@ Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float
 
     return qAngles;
 }
+
 
 void NormalizeAngles(Vec3 &qAngle) {
     if (qAngle.x > 89.0f) qAngle.x = 89.0f;

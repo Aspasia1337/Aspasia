@@ -403,9 +403,7 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 				if (ImGui::Checkbox ("Render Flash Hook!", &Globals::RenderFlashHook)) {
 
 				}
-				if (ImGui::Checkbox ("CreateMove Hook!", &Globals::CreateMoveHook)) {
 
-				}
 				if (ImGui::Checkbox ("View Angles Hook!", &Globals::SetViewAngles)) {
 				}
 
@@ -446,6 +444,8 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 				if (ImGui::DragFloat ("intensity", &Globals::lightIntensity, 0.001f, 0.0f, 10.0f, "%.3f")) {
 				}
+
+
 			}
 
 
@@ -498,6 +498,10 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 				}
 
+				if (ImGui::Checkbox ("Render Bones", &Globals::RenderPlayerBones)) {
+
+				}
+
 				if (Globals::Chams) {
 
 					if (ImGui::Checkbox ("PlayerChams", &Globals::PlayersChams)) {
@@ -532,8 +536,29 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 					}
 
 
+
+					if (ImGui::Checkbox ("LegitBot Hook!", &Globals::CreateMoveHook)) {
+
+					}
+
+
+
+
 				}
 
+
+				
+					if (ImGui::Checkbox ("CreateMove Hook!", &Globals::CreateMoveHook)) {
+
+
+					}
+
+					if (Globals::CreateMoveHook) {
+						if (ImGui::Combo ("TARGET PLACE", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE (Globals::BoneNames))) {
+
+						}
+
+					}
 				
 
 			}
@@ -542,7 +567,6 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 	}
 
 	if (Globals::noSmoke) {
-		iGameEntitySystem->getAllPlayers ( );
 	}
 
 	if (Globals::smokeVisuals) {
@@ -556,6 +580,12 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 	if (Globals::HealthBar) {
 		for (auto &pawn : iGameEntitySystem->PawnMap) {
 			iVisual->m_OverlayRender.RenderHealth (pawn.second);
+		}
+	}
+
+	if (Globals::RenderPlayerBones) {
+		for (auto &pawn : iGameEntitySystem->PawnMap) {
+			iVisual->m_OverlayRender.RenderPlayerBones (pawn.second);
 		}
 	}
 

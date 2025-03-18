@@ -52,11 +52,13 @@ namespace Globals {
 	extern float SkyModulationColor[3];
 	extern float SkyTintColor[3];
 
-	extern const char *MaterialNames[5];
+	extern const char *MaterialNames[6];
+	extern const char *BoneNames[7];
 	
 	extern int  MaterialSelected;
 	extern int MaterialGunSelected;
 
+	extern int BoneSelected;
 
 	extern bool PlayersChams;
 	extern bool WeaponChams;
@@ -74,4 +76,7 @@ namespace Globals {
 
 	extern std::vector <Feature> Features;
 
+	extern bool RenderPlayerBones;
+
+	extern std::unordered_map<const char*, terroristBones::tBones> boneMap;
 };
