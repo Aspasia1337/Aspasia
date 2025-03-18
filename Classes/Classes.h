@@ -7,6 +7,239 @@
 #include "../math/vector.h"
 #include <unordered_map>
 
+
+
+
+namespace terroristBones {
+    enum tBones : DWORD {
+        pelvis = 0,
+        spine_0 = 1,
+        spine_1 = 2,
+        spine_2 = 3,
+        spine_3 = 4,
+        neck_0 = 5,
+        head_0 = 6,
+        clavicle_l = 7,
+        arm_upper_l = 8,
+        arm_lower_l = 9,
+        hand_l = 10,
+        weapon_hand_l = 11,
+        clavicle_r = 12,
+        arm_upper_r = 13,
+        arm_lower_r = 14,
+        hand_r = 15,
+        weapon_hand_r = 16,
+        jiggle_primary = 17,
+        chesthier_offset = 18,
+        weaponhier_jnt = 19,
+        weaponhier_r_iktarget = 20,
+        weaponhier_l_iktarget = 21,
+        leg_upper_l = 22,
+        leg_lower_l = 23,
+        ankle_l = 24,
+        leg_upper_r = 25,
+        leg_lower_r = 26,
+        ankle_r = 27,
+        root_motion = 28,
+        leg_l_offset = 29,
+        leg_l_iktarget = 30,
+        leg_r_offset = 31,
+        leg_r_iktarget = 32,
+        eyeball_l = 33,
+        eyeball_r = 34,
+        eye_target = 35,
+        head_0_twist = 36,
+        finger_middle_meta_l = 37,
+        finger_middle_0_l = 38,
+        finger_middle_1_l = 39,
+        finger_middle_2_l = 40,
+        finger_pinky_meta_l = 41,
+        finger_pinky_0_l = 42,
+        finger_pinky_1_l = 43,
+        finger_pinky_2_l = 44,
+        finger_index_meta_l = 45,
+        finger_index_0_l = 46,
+        finger_index_1_l = 47,
+        finger_index_2_l = 48,
+        finger_thumb_0_l = 49,
+        finger_thumb_1_l = 50,
+        finger_thumb_2_l = 51,
+        finger_ring_meta_l = 52,
+        finger_ring_0_l = 53,
+        finger_ring_1_l = 54,
+        finger_ring_2_l = 55,
+        arm_lower_l_twist = 56,
+        arm_lower_l_twist1 = 57,
+        arm_upper_l_twist1 = 58,
+        arm_upper_l_twist = 59,
+        pect_l_aimat = 60,
+        scapula_l = 61,
+        finger_middle_meta_r = 62,
+        finger_middle_0_r = 63,
+        finger_middle_1_r = 64,
+        finger_middle_2_r = 65,
+        finger_pinky_meta_r = 66,
+        finger_pinky_0_r = 67,
+        finger_pinky_1_r = 68,
+        finger_pinky_2_r = 69,
+        finger_index_meta_r = 70,
+        finger_index_0_r = 71,
+        finger_index_1_r = 72,
+        finger_index_2_r = 73,
+        finger_thumb_0_r = 74,
+        finger_thumb_1_r = 75,
+        finger_thumb_2_r = 76,
+        finger_ring_meta_r = 77,
+        finger_ring_0_r = 78,
+        finger_ring_1_r = 79,
+        finger_ring_2_r = 80,
+        arm_lower_r_twist = 81,
+        arm_lower_r_twist1 = 82,
+        arm_upper_r_twist1 = 83,
+        arm_upper_r_twist = 84,
+        pect_r_aimat = 85,
+        scapula_r = 86,
+        pect_l_aimup = 87,
+        pect_r_aimup = 88,
+        scap_aimup = 89,
+        pectaim_l = 90,
+        pecttrans_l = 91,
+        pectaim_r = 92,
+        pecttrans_r = 93,
+        scap_r_aimat = 94,
+        scap_l_aimat = 95,
+        pect_l_ptbase = 96,
+        pect_r_ptbase = 97,
+        ball_l = 98,
+        leg_upper_l_twist = 99,
+        leg_upper_l_twist1 = 100,
+        ball_r = 101,
+        leg_upper_r_twist = 102,
+        leg_upper_r_twist1 = 103
+    };
+
+}
+
+namespace antiTerroristBones {
+    enum ctBones : DWORD {
+        pelvis = 0,
+        spine_0 = 1,
+        spine_1 = 2,
+        spine_2 = 3,
+        spine_3 = 4,
+        neck_0 = 5,
+        head_0 = 6,
+        clavicle_l = 7,
+        arm_upper_l = 8,
+        arm_lower_l = 9,
+        hand_l = 10,
+        weapon_hand_l = 11,
+        clavicle_r = 12,
+        arm_upper_r = 13,
+        arm_lower_r = 14,
+        hand_r = 15,
+        weapon_hand_r = 16,
+        jiggle_primary = 17,
+        chesthier_offset = 18,
+        weaponhier_jnt = 19,
+        weaponhier_r_iktarget = 20,
+        weaponhier_l_iktarget = 21,
+        leg_upper_l = 22,
+        leg_lower_l = 23,
+        ankle_l = 24,
+        leg_upper_r = 25,
+        leg_lower_r = 26,
+        ankle_r = 27,
+        root_motion = 28,
+        leg_l_offset = 29,
+        leg_l_iktarget = 30,
+        leg_r_offset = 31,
+        leg_r_iktarget = 32,
+        eyeball_l = 33,
+        eyeball_r = 34,
+        eye_target = 35,
+        head_0_twist = 36,
+        jiggle_hood = 37,
+        finger_middle_meta_l = 38,
+        finger_middle_0_l = 39,
+        finger_middle_1_l = 40,
+        finger_middle_2_l = 41,
+        finger_pinky_meta_l = 42,
+        finger_pinky_0_l = 43,
+        finger_pinky_1_l = 44,
+        finger_pinky_2_l = 45,
+        finger_thumb_0_l = 46,
+        finger_thumb_1_l = 47,
+        finger_thumb_2_l = 48,
+        finger_index_meta_l = 49,
+        finger_index_0_l = 50,
+        finger_index_1_l = 51,
+        finger_index_2_l = 52,
+        finger_ring_meta_l = 53,
+        finger_ring_0_l = 54,
+        finger_ring_1_l = 55,
+        finger_ring_2_l = 56,
+        arm_lower_l_twist = 57,
+        arm_lower_l_twist1 = 58,
+        arm_upper_l_twist = 59,
+        arm_upper_l_twist1 = 60,
+        pect_l_aimat = 61,
+        scapula_l = 62,
+        finger_middle_meta_r = 63,
+        finger_middle_0_r = 64,
+        finger_middle_1_r = 65,
+        finger_middle_2_r = 66,
+        finger_pinky_meta_r = 67,
+        finger_pinky_0_r = 68,
+        finger_pinky_1_r = 69,
+        finger_pinky_2_r = 70,
+        finger_index_meta_r = 71,
+        finger_index_0_r = 72,
+        finger_index_1_r = 73,
+        finger_index_2_r = 74,
+        finger_thumb_0_r = 75,
+        finger_thumb_1_r = 76,
+        finger_thumb_2_r = 77,
+        finger_ring_meta_r = 78,
+        finger_ring_0_r = 79,
+        finger_ring_1_r = 80,
+        finger_ring_2_r = 81,
+        arm_lower_r_twist = 82,
+        arm_lower_r_twist1 = 83,
+        arm_upper_r_twist = 84,
+        arm_upper_r_twist1 = 85,
+        pect_r_aimat = 86,
+        scapula_r = 87,
+        jiggle_back_micropouches = 88,
+        pect_l_aimup = 89,
+        pect_r_aimup = 90,
+        scap_aimup = 91,
+        jiggle_front_micropouches = 92,
+        jiggle_front_pouch_01 = 93,
+        jiggle_front_pouch_02 = 94,
+        jiggle_radio = 95,
+        pectaim_l = 96,
+        pecttrans_l = 97,
+        pectaim_r = 98,
+        pecttrans_r = 99,
+        scap_r_aimat = 100,
+        scap_l_aimat = 101,
+        pect_l_ptbase = 102,
+        pect_r_ptbase = 103,
+        ball_l = 104,
+        leg_upper_l_twist = 105,
+        leg_upper_l_twist1 = 106,
+        jiggle_climbinggear_01 = 107,
+        jiggle_climbinggear_02 = 108,
+        ball_r = 109,
+        leg_upper_r_twist = 110,
+        leg_upper_r_twist1 = 111,
+        jiggle_holster = 112
+    };
+
+};
+
+
 class Feature {
 public:
 	bool *bFeature;
@@ -63,13 +296,52 @@ public:
 };
 
 
+class BoneData_t {
+public:
+		Vec3 vecPosition;
+		float flScale;
+		Vector4D_t vecRotation;
+};
+
+
+class CModelState {
+public:
+	union {
+		DEFINE_MEMBER_N (BoneData_t *, bones, 0x80);
+	};
+};
+
+
+class CSkeletonInstance {
+public:
+	union {
+		DEFINE_MEMBER_N (CModelState , modelState, 0x170);
+	};
+};
+
+
 class CGameSceneNode {
 public:
 	union {
 		//              Type     Name    Offset
-		DEFINE_MEMBER_N (uint32_t, m_modelState, 0x170);   //linker!
+		DEFINE_MEMBER_N (CModelState , m_modelState, 0x170);   //linker!
 		DEFINE_MEMBER_N (Vec3, m_vecOrigin, 0x88);   //linker!
 	};
+
+
+
+	//	return iHelper->m_Mem.CallVMT<CSkeletonInstance *, 8> (this);
+
+	//Vec3 GetBoneFromIndex (uint32_t BoneIndex, C_PlayerPawn *pawn) {
+
+	//	CSkeletonInstance *pSkeleton = GetSkeletonInstance ();
+	//	if (!pSkeleton)
+	//		return *new Vec3 (0, 0, 0);
+	//		
+
+
+	//}
+	
 
 };
 
@@ -117,10 +389,6 @@ public:
 };
 
 
-class CSkeletonInstance {
-
-};
-
 
 class CBodyComponent {
 	DEFINE_MEMBER_N (CSkeletonInstance *, m_skeletonInstance, 0x50);   //linker!
@@ -145,6 +413,8 @@ public:
 		DEFINE_MEMBER_N (uint32_t, m_hObserverTarget, 0x44);
 	};
 };
+
+
 
 class C_PlayerPawn {
 public:
