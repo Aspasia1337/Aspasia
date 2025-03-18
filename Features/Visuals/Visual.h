@@ -98,7 +98,8 @@ public:
 		szVMatBufferIlluminateVisible,szVMatBufferIlluminateInvisible,
 		szVMatBufferIlatex, szVMatBufferIlatexInvisible,
 		szVMatBufferMetalic,szVMatBufferMetalicInvisible,
-		szVMatBufferGlowVisible, szVMatBufferGlowInvisible};
+		szVMatBufferGlowVisible, szVMatBufferGlowInvisible,
+		szBloomVmatBuffer, szInvisBloomVmatBuffer};
 
 		void InitChams ( );
 		CMaterial2 *CreateMaterial (const char *szMaterialName, const char szVmatBuffer[]);
@@ -119,6 +120,8 @@ public:
 	public:
 
 		static void RenderHealth (C_PlayerPawn *Player);
+
+		static void RenderPlayerBones (C_PlayerPawn *Player);
 
 	};
 	OverlayRender m_OverlayRender;

@@ -256,6 +256,8 @@ void CUtilsBuff::PutString (const char *szString)
 }
 
 
+
+
 void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
 {
 	if (!Player || Player->pawnHealth <= 0)
@@ -295,4 +297,38 @@ void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
 		ImVec2 (pos.x + (width * healthPerc), pos.y + height),
 		healthColor
 	);
+}
+
+void Visual::OverlayRender::RenderPlayerBones (C_PlayerPawn *Player)
+{
+	if (Player == iGameEntitySystem->GetPlayerPawn ( ))
+		return;
+
+		for (int bone = terroristBones::pelvis; bone <= terroristBones::leg_upper_r_twist1; ++bone)
+		{
+			CGameSceneNode *BoneArray = Player->m_pGameSceneNode;
+			CSkeletonInstance *SkeletonInstance = iHelper->m_Mem.CallVMT<CSkeletonInstance *, 8U> (BoneArray);
+			CModelState BoneModelState = SkeletonInstance->modelState;
+			BoneData_t *BoneArrayWHAT = BoneModelState.bones;
+
+			Vec2 screenPos;
+			BoneData_t *BoneArrayTWO = BoneArrayWHAT + bone;  // Acceder al hueso correcto
+
+			// Convertir coordenadas 3D a 2D
+			if (!BoneArrayTWO->vecPosition.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
+				continue;
+
+			ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+
+			char buffer[20];
+			snprintf (buffer, sizeof (buffer), "%d", bone);
+
+			ImU32 boneColor = IM_COL32 (
+				(bone * 15) % 255, 
+				(bone * 35) % 255, 
+				(bone * 55) % 255,  
+				255);  
+
+			drawList->AddText (ImVec2 (screenPos.x, screenPos.y), boneColor, buffer);
+		}
 }
