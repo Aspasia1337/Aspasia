@@ -202,7 +202,7 @@ void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *
 
 void Visual::Chams::InitChams ( )
 {
-	const char *MaterialNames [5] = {"WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow"};
+	const char *MaterialNames [6] = {"WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow", "Blom"};
 
 	int i = 0;
 	for (auto &MaterialName : MaterialNames) {

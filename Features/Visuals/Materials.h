@@ -208,3 +208,35 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
 	TextureAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
 	g_tAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
 })";
+
+
+static const char szBloomVmatBuffer[] = R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
+format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	shader = "solidcolor.vfx"
+	g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
+	g_tNormal = resource:"materials/default/default_normal_tga_7652cb.vtex"
+	g_tRoughness = resource:"materials/default/default_normal_tga_b3f4ec4c.vtex"
+	g_tMetalness = resource:"materials/default/default_normal_tga_b3f4ec4c.vtex"
+	g_tAmbientOcclusion = resource:"materials/default/default_normal_tga_b3f4ec4c.vtex"
+	F_IGNOREZ = 1
+	F_DISABLE_Z_WRITE = 1
+	F_RENDER_BACKFACES = 1
+	g_vColorTint = [9.0, 9.0, 9.0, 9.0]
+} )";
+
+static const char szInvisBloomVmatBuffer[] = R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
+format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	shader = "solidcolor.vfx"
+	g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
+	g_tNormal = resource:"materials/default/default_normal_tga_7652cb.vtex"
+	g_tRoughness = resource:"materials/default/default_normal_tga_b3f4ec4c.vtex"
+	g_tMetalness = resource:"materials/default/default_normal_tga_b3f4ec4c.vtex"
+	g_tAmbientOcclusion = resource:"materials/default/default_normal_tga_b3f4ec4c.vtex"
+	F_IGNOREZ = 1
+	F_DISABLE_Z_WRITE = 1
+	F_DISABLE_Z_BUFFERING = 1
+	F_RENDER_BACKFACES = 1
+	g_vColorTint = [9.0, 9.0, 9.0, 9.0]
+} )";
