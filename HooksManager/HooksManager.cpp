@@ -400,22 +400,45 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 		}
 	}
 
-	if (Globals::CreateMoveHook) {
+	if (Globals::CreateMoveHook && iGameEntitySystem->PawnMap.size() >= 1 ) {
+
+		//C_PlayerPawn *EnemyTemp = nullptr;
+		//	for(auto &anyenemy: iGameEntitySystem->PawnMap){
+		//		if (anyenemy.second != iGameEntitySystem->GetPlayerPawn ( ) && !anyenemy.second->pawnIsAlive && anyenemy.second->pawnHealth > 0)
+		//		{
+		//			EnemyTemp = anyenemy.second;
+		//			break;
+		//		}
+		//	}
 
 		C_PlayerPawn *EnemyTemp = nullptr;
-			for(auto &anyenemy: iGameEntitySystem->PawnMap){
-				if (anyenemy.second != iGameEntitySystem->GetPlayerPawn ( ) && anyenemy.second->pawnHealth >0)
-				{
-					EnemyTemp = anyenemy.second;
-					break;
+		double MinDistance = 99999999;
+
+		Vec3 PlayerPos = iGameEntitySystem->GetPlayerPawn ( )->vOldOrigin;
+
+		for (auto &anyenemy : iGameEntitySystem->PawnMap) {
+			C_PlayerPawn *enemy = anyenemy.second;
+
+			if (enemy != iGameEntitySystem->GetPlayerPawn ( ) && !enemy->pawnIsAlive && enemy->pawnHealth > 0) {
+				double distance = CalculateDistance (PlayerPos, enemy->vOldOrigin);
+
+				if (distance < MinDistance) {
+					MinDistance = distance;
+					EnemyTemp = enemy;
 				}
 			}
+		}
+
+
+			if (!EnemyTemp || EnemyTemp->pawnIsAlive && EnemyTemp->pawnHealth <= 0 && !EnemyTemp->pawnIsAlive)
+				return;
 
 			Vec3 tempMe = Vec3 (
 				iGameEntitySystem->GetPlayerPawn ( )->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->GetPlayerPawn ( )->m_vecViewOffset.x,
 				iGameEntitySystem->GetPlayerPawn ( )->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->GetPlayerPawn ( )->m_vecViewOffset.y,
 				iGameEntitySystem->GetPlayerPawn ( )->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->GetPlayerPawn ( )->m_vecViewOffset.z
 			);
+
 
 			Vec3 pos = iLegitBot->m_BonePosition.GetBonePosFromIndex (Globals::boneMap.at(Globals::BoneNames[Globals::BoneSelected]), EnemyTemp, iGameEntitySystem->GetPlayerPawn ());
 
@@ -425,10 +448,7 @@ void HooksManager::CreateMove::hCreateMove (CCSGOInput *csgoInput, __int64 nSlot
 				pos.z
 			);
 
-			iHelper->m_Console.printMessage (WARNING, tempEnemy.x, " ", tempEnemy.y, " ", tempEnemy.z);
-
 			SetViewAngles::hSetViewAngles ((__int64 *)csgoInput, 0, CalculateAngles (tempMe, tempEnemy, Globals::aimbotFov));
-
 
 		}
 

@@ -548,17 +548,17 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 
 				
-					if (ImGui::Checkbox ("CreateMove Hook!", &Globals::CreateMoveHook)) {
+			if (ImGui::Checkbox ("CreateMove Hook!", &Globals::CreateMoveHook)) {
 
 
-					}
+			}
 
-					if (Globals::CreateMoveHook) {
-						if (ImGui::Combo ("TARGET PLACE", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE (Globals::BoneNames))) {
+			if (Globals::CreateMoveHook) {
+				if (ImGui::Combo ("TARGET PLACE", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE (Globals::BoneNames))) {
 
-						}
+				}
 
-					}
+			}
 				
 
 			}

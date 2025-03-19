@@ -425,6 +425,7 @@ public:
 		DEFINE_MEMBER_N (CGameSceneNode *, m_pGameSceneNode, 0x328);   //linker!
 		DEFINE_MEMBER_N (int32_t, pawnHealth, 0x344);
 		DEFINE_MEMBER_N (uint8_t, isAlive, 0x348);
+        DEFINE_MEMBER_N (bool, pawnIsAlive, 0x814);
 		DEFINE_MEMBER_N (uint32_t, m_fFlags, 0x3EC);
 		DEFINE_MEMBER_N (uint8_t, m_nActualMoveType, 0x446);
 		DEFINE_MEMBER_N (Vec3, vOldOrigin, 0x1324);
