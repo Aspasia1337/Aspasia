@@ -271,9 +271,17 @@ void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
 
 	ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
 
-	float width = 60.0f;
-	float height = 3.0f;
-	float offsetY = 12.0f;
+	Vec3 localPlayerPos = iGameEntitySystem->GetPlayerPawn ( )->vOldOrigin; 
+	double distance = CalculateDistance (localPlayerPos, worldPos);
+
+	float minDistance = 100.0f; 
+	float maxDistance = 1000.0f;
+	float scale = 1.0f - (distance - minDistance) / (maxDistance - minDistance);
+	scale = std::clamp (scale, 0.3f, 1.0f);
+
+	float width = 60.0f * scale;
+	float height = 3.0f * scale;
+	float offsetY = 12.0f * scale;
 
 	int health = Player->pawnHealth;
 	float healthPerc = static_cast<float>(health) / 100.0f;
@@ -306,16 +314,9 @@ void Visual::OverlayRender::RenderPlayerBones (C_PlayerPawn *Player)
 
 		for (int bone = terroristBones::pelvis; bone <= terroristBones::leg_upper_r_twist1; ++bone)
 		{
-			CGameSceneNode *BoneArray = Player->m_pGameSceneNode;
-			CSkeletonInstance *SkeletonInstance = iHelper->m_Mem.CallVMT<CSkeletonInstance *, 8U> (BoneArray);
-			CModelState BoneModelState = SkeletonInstance->modelState;
-			BoneData_t *BoneArrayWHAT = BoneModelState.bones;
-
 			Vec2 screenPos;
-			BoneData_t *BoneArrayTWO = BoneArrayWHAT + bone;  // Acceder al hueso correcto
 
-			// Convertir coordenadas 3D a 2D
-			if (!BoneArrayTWO->vecPosition.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
+			if (!Player->GetBone(bone)->vecPosition.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
 				continue;
 
 			ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
@@ -331,4 +332,73 @@ void Visual::OverlayRender::RenderPlayerBones (C_PlayerPawn *Player)
 
 			drawList->AddText (ImVec2 (screenPos.x, screenPos.y), boneColor, buffer);
 		}
+}
+
+
+void Visual::OverlayRender::RenderSkeleton (C_PlayerPawn *Player)
+{
+	if (!Player || Player == iGameEntitySystem->GetPlayerPawn ( ))
+		return;
+
+	ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+	if (!drawList)
+		return;
+
+	auto &boneMap = Globals::boneMap;
+	std::unordered_map<const char *, ImVec2> boneScreenPositions;
+
+	for (const auto &bone : boneMap) {
+		Vec2 bonePos;
+		if (Player->GetBone (bone.second) && Player->GetBone (bone.second)->vecPosition.WorldToScreen (bonePos, iGameEntitySystem->ViewMatrix)) {
+			boneScreenPositions[bone.first] = ImVec2 (bonePos.x, bonePos.y);
+		}
+	}
+
+	std::vector<std::pair<const char *, const char *>> boneConnections = {
+		{"Head", "Neck"}, {"Neck", "Torso"}, {"Torso", "Pelvis"},
+		{"Torso", "Left Clavicle"}, {"Left Clavicle", "Left Upper Arm"},
+		{"Left Upper Arm", "Left Lower Arm"}, {"Left Lower Arm", "Left Hand"},
+		{"Torso", "Right Clavicle"}, {"Right Clavicle", "Right Upper Arm"},
+		{"Right Upper Arm", "Right Lower Arm"}, {"Right Lower Arm", "Right Hand"},
+		{"Pelvis", "Left Upper Leg"}, {"Left Upper Leg", "Left Lower Leg"},
+		{"Left Lower Leg", "Left Feet"}, {"Pelvis", "Right Upper Leg"},
+		{"Right Upper Leg", "Right Lower Leg"}, {"Right Lower Leg", "Right Feet"}
+	};
+	
+	std::vector<ImU32> boneColors = {
+		IM_COL32 (255, 255, 255, 255),  
+		IM_COL32 (255, 200, 0, 255),    
+		IM_COL32 (255, 0, 0, 255),      
+		IM_COL32 (255, 0, 0, 255),
+		IM_COL32 (255, 0, 0, 255),
+		IM_COL32 (255, 0, 0, 255),
+		IM_COL32 (255, 0, 0, 255),
+
+		IM_COL32 (0, 255, 0, 255),    
+		IM_COL32 (0, 255, 0, 255),
+		IM_COL32 (0, 255, 0, 255),
+		IM_COL32 (0, 255, 0, 255),
+
+		IM_COL32 (0, 0, 255, 255),    
+		IM_COL32 (0, 0, 255, 255),
+		IM_COL32 (0, 0, 255, 255),
+
+		IM_COL32 (255, 0, 255, 255),  
+		IM_COL32 (255, 0, 255, 255),
+		IM_COL32 (255, 0, 255, 255)
+	};
+
+	if (boneConnections.size ( ) != boneColors.size ( )) {
+		return;
+	}
+
+	for (size_t i = 0; i < boneConnections.size ( ); ++i) {
+		auto it1 = boneScreenPositions.find (boneConnections[i].first);
+		auto it2 = boneScreenPositions.find (boneConnections[i].second);
+
+		if (it1 == boneScreenPositions.end ( ) || it2 == boneScreenPositions.end ( ))
+			continue;
+
+		drawList->AddLine (it1->second, it2->second, boneColors[i], 2.5f);
+	}
 }

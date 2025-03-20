@@ -16,6 +16,9 @@ public:
 	};
 	GetBonePosition m_BonePosition;
 
+
+
+
 };
 
 inline Legitbot *iLegitBot = new Legitbot ( );

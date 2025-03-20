@@ -123,6 +123,8 @@ public:
 
 		static void RenderPlayerBones (C_PlayerPawn *Player);
 
+		static void RenderSkeleton (C_PlayerPawn *Player);
+
 	};
 	OverlayRender m_OverlayRender;
 

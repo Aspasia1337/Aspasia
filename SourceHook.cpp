@@ -99,14 +99,31 @@ namespace Globals {
     bool RenderPlayerBones = false;
 
     std::unordered_map<const char *, terroristBones::tBones> boneMap = {
-    {"Head", terroristBones::head_0},
-    {"Torso", terroristBones::spine_3},
-    {"Right Hand", terroristBones::hand_r},
-    {"Left Hand", terroristBones::hand_l},
-    {"Pelvis", terroristBones::pelvis},
-    {"Right Feet", terroristBones::ankle_r},
-    {"Left Feet", terroristBones::ankle_l}
+        {"Head", terroristBones::head_0},
+        {"Neck", terroristBones::neck_0},
+        {"Upper Chest", terroristBones::spine_2},
+        {"Torso", terroristBones::spine_3},
+        {"Pelvis", terroristBones::pelvis},
+
+        {"Left Clavicle", terroristBones::clavicle_l},
+        {"Left Upper Arm", terroristBones::arm_upper_l},
+        {"Left Lower Arm", terroristBones::arm_lower_l},
+        {"Left Hand", terroristBones::hand_l},
+
+        {"Right Clavicle", terroristBones::clavicle_r},
+        {"Right Upper Arm", terroristBones::arm_upper_r},
+        {"Right Lower Arm", terroristBones::arm_lower_r},
+        {"Right Hand", terroristBones::hand_r},
+
+        {"Left Upper Leg", terroristBones::leg_upper_l},
+        {"Left Lower Leg", terroristBones::leg_lower_l},
+        {"Left Feet", terroristBones::ankle_l},
+
+        {"Right Upper Leg", terroristBones::leg_upper_r},
+        {"Right Lower Leg", terroristBones::leg_lower_r},
+        {"Right Feet", terroristBones::ankle_r}
     };
+
 
 
 }

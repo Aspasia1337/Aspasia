@@ -13,6 +13,6 @@ Vec3 Legitbot::GetBonePosition::GetBonePosFromIndex (uint32_t index, C_PlayerPaw
 		CModelState BoneModelState = SkeletonInstance->modelState;
 		BoneData_t *BoneArrayWHAT = BoneModelState.bones;
 
-		BoneArrayWHAT +=index;  // Acceder al hueso correcto
+		BoneArrayWHAT +=index; 
 		return (BoneArrayWHAT->vecPosition);
 }

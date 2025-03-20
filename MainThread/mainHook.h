@@ -585,7 +585,8 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
 	if (Globals::RenderPlayerBones) {
 		for (auto &pawn : iGameEntitySystem->PawnMap) {
-			iVisual->m_OverlayRender.RenderPlayerBones (pawn.second);
+	//		iVisual->m_OverlayRender.RenderPlayerBones (pawn.second);
+			iVisual->m_OverlayRender.RenderSkeleton (pawn.second);
 		}
 	}
 

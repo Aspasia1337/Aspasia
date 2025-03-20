@@ -4,9 +4,12 @@
 #define MAKE_PAD(size) STR_MERGE(_pad, __COUNTER__)[size]
 #define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
 
-#include "../math/vector.h"
+#include <iostream>
 #include <unordered_map>
 
+
+#include "../math/vector.h"
+#include "../helper/helper.h"
 
 
 
@@ -445,6 +448,8 @@ public:
 
 	C_PlayerPawn *GetSpectator (std::unordered_map < uint32_t, C_PlayerPawn *> PawnMap);
 	C_PlayerPawn *GetPawn (std::unordered_map < uint32_t, C_PlayerPawn *> SpectatorMap);
+    BoneData_t *GetBone (uint32_t BoneId);
+    
 
 	bool isInFov = false;
 };
