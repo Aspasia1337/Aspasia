@@ -16,6 +16,13 @@ public:
 
 	};
 	Spectators m_Spectators;
+
+	class ClantagChanger {
+	public:
+		static void (__fastcall *SetClantag)(const char *string);
+
+	};
+	ClantagChanger m_Clantag;
 };
 
 inline Misc *iMisc = new Misc ( );

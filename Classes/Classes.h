@@ -359,6 +359,8 @@ public:
 		DEFINE_MEMBER_N (uint32_t, pawnHealth, 0x818);
 		DEFINE_MEMBER_N (uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); //linker!
 		DEFINE_MEMBER_N (char *, m_sSanitizedPlayerName, 0x770); //linker!
+        DEFINE_MEMBER_N (uint32_t, m_iCompetitiveRanking, 0x790); //linker!
+        DEFINE_MEMBER_N (uint32_t, m_iCompetitiveWins, 0x794); //linker!
 		DEFINE_MEMBER_N (uint32_t, ping, 0x740);
 
 	};

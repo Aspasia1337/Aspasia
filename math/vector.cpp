@@ -53,7 +53,7 @@ bool IsTargetWithinFOV (float targetYaw, float targetPitch, float playerYaw, flo
 }
 
 Vec3 CalculateAngles (const Vec3 &vec3Source, const Vec3 &vec3Destination, float AimFov) {
-    Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AADAA0);
+    Vec3 *viewangles = (Vec3 *)(iGameEntitySystem->clientDll + 0x1AAE880);
 
     float returningDistance;
     Vec3 qAngles;
