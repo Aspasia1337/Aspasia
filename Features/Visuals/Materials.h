@@ -1,7 +1,7 @@
 #pragma once
 
 static constexpr char szVMatBufferWhiteVisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 	shader = "csgo_unlitgeneric.vfx"
 
@@ -19,7 +19,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
 })";
 
 static constexpr char szVMatBufferWhiteInvisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 	shader = "csgo_unlitgeneric.vfx"
 
@@ -38,7 +38,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
 })";
 
 static constexpr char szVMatBufferIlluminateVisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 				Shader = "csgo_effects.vfx"
                 g_flFresnelExponent = 7.0
@@ -60,7 +60,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
 })";
 
 static constexpr char szVMatBufferIlluminateInvisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 				Shader = "csgo_effects.vfx"
                 g_flFresnelExponent = 7.0
@@ -81,7 +81,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
                 F_RENDER_BACKFACES = 0
 })";
 static constexpr char szVMatBufferIlatex[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 shader = "csgo_character.vfx"
                 F_BLEND_MODE = 1
@@ -94,7 +94,7 @@ shader = "csgo_character.vfx"
 })";
 
 static constexpr char szVMatBufferIlatexInvisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
  shader = "csgo_character.vfx"
                 F_DISABLE_Z_BUFFERING = 1
@@ -109,7 +109,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
                 g_tMetalness = resource:"materials/default/default_metal_tga_8fbc2820.vtex"
 })";
 static constexpr char szVMatBufferMetalic[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
     Shader = "csgo_complex.vfx"
                 F_IGNOREZ = 0
@@ -126,7 +126,7 @@ F_RENDER_BACKFACES = 0
 })";
 
 static constexpr char szVMatBufferMetalicInvisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
     Shader = "csgo_complex.vfx"
                 F_IGNOREZ = 1
@@ -143,7 +143,7 @@ F_RENDER_BACKFACES = 0
 })";
 
 static constexpr char szVMatBufferGlow2Visible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
             format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
             {
                 shader = "csgo_effects.vfx"
@@ -167,7 +167,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
                 g_vColorTint = [1.0, 1.0, 1.0, 0.0]
 })";
 static constexpr char szVMatBufferGlowVisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 	shader = "csgo_complex.vfx"
 
@@ -188,7 +188,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
 })";
 
 static constexpr char szVMatBufferGlowInvisible[] =
-R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+    R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 	shader = "csgo_complex.vfx"
 
@@ -208,7 +208,6 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:g
 	TextureAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
 	g_tAmbientOcclusion = resource:"materials/debug/particleerror.vtex"
 })";
-
 
 static const char szBloomVmatBuffer[] = R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
 format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->

@@ -2,14 +2,17 @@
 #define STR_MERGE_IMPL(a, b) a##b
 #define STR_MERGE(a, b) STR_MERGE_IMPL(a, b)
 #define MAKE_PAD(size) STR_MERGE(_pad, __COUNTER__)[size]
-#define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
+#define DEFINE_MEMBER_N(type, name, offset) \
+	struct                                  \
+	{                                       \
+		unsigned char MAKE_PAD(offset);     \
+		type name;                          \
+	}
 
 #include "../math/vector.h"
 #include "../Classes/Classes.h"
 
-
-
-//https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html  checkkkkk bopnes
+// https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html  checkkkkk bopnes
 enum class BoneIDs
 {
 	Head = 6,
@@ -84,137 +87,120 @@ enum class BoneIDs
 	RightThumb3 = 76,
 };
 
-
-
 class HooksManager
 {
 private:
-
 public:
-
 	Vec3 storedViewAngles;
-
 
 	void *CGameInput = nullptr;
 
-	HooksManager ( ) {
+	HooksManager()
+	{
 	}
 
-	bool initHook ( );
+	bool initHook();
 
-	//void __fastcall createMove(__int64 *a1, int a2, char a3)
-	class CreateMove {
+	// void __fastcall createMove(__int64 *a1, int a2, char a3)
+	class CreateMove
+	{
 
 	public:
-		typedef void (__fastcall *CreateMoveFunction)(CCSGOInput *csgoInput, __int64 nSlot, bool bActivate);
+		typedef void(__fastcall *CreateMoveFunction)(CCSGOInput *csgoInput, __int64 nSlot, bool bActivate);
 		static CreateMoveFunction oCreateMove;
-		static void __fastcall hCreateMove (CCSGOInput *csgoInput, __int64 nSlot, bool bActivate);
-		static bool isPlayerInGame (void);
+		static void __fastcall hCreateMove(CCSGOInput *csgoInput, __int64 nSlot, bool bActivate);
+		static bool isPlayerInGame(void);
 	};
 	CreateMove m_CreateMove;
 
-
-	class CreateMoveTWO {
+	class CreateMoveTWO
+	{
 
 	public:
-		typedef void (__fastcall *CreateMoveFunctionTWO)(CCSGOInput *csgoInput, __int64 a2, CUserCmd *a3);
+		typedef void(__fastcall *CreateMoveFunctionTWO)(CCSGOInput *csgoInput, __int64 a2, CUserCmd *a3);
 		static CreateMoveFunctionTWO oCreateMoveTWO;
-		static void __fastcall hCreateMoveTWO (CCSGOInput *csgoInput, __int64 a2, CUserCmd *a3);
-
-
+		static void __fastcall hCreateMoveTWO(CCSGOInput *csgoInput, __int64 a2, CUserCmd *a3);
 	};
 	CreateMoveTWO m_CreateMoveTWO;
 
-
-
-	class ValidateInput {
+	class ValidateInput
+	{
 
 	public:
-		typedef void (__fastcall *ValidateInputFunction)(CCSGOInput *pInput, int unk);
+		typedef void(__fastcall *ValidateInputFunction)(CCSGOInput *pInput, int unk);
 		static ValidateInputFunction oValidateInput;
-		static void __fastcall hValidateInput (CCSGOInput *csgoInput, __int64 a2);
+		static void __fastcall hValidateInput(CCSGOInput *csgoInput, __int64 a2);
 	};
 
 	ValidateInput m_ValidateInput;
 
-
-	class SetViewAngles {
+	class SetViewAngles
+	{
 	public:
-
-		typedef void (__fastcall *SetViewAnglesFunction)(__int64 *a1, __int64 a2, Vec3 a3);
+		typedef void(__fastcall *SetViewAnglesFunction)(__int64 *a1, __int64 a2, Vec3 a3);
 		static SetViewAnglesFunction oSetViewAngles;
-		static void __fastcall hSetViewAngles (__int64 *a1, __int64 a2, Vec3 a3);
-
+		static void __fastcall hSetViewAngles(__int64 *a1, __int64 a2, Vec3 a3);
 	};
 
 	SetViewAngles m_SetViewAngles;
 
-
-
-	class OverrideViewClass {
+	class OverrideViewClass
+	{
 	public:
-		typedef void (__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
-		static OverrideViewFunction oCameraServices; //static because shared among all the instances of the class
-		static void __fastcall hCameraServices (__int64 a1, CViewSetupTRY *a2);
+		typedef void(__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
+		static OverrideViewFunction oCameraServices; // static because shared among all the instances of the class
+		static void __fastcall hCameraServices(__int64 a1, CViewSetupTRY *a2);
 	};
 
 	OverrideViewClass m_OverrideViewFunction;
 
-	class FrameStageNotify {
+	class FrameStageNotify
+	{
 	public:
-		typedef int64_t (__fastcall *FrameStageNotifyFunction)(__int64, int);
+		typedef int64_t(__fastcall *FrameStageNotifyFunction)(__int64, int);
 		static FrameStageNotifyFunction oFrameStageNotify;
-		static void __fastcall hFrameStageNotify (__int64 a1, int a2);
+		static void __fastcall hFrameStageNotify(__int64 a1, int a2);
 	};
 
 	FrameStageNotify m_FrameStageNotify;
 
-
-
-
-	typedef void (__fastcall *calcBonesFunction)(void *a1, unsigned int bone);
+	typedef void(__fastcall *calcBonesFunction)(void *a1, unsigned int bone);
 
 	static calcBonesFunction calcBones;
 
-
-	class OnAddEntity {
+	class OnAddEntity
+	{
 	public:
-		typedef int64_t (__fastcall *OnAddEntityFunction)(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
+		typedef int64_t(__fastcall *OnAddEntityFunction)(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
 		static OnAddEntityFunction oOnAddEntity;
-		static void __fastcall hOnAddEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
-
+		static void __fastcall hOnAddEntity(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
 	};
 
 	OnAddEntity m_OnAddEntity;
 
-
-
-	class OnRemoveEntity {
+	class OnRemoveEntity
+	{
 	public:
-		typedef int64_t (__fastcall *OnRemoveEntityFunction)(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
+		typedef int64_t(__fastcall *OnRemoveEntityFunction)(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
 		static OnRemoveEntityFunction oOnRemoveEntity;
-		static void __fastcall hOnRemoveEntity (__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
-
+		static void __fastcall hOnRemoveEntity(__int64 CGameEntitySystem, void *entityPointer, int entityHandle);
 	};
 
 	OnRemoveEntity m_OnRemoveEntity;
 
-	class IsRelativeMouseMode {
+	class IsRelativeMouseMode
+	{
 	public:
 		typedef void *(__fastcall *IsRelativeMouseModeFunction)(void *pThisptr, bool bActive);
-		static IsRelativeMouseModeFunction oIsRelativeMouseMode ;
-		static void* __fastcall hIsRelativeMouseFunction (void *pThisptr, bool bActive);
+		static IsRelativeMouseModeFunction oIsRelativeMouseMode;
+		static void *__fastcall hIsRelativeMouseFunction(void *pThisptr, bool bActive);
 
 		typedef void *(__fastcall *MouseInputFunction)(void *pThisptr);
 		static MouseInputFunction oMouseInput;
-		static void __fastcall hMouseInput (void *pThisptr);
-
+		static void __fastcall hMouseInput(void *pThisptr);
 	};
 
 	IsRelativeMouseMode m_IsRelativeMouseMode;
-
 };
 
-inline HooksManager *iHooksManager = new HooksManager ( );
-
-
+inline HooksManager *iHooksManager = new HooksManager();

@@ -2,19 +2,23 @@
 #define STR_MERGE_IMPL(a, b) a##b
 #define STR_MERGE(a, b) STR_MERGE_IMPL(a, b)
 #define MAKE_PAD(size) STR_MERGE(_pad, __COUNTER__)[size]
-#define DEFINE_MEMBER_N(type, name, offset) struct {unsigned char MAKE_PAD(offset); type name;}
+#define DEFINE_MEMBER_N(type, name, offset) \
+    struct                                  \
+    {                                       \
+        unsigned char MAKE_PAD(offset);     \
+        type name;                          \
+    }
 
 #include <iostream>
 #include <unordered_map>
 
-
 #include "../math/vector.h"
 #include "../helper/helper.h"
 
-
-
-namespace terroristBones {
-    enum tBones : DWORD {
+namespace terroristBones
+{
+    enum tBones : DWORD
+    {
         pelvis = 0,
         spine_0 = 1,
         spine_1 = 2,
@@ -123,8 +127,10 @@ namespace terroristBones {
 
 }
 
-namespace antiTerroristBones {
-    enum ctBones : DWORD {
+namespace antiTerroristBones
+{
+    enum ctBones : DWORD
+    {
         pelvis = 0,
         spine_0 = 1,
         spine_1 = 2,
@@ -242,381 +248,376 @@ namespace antiTerroristBones {
 
 };
 
-
-class Feature {
+class Feature
+{
 public:
-	bool *bFeature;
-	const char *FeatureName;
+    bool *bFeature;
+    const char *FeatureName;
 
-	Feature (bool *bFeat,const char *FeatName) : bFeature (bFeat), FeatureName (FeatName) {};
+    Feature(bool *bFeat, const char *FeatName) : bFeature(bFeat), FeatureName(FeatName) {};
 };
 
-
-class C_BaseEntity {
+class C_BaseEntity
+{
 public:
-	union {
-		DEFINE_MEMBER_N (uint32_t, m_iHealth, 0x344);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(uint32_t, m_iHealth, 0x344);
+    };
 };
 
-
-struct Color {
-	float x; //  (B)
-	float y; //  (G)
-	float z; //  (R)
-	float w; //  (A)
+struct Color
+{
+    float x; //  (B)
+    float y; //  (G)
+    float z; //  (R)
+    float w; //  (A)
 };
 
-class CMaterial2 {
+class CMaterial2
+{
 public:
-	virtual const char *GetName ( ) = 0;
-	virtual const char *GetShareName ( ) = 0;
+    virtual const char *GetName() = 0;
+    virtual const char *GetShareName() = 0;
 };
 
-class CBaseHandle {
+class CBaseHandle
+{
 public:
-	uint32_t nIndex;
+    uint32_t nIndex;
 };
 
 class CSceneAnimatableObject
 {
 public:
-	union {
-		DEFINE_MEMBER_N (CBaseHandle, hOwner, 0xB8);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(CBaseHandle, hOwner, 0xB8);
+    };
 };
 
-
-
-class CMeshData {
+class CMeshData
+{
 public:
-	union {
-		//              Type     Name    Offset
-		DEFINE_MEMBER_N (CSceneAnimatableObject *, SceneAnimatableObject, 0x18);
-		DEFINE_MEMBER_N (CMaterial2 *, CMaterial, 0x20);
-		DEFINE_MEMBER_N (byte , colVal, 0x40);
-	};
+    union
+    {
+        //              Type     Name    Offset
+        DEFINE_MEMBER_N(CSceneAnimatableObject *, SceneAnimatableObject, 0x18);
+        DEFINE_MEMBER_N(CMaterial2 *, CMaterial, 0x20);
+        DEFINE_MEMBER_N(byte, colVal, 0x40);
+    };
 };
 
-
-class BoneData_t {
+class BoneData_t
+{
 public:
-		Vec3 vecPosition;
-		float flScale;
-		Vector4D_t vecRotation;
+    Vec3 vecPosition;
+    float flScale;
+    Vector4D_t vecRotation;
 };
 
-
-class CModelState {
+class CModelState
+{
 public:
-	union {
-		DEFINE_MEMBER_N (BoneData_t *, bones, 0x80);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(BoneData_t *, bones, 0x80);
+    };
 };
 
-
-class CSkeletonInstance {
+class CSkeletonInstance
+{
 public:
-	union {
-		DEFINE_MEMBER_N (CModelState , modelState, 0x170);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(CModelState, modelState, 0x170);
+    };
 };
 
-
-class CGameSceneNode {
+class CGameSceneNode
+{
 public:
-	union {
-		//              Type     Name    Offset
-		DEFINE_MEMBER_N (CModelState , m_modelState, 0x170);   //linker!
-		DEFINE_MEMBER_N (Vec3, m_vecOrigin, 0x88);   //linker!
-	};
+    union
+    {
+        //              Type     Name    Offset
+        DEFINE_MEMBER_N(CModelState, m_modelState, 0x170); // linker!
+        DEFINE_MEMBER_N(Vec3, m_vecOrigin, 0x88);          // linker!
+    };
 
+    //	return iHelper->m_Mem.CallVMT<CSkeletonInstance *, 8> (this);
 
+    // Vec3 GetBoneFromIndex (uint32_t BoneIndex, C_PlayerPawn *pawn) {
 
-	//	return iHelper->m_Mem.CallVMT<CSkeletonInstance *, 8> (this);
+    //	CSkeletonInstance *pSkeleton = GetSkeletonInstance ();
+    //	if (!pSkeleton)
+    //		return *new Vec3 (0, 0, 0);
+    //
 
-	//Vec3 GetBoneFromIndex (uint32_t BoneIndex, C_PlayerPawn *pawn) {
-
-	//	CSkeletonInstance *pSkeleton = GetSkeletonInstance ();
-	//	if (!pSkeleton)
-	//		return *new Vec3 (0, 0, 0);
-	//		
-
-
-	//}
-	
-
+    //}
 };
 
-
-class C_PlayerController {
+class C_PlayerController
+{
 public:
-	union {
-		//              Type     Name    Offset
-		DEFINE_MEMBER_N (uint32_t, m_hPawn, 0x62c);
-		DEFINE_MEMBER_N (char, m_iszPlayerName, 0x660);
-		DEFINE_MEMBER_N (bool, pawnIsAlive, 0x814);
-		DEFINE_MEMBER_N (uint32_t, pawnHealth, 0x818);
-		DEFINE_MEMBER_N (uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); //linker!
-		DEFINE_MEMBER_N (char *, m_sSanitizedPlayerName, 0x770); //linker!
-        DEFINE_MEMBER_N (uint32_t, m_iCompetitiveRanking, 0x790); //linker!
-        DEFINE_MEMBER_N (uint32_t, m_iCompetitiveWins, 0x794); //linker!
-		DEFINE_MEMBER_N (uint32_t, ping, 0x740);
-
-	};
+    union
+    {
+        //              Type     Name    Offset
+        DEFINE_MEMBER_N(uint32_t, m_hPawn, 0x62c);
+        DEFINE_MEMBER_N(char, m_iszPlayerName, 0x660);
+        DEFINE_MEMBER_N(bool, pawnIsAlive, 0x814);
+        DEFINE_MEMBER_N(uint32_t, pawnHealth, 0x818);
+        DEFINE_MEMBER_N(uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); // linker!
+        DEFINE_MEMBER_N(char *, m_sSanitizedPlayerName, 0x770);               // linker!
+        DEFINE_MEMBER_N(uint32_t, m_iCompetitiveRanking, 0x790);              // linker!
+        DEFINE_MEMBER_N(uint32_t, m_iCompetitiveWins, 0x794);                 // linker!
+        DEFINE_MEMBER_N(uint32_t, ping, 0x740);
+    };
 };
 
-
-
-class C_SmokeGrenadeProjectile {
+class C_SmokeGrenadeProjectile
+{
 public:
-	union {
-		DEFINE_MEMBER_N (bool, bDidSmokeEffect, 0x1214);
-		DEFINE_MEMBER_N (Vec3, smokeColor, 0x121C);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(bool, bDidSmokeEffect, 0x1214);
+        DEFINE_MEMBER_N(Vec3, smokeColor, 0x121C);
+    };
 };
 
-
-
-
-
-class PostProcessingVolume {
+class PostProcessingVolume
+{
 public:
-	union {
-		DEFINE_MEMBER_N (float, m_flMaxExposure, 0xD58);   //linker!
-		DEFINE_MEMBER_N (float, m_flMinExposure, 0xD54);   //linker!
-		DEFINE_MEMBER_N (bool, m_bExposureControl, 0xD6D);   //linker!
-
-
-	};
-
-
+    union
+    {
+        DEFINE_MEMBER_N(float, m_flMaxExposure, 0xD58);   // linker!
+        DEFINE_MEMBER_N(float, m_flMinExposure, 0xD54);   // linker!
+        DEFINE_MEMBER_N(bool, m_bExposureControl, 0xD6D); // linker!
+    };
 };
 
-
-
-class CBodyComponent {
-	DEFINE_MEMBER_N (CSkeletonInstance *, m_skeletonInstance, 0x50);   //linker!
-
+class CBodyComponent
+{
+    DEFINE_MEMBER_N(CSkeletonInstance *, m_skeletonInstance, 0x50); // linker!
 };
 
-
-class CPlayer_CameraServices {
+class CPlayer_CameraServices
+{
 public:
-	union {
+    union
+    {
 
-		DEFINE_MEMBER_N (PostProcessingVolume, m_hActivePostProcessingVolume, 0x1F4);   //linker!
-
-
-	};
+        DEFINE_MEMBER_N(PostProcessingVolume, m_hActivePostProcessingVolume, 0x1F4); // linker!
+    };
 };
 
-class CPlayer_ObserverServices {
+class CPlayer_ObserverServices
+{
 
 public:
-	union {
-		DEFINE_MEMBER_N (uint32_t, m_hObserverTarget, 0x44);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(uint32_t, m_hObserverTarget, 0x44);
+    };
 };
 
-
-
-class C_PlayerPawn {
+class C_PlayerPawn
+{
 public:
-	union {
-		//              Type     Name    Offset
-		DEFINE_MEMBER_N (uint32_t, m_armor, 0x241C);   //linker!
-		DEFINE_MEMBER_N (CBodyComponent *, m_CBodyComponent, 0x38);   //linker!
-		DEFINE_MEMBER_N (CGameSceneNode *, m_pGameSceneNode, 0x328);   //linker!
-		DEFINE_MEMBER_N (int32_t, pawnHealth, 0x344);
-		DEFINE_MEMBER_N (uint8_t, isAlive, 0x348);
-        DEFINE_MEMBER_N (bool, pawnIsAlive, 0x814);
-		DEFINE_MEMBER_N (uint32_t, m_fFlags, 0x3EC);
-		DEFINE_MEMBER_N (uint8_t, m_nActualMoveType, 0x446);
-		DEFINE_MEMBER_N (Vec3, vOldOrigin, 0x1324);
-		DEFINE_MEMBER_N (char *, playerName, 0x660);
-		DEFINE_MEMBER_N (uintptr_t, CGlowProperty, 0xC00);
-		DEFINE_MEMBER_N (Color, m_glowColorOverride, 0x40);
-		DEFINE_MEMBER_N (bool, m_bGlowing, 0x51);
-		DEFINE_MEMBER_N (uint32_t, m_hOriginalController, 0x1508);   //linker!
-		DEFINE_MEMBER_N (Vec3, m_vecViewOffset, 0xCB0);   //linker!
-		DEFINE_MEMBER_N (Vec3, v_angle, 0x124c);   //linker!
-		DEFINE_MEMBER_N (CPlayer_CameraServices *, m_pCameraServices, 0x11E0);   //linker!
-		DEFINE_MEMBER_N (CPlayer_ObserverServices *, m_pObserverServices, 0x11C0);
-		DEFINE_MEMBER_N (uint32_t, ObserverEntityHandle, 0x1510); // m_hDetectParentChange TODO MAKE THIS C_PLAYEROBSERVER AND NOT PAWN
-	};
+    union
+    {
+        //              Type     Name    Offset
+        DEFINE_MEMBER_N(uint32_t, m_armor, 0x241C);                 // linker!
+        DEFINE_MEMBER_N(CBodyComponent *, m_CBodyComponent, 0x38);  // linker!
+        DEFINE_MEMBER_N(CGameSceneNode *, m_pGameSceneNode, 0x328); // linker!
+        DEFINE_MEMBER_N(int32_t, pawnHealth, 0x344);
+        DEFINE_MEMBER_N(uint8_t, isAlive, 0x348);
+        DEFINE_MEMBER_N(bool, pawnIsAlive, 0x814);
+        DEFINE_MEMBER_N(uint32_t, m_fFlags, 0x3EC);
+        DEFINE_MEMBER_N(uint8_t, m_nActualMoveType, 0x446);
+        DEFINE_MEMBER_N(Vec3, vOldOrigin, 0x1324);
+        DEFINE_MEMBER_N(char *, playerName, 0x660);
+        DEFINE_MEMBER_N(uintptr_t, CGlowProperty, 0xC00);
+        DEFINE_MEMBER_N(Color, m_glowColorOverride, 0x40);
+        DEFINE_MEMBER_N(bool, m_bGlowing, 0x51);
+        DEFINE_MEMBER_N(uint32_t, m_hOriginalController, 0x1508);             // linker!
+        DEFINE_MEMBER_N(Vec3, m_vecViewOffset, 0xCB0);                        // linker!
+        DEFINE_MEMBER_N(Vec3, v_angle, 0x124c);                               // linker!
+        DEFINE_MEMBER_N(CPlayer_CameraServices *, m_pCameraServices, 0x11E0); // linker!
+        DEFINE_MEMBER_N(CPlayer_ObserverServices *, m_pObserverServices, 0x11C0);
+        DEFINE_MEMBER_N(uint32_t, ObserverEntityHandle, 0x1510); // m_hDetectParentChange TODO MAKE THIS C_PLAYEROBSERVER AND NOT PAWN
+    };
 
+    C_PlayerPawn *GetSpectator(std::unordered_map<uint32_t, C_PlayerPawn *> PawnMap);
+    C_PlayerPawn *GetPawn(std::unordered_map<uint32_t, C_PlayerPawn *> SpectatorMap);
+    BoneData_t *GetBone(uint32_t BoneId);
 
-
-	C_PlayerPawn *GetSpectator (std::unordered_map < uint32_t, C_PlayerPawn *> PawnMap);
-	C_PlayerPawn *GetPawn (std::unordered_map < uint32_t, C_PlayerPawn *> SpectatorMap);
-    BoneData_t *GetBone (uint32_t BoneId);
-    
-
-	bool isInFov = false;
+    bool isInFov = false;
 };
 
-
-
-class CMsgQAngle {
+class CMsgQAngle
+{
 public:
-	union {
-		DEFINE_MEMBER_N (Vec3, ViewAngles, 0x18);
-	};
-
+    union
+    {
+        DEFINE_MEMBER_N(Vec3, ViewAngles, 0x18);
+    };
 };
 
-class CInButtonStatePb {
+class CInButtonStatePb
+{
 public:
-	union {
-		DEFINE_MEMBER_N (uint64_t, nValue, 0x8);
-
-	};
+    union
+    {
+        DEFINE_MEMBER_N(uint64_t, nValue, 0x8);
+    };
 };
 
-class CBaseUserCmdPB {
+class CBaseUserCmdPB
+{
 public:
-	union {
-		DEFINE_MEMBER_N (CInButtonStatePb *, ButtonState, 0x38);
+    union
+    {
+        DEFINE_MEMBER_N(CInButtonStatePb *, ButtonState, 0x38);
 
-		DEFINE_MEMBER_N (CMsgQAngle *, CMsgQAngle, 0x40);
-
-	};
+        DEFINE_MEMBER_N(CMsgQAngle *, CMsgQAngle, 0x40);
+    };
 };
 
-
-
-
-
-class CUserCmd {
+class CUserCmd
+{
 public:
-	union {
-		DEFINE_MEMBER_N (CBaseUserCmdPB *, CBaseUserCmdPB, 0x40);
-		DEFINE_MEMBER_N (uint32_t, Buttons, 0x60);
-		DEFINE_MEMBER_N (uint32_t, ButtonsBackup, 0x68);
-
-
-	};
-
+    union
+    {
+        DEFINE_MEMBER_N(CBaseUserCmdPB *, CBaseUserCmdPB, 0x40);
+        DEFINE_MEMBER_N(uint32_t, Buttons, 0x60);
+        DEFINE_MEMBER_N(uint32_t, ButtonsBackup, 0x68);
+    };
 };
 
-class ByteColor {
+class ByteColor
+{
 public:
-	unsigned char r, g, b;
+    unsigned char r, g, b;
 
-	ByteColor (unsigned char _r = 0, unsigned char _g = 0, unsigned char _b = 0) {
-		r = _r;
-		g = _g;
-		b = _b;
-	}
+    ByteColor(unsigned char _r = 0, unsigned char _g = 0, unsigned char _b = 0)
+    {
+        r = _r;
+        g = _g;
+        b = _b;
+    }
 
-	bool operator==(const ByteColor ColorA) {
-		return(ColorA.r == this->r
-			&& ColorA.g == this->g
-			&& ColorA.b == this->b);
-	}
+    bool operator==(const ByteColor ColorA)
+    {
+        return (ColorA.r == this->r && ColorA.g == this->g && ColorA.b == this->b);
+    }
 };
 
-
-
-class C_EnvSky {
+class C_EnvSky
+{
 public:
-	union {
-		DEFINE_MEMBER_N (byte, m_vTintColor, 0xD39);
-		DEFINE_MEMBER_N (Color, m_vTintColorLightingOnly, 0xD3D);
-		DEFINE_MEMBER_N (float, m_flBrightnessScale, 0xD44);
-	};
+    union
+    {
+        DEFINE_MEMBER_N(byte, m_vTintColor, 0xD39);
+        DEFINE_MEMBER_N(Color, m_vTintColorLightingOnly, 0xD3D);
+        DEFINE_MEMBER_N(float, m_flBrightnessScale, 0xD44);
+    };
 };
 
-
-class CCSGOInput {
+class CCSGOInput
+{
 public:
-	union {
-		DEFINE_MEMBER_N (Vec3, Angles, 0x3D0);
-
-	};
+    union
+    {
+        DEFINE_MEMBER_N(Vec3, Angles, 0x3D0);
+    };
 };
-
 
 class CAggregateSceneObject
 {
 public:
-	union {
+    union
+    {
 
-		DEFINE_MEMBER_N (byte, lightType, 0xE0);
-		DEFINE_MEMBER_N (float, RedColor, 0xE4);
-		DEFINE_MEMBER_N (float, GreenColor, 0xE8);
-		DEFINE_MEMBER_N (float, BlueColor, 0xEC);
-	};
+        DEFINE_MEMBER_N(byte, lightType, 0xE0);
+        DEFINE_MEMBER_N(float, RedColor, 0xE4);
+        DEFINE_MEMBER_N(float, GreenColor, 0xE8);
+        DEFINE_MEMBER_N(float, BlueColor, 0xEC);
+    };
 };
 
-class CAggregateSceneObjectDataWorld {
+class CAggregateSceneObjectDataWorld
+{
 private:
-	char pad_0000[0x38]; // 0x0
+    char pad_0000[0x38]; // 0x0
 public:
-	unsigned char r; // 0x38
-	unsigned char g; // 0x39
-	unsigned char b; // 0x3A
+    unsigned char r; // 0x38
+    unsigned char g; // 0x39
+    unsigned char b; // 0x3A
 private:
-	char pad_0038[0x9];
+    char pad_0038[0x9];
 };
 
-
-class CViewSetupTRY {
+class CViewSetupTRY
+{
 public:
-	union {
-		DEFINE_MEMBER_N (float, fov, 0x4E8);
-		DEFINE_MEMBER_N (float, viewmodel, 0x4d8);
-		DEFINE_MEMBER_N (Vec3, viewAngles, 0x4DC);
-		DEFINE_MEMBER_N (float, fov2, 0x470);
-		DEFINE_MEMBER_N (Vec3, position, 0x4E0);
-
-
-	};
-
+    union
+    {
+        DEFINE_MEMBER_N(float, fov, 0x4E8);
+        DEFINE_MEMBER_N(float, viewmodel, 0x4d8);
+        DEFINE_MEMBER_N(Vec3, viewAngles, 0x4DC);
+        DEFINE_MEMBER_N(float, fov2, 0x470);
+        DEFINE_MEMBER_N(Vec3, position, 0x4E0);
+    };
 };
 
-class CAggregateSceneObjectWorld {
+class CAggregateSceneObjectWorld
+{
 private:
-	char pad_0000[0x120];
+    char pad_0000[0x120];
+
 public:
-	int count; // 0x120
+    int count; // 0x120
 private:
-	char pad_0120[0x4];
+    char pad_0120[0x4];
+
 public:
-	CAggregateSceneObjectDataWorld *array; // 0x128
+    CAggregateSceneObjectDataWorld *array; // 0x128
 };
 
-class Players {
+class Players
+{
 public:
-	C_PlayerPawn *Pawn;
-	C_PlayerController *Controller;
-	C_PlayerPawn *ObserverPawn;
+    C_PlayerPawn *Pawn;
+    C_PlayerController *Controller;
+    C_PlayerPawn *ObserverPawn;
 
-	Players ( ) : Pawn (nullptr), Controller (nullptr), ObserverPawn (nullptr) {}
-	Players (C_PlayerPawn *pawn, C_PlayerController *controller, C_PlayerPawn *observerPawn)
-		: Pawn (pawn), Controller (controller), ObserverPawn (observerPawn) {
-	}
+    Players() : Pawn(nullptr), Controller(nullptr), ObserverPawn(nullptr) {}
+    Players(C_PlayerPawn *pawn, C_PlayerController *controller, C_PlayerPawn *observerPawn)
+        : Pawn(pawn), Controller(controller), ObserverPawn(observerPawn)
+    {
+    }
 };
 
-class CustomMaterial_t {
+class CustomMaterial_t
+{
 public:
-	CMaterial2* pMaterial;
-	CMaterial2* pMaterialVisible;
+    CMaterial2 *pMaterial;
+    CMaterial2 *pMaterialVisible;
 
-	CustomMaterial_t (CMaterial2 *Material1, CMaterial2 *Material2) : pMaterial (Material1), pMaterialVisible (Material2) { };
+    CustomMaterial_t(CMaterial2 *Material1, CMaterial2 *Material2) : pMaterial(Material1), pMaterialVisible(Material2) {};
 };
 
-class CKeyValues3 {
+class CKeyValues3
+{
 public:
-	char pad_0100 [0x100];
-	std::uint64_t uKey;
-	void *pValue;
+    char pad_0100[0x100];
+    std::uint64_t uKey;
+    void *pValue;
 };
 
 struct KV3ID_t
 {
-	const char *szName;
-	std::uint64_t unk0;
-	std::uint64_t unk1;
+    const char *szName;
+    std::uint64_t unk0;
+    std::uint64_t unk1;
 };

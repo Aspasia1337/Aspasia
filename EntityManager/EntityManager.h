@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <type_traits>
-#include <algorithm> 
+#include <algorithm>
 #include <string>
 
 #include "../helper/helper.h"
@@ -17,72 +17,71 @@
 
 #include <unordered_map>
 
-
-
-class GameEntitySystem {
+class GameEntitySystem
+{
 
 public:
 	uintptr_t pEntityList;
 	uintptr_t clientDll;
 	uintptr_t engine2Dll;
 	DWORD pMaxIndex;
-    std::vector <C_BaseEntity *> CBaseEntityVector;
+	std::vector<C_BaseEntity *> CBaseEntityVector;
 	std::vector<C_PlayerController *> ControllerVector;
 	std::vector<C_PlayerPawn *> PawnVector;
-    std::vector<C_PlayerPawn *> ObserverPawnVector;
+	std::vector<C_PlayerPawn *> ObserverPawnVector;
 	std::vector<Players *> PlayersMap;
 	std::vector<C_SmokeGrenadeProjectile *> SmokeGrenadeVector;
 
-    std::unordered_map <uint32_t, C_PlayerPawn *> PawnMap;
-    std::unordered_map <uint32_t, C_PlayerPawn *> ObserverMap;
-    std::unordered_map <uint32_t, C_PlayerController *> ControllerMap;
-    //std::vector<C_EnvSky *> CEnvSkyVector;
-
+	std::unordered_map<uint32_t, C_PlayerPawn *> PawnMap;
+	std::unordered_map<uint32_t, C_PlayerPawn *> ObserverMap;
+	std::unordered_map<uint32_t, C_PlayerController *> ControllerMap;
+	// std::vector<C_EnvSky *> CEnvSkyVector;
 
 	float (*ViewMatrix)[4][4];
 	C_PlayerPawn *LocalPlayerPawn;
-    C_PlayerPawn *Pawn;
-    Vec3 *viewangles;
+	C_PlayerPawn *Pawn;
+	Vec3 *viewangles;
 
 	C_PlayerController *LocalPlayerController;
-    C_PlayerPawn *LocalPlayerObserver;
+	C_PlayerPawn *LocalPlayerObserver;
 	int indexes = 0;
 
-	GameEntitySystem ( ) {
-        init ( ); 
+	GameEntitySystem()
+	{
+		init();
 	}
 
-	void init ( ) {
-		clientDll = (uintptr_t)GetModuleHandle ("client.dll");
-		pEntityList = (uintptr_t)GetModuleHandle ("client.dll") + (uintptr_t)0x1A38800;
+	void init()
+	{
+		clientDll = (uintptr_t)GetModuleHandle("client.dll");
+		pEntityList = (uintptr_t)GetModuleHandle("client.dll") + (uintptr_t)0x1A38800;
 		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5F568) + (uintptr_t)0x20F0);
-		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip (iHelper->m_Mem.PatternScanner ("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
-		engine2Dll = (uintptr_t)GetModuleHandle ("engine2.dll");
-        viewangles = (Vec3 *)(clientDll + 0x1AAE880);
+		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip(iHelper->m_Mem.PatternScanner("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
+		engine2Dll = (uintptr_t)GetModuleHandle("engine2.dll");
+		viewangles = (Vec3 *)(clientDll + 0x1AAE880);
+	}
 
-    }
+	std::string GetSchemaName(void *entity);
 
-    std::string GetSchemaName (void *entity);
+	uint32_t GetEntityHandle(void *entity);
 
-    uint32_t GetEntityHandle (void *entity);
+	void *GetEntityByIndexFunction(int Index);
 
-	void *GetEntityByIndexFunction (int Index);
+	void getGameEntities();
 
-	void getGameEntities ( );
+	void getAllPlayers();
 
-	void getAllPlayers ( );
+	void getClosetEnemis();
 
-	void getClosetEnemis ( );
+	void getEnemisByFov();
 
-	void getEnemisByFov ( );
+	C_PlayerPawn *GetPlayerPawn();
 
-    C_PlayerPawn *GetPlayerPawn ( );
-    
-    C_PlayerController *GetPlayerController ( );
-    
-    C_PlayerController *GetControllerFromPawn (C_PlayerPawn *Pawn);
+	C_PlayerController *GetPlayerController();
 
-    C_PlayerPawn *GetPawnFromObserver (C_PlayerPawn *Observer);
+	C_PlayerController *GetControllerFromPawn(C_PlayerPawn *Pawn);
+
+	C_PlayerPawn *GetPawnFromObserver(C_PlayerPawn *Observer);
 };
 
-inline GameEntitySystem *iGameEntitySystem = new GameEntitySystem ( );
+inline GameEntitySystem *iGameEntitySystem = new GameEntitySystem();

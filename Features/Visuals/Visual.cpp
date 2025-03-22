@@ -9,101 +9,107 @@
 ByteColor Visual::WorldModulation::ColorCache;
 ByteColor Visual::UpdateSkybox::ColorCache;
 
-
-void *Visual::LightningModulation::hLightningModulation (__int64 a1, CAggregateSceneObject *CAgregateSceneObject, __int64 a3) {
+void *Visual::LightningModulation::hLightningModulation(__int64 a1, CAggregateSceneObject *CAgregateSceneObject, __int64 a3)
+{
 
 	CAgregateSceneObject->RedColor = Globals::lightModulationColor[0] * Globals::lightIntensity;
 	CAgregateSceneObject->GreenColor = Globals::lightModulationColor[1] * Globals::lightIntensity;
 	CAgregateSceneObject->BlueColor = Globals::lightModulationColor[2] * Globals::lightIntensity;
 
-	return oLightningModulation (a1, CAgregateSceneObject, a3);
+	return oLightningModulation(a1, CAgregateSceneObject, a3);
 }
 
-
-void Visual::SmokeRender::hRenderSmoke (__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6) {
-
-	if (Globals::RenderSmokeHook) {
-		return;
-	}
-	return oRenderSmokeParticles (a1, a2, a3, a4, a5, a6);
-}
-
-void Visual::FlashEffect::hFlashEffect (__int64 a1, __int64 a2, float *a3) {
-
-	if (Globals::RenderFlashHook) {
-		return;
-	}
-	return oFlashEffect (a1, a2, a3);
-}
-
-
-
-void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2)
+void Visual::SmokeRender::hRenderSmoke(__int64 a1, __int64 a2, int a3, int a4, __int64 a5, __int64 a6)
 {
-	if (Globals::Chams) {
-		if (!arrMeshDraw) {
-			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+
+	if (Globals::RenderSmokeHook)
+	{
+		return;
+	}
+	return oRenderSmokeParticles(a1, a2, a3, a4, a5, a6);
+}
+
+void Visual::FlashEffect::hFlashEffect(__int64 a1, __int64 a2, float *a3)
+{
+
+	if (Globals::RenderFlashHook)
+	{
+		return;
+	}
+	return oFlashEffect(a1, a2, a3);
+}
+
+void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2)
+{
+	if (Globals::Chams)
+	{
+		if (!arrMeshDraw)
+		{
+			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
 
 		// Crear una copia local del puntero a SceneAnimatableObject para evitar cambios concurrentes
 		auto *sceneObject = arrMeshDraw->SceneAnimatableObject;
-		if (!sceneObject) {
-			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		if (!sceneObject)
+		{
+			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
 
 		auto *object = &arrMeshDraw->SceneAnimatableObject->hOwner;
 
-		if (object == nullptr) {
-			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		if (object == nullptr)
+		{
+			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
 
 		auto *index = &arrMeshDraw->SceneAnimatableObject->hOwner.nIndex;
 
-		if (index == nullptr) {
-			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		if (index == nullptr)
+		{
+			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
 
 		CBaseHandle hOwner = sceneObject->hOwner;
 
-		auto pEntity = iGameEntitySystem->GetEntityByIndexFunction (hOwner.nIndex & 0x7FFF);
+		auto pEntity = iGameEntitySystem->GetEntityByIndexFunction(hOwner.nIndex & 0x7FFF);
 
-		if (pEntity == nullptr) {
-			return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+		if (pEntity == nullptr)
+		{
+			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
-		auto schemaName = iGameEntitySystem->GetSchemaName (pEntity);
+		auto schemaName = iGameEntitySystem->GetSchemaName(pEntity);
 
-		//iHelper->m_Console.printMessage (WARNING, schemaName);
+		// iHelper->m_Console.printMessage (WARNING, schemaName);
 
 		// Menu MODEL
-		if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawn").c_str ( )) == 0 && Globals::PlayersChams) {
-			ByteColor Color = ToByteColor (Globals::ChamsColor);
+		if (std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawn").c_str()) == 0 && Globals::PlayersChams)
+		{
+			ByteColor Color = ToByteColor(Globals::ChamsColor);
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
-
-
 		}
 
 		// In Game Player Model
-		if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str ( )) == 0 && Globals::PlayersChams) {
+		if (std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawnBase").c_str()) == 0 && Globals::PlayersChams)
+		{
 
-			ByteColor Color = ToByteColor (Globals::ChamsColor);
+			ByteColor Color = ToByteColor(Globals::ChamsColor);
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
-
 		}
 
 		// OnGround Guns
-		//if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSWeaponBaseGun").c_str ( )) == 0 && Globals::WeaponChams) {
+		// if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSWeaponBaseGun").c_str ( )) == 0 && Globals::WeaponChams) {
 
 		//	ByteColor Color = ToByteColor (Globals::ChamsColorGun);
 
@@ -116,51 +122,44 @@ void Visual::DrawObjectClass::hDrawObject (void *pAnimatableSceneObjectDesc, voi
 
 		//}
 
-
 		// Player Gun
-		if (std::strcmp (schemaName.c_str ( ), std::string ("C_PredictedViewModel").c_str ( )) == 0 && Globals::WeaponChams) {
+		if (std::strcmp(schemaName.c_str(), std::string("C_PredictedViewModel").c_str()) == 0 && Globals::WeaponChams)
+		{
 
-			ByteColor Color = ToByteColor (Globals::ChamsColorGun);
+			ByteColor Color = ToByteColor(Globals::ChamsColorGun);
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
-
 		}
 	}
-	
-	return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+
+	return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }
 
-
-
-void OverrideMaterial (void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2) {
-
-
-
-}
-
-
-ByteColor Visual::ToByteColor (float *floatColor) {
-	return ByteColor (
-		static_cast<unsigned char>(std::clamp (floatColor[0], 0.0f, 1.0f) * 255.0f + 0.5f),
-		static_cast<unsigned char>(std::clamp (floatColor[1], 0.0f, 1.0f) * 255.0f + 0.5f),
-		static_cast<unsigned char>(std::clamp (floatColor[2], 0.0f, 1.0f) * 255.0f + 0.5f)
-	);
-}
-
-
-
-
-void Visual::UpdateSkybox::ChangeSkybox ( )
+void OverrideMaterial(void *pAnimatableSceneObjectDesc, void *pDx11, CMeshData *arrMeshDraw, int nDataCount, void *pSceneView, void *pSceneLayer, void *pUnk, void *pUnk2)
 {
-	ByteColor Color = Visual::ToByteColor (Globals::SkyTintColor);
+}
 
-	if (Globals::ChangeSkyColor && Color != ColorCache) {
-		for (auto &sky : CEnvSkyVector) {
+ByteColor Visual::ToByteColor(float *floatColor)
+{
+	return ByteColor(
+		static_cast<unsigned char>(std::clamp(floatColor[0], 0.0f, 1.0f) * 255.0f + 0.5f),
+		static_cast<unsigned char>(std::clamp(floatColor[1], 0.0f, 1.0f) * 255.0f + 0.5f),
+		static_cast<unsigned char>(std::clamp(floatColor[2], 0.0f, 1.0f) * 255.0f + 0.5f));
+}
+
+void Visual::UpdateSkybox::ChangeSkybox()
+{
+	ByteColor Color = Visual::ToByteColor(Globals::SkyTintColor);
+
+	if (Globals::ChangeSkyColor && Color != ColorCache)
+	{
+		for (auto &sky : CEnvSkyVector)
+		{
 
 			unsigned char *p = reinterpret_cast<unsigned char *>(&sky->m_vTintColor);
 
@@ -170,19 +169,22 @@ void Visual::UpdateSkybox::ChangeSkybox ( )
 			p[3] = 255;
 
 			sky->m_flBrightnessScale = 1.f;
-			iVisual->m_UpdateSkybox.UpdateSkyboxFunction (sky);
+			iVisual->m_UpdateSkybox.UpdateSkyboxFunction(sky);
 		}
 		ColorCache = Color;
 	}
 }
 
-void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *pAggregateSceneObject, void *a2) {
+void *Visual::WorldModulation::hModulateWorldColor(CAggregateSceneObjectWorld *pAggregateSceneObject, void *a2)
+{
 
-	ByteColor Color = Visual::ToByteColor (Globals::worldModulationColor);
+	ByteColor Color = Visual::ToByteColor(Globals::worldModulationColor);
 
-	if (Globals::worldModulation && Color != ColorCache) {
+	if (Globals::worldModulation && Color != ColorCache)
+	{
 		int count = pAggregateSceneObject->count;
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++)
+		{
 			CAggregateSceneObjectDataWorld *pAggregateSceneObjectData = &pAggregateSceneObject->array[i];
 
 			pAggregateSceneObjectData->r = Color.r;
@@ -192,73 +194,66 @@ void *Visual::WorldModulation::hModulateWorldColor (CAggregateSceneObjectWorld *
 			ColorCache = Color;
 		}
 	}
-	return oModulateWorldColor (pAggregateSceneObject, a2);
+	return oModulateWorldColor(pAggregateSceneObject, a2);
 }
 
-
-
-
-
-
-void Visual::Chams::InitChams ( )
+void Visual::Chams::InitChams()
 {
-	const char *MaterialNames [6] = {"WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow", "Blom"};
+	const char *MaterialNames[6] = {"WhiteMaterial", "Illuminate", "Latex", "Metalic", "Glow", "Blom"};
 
 	int i = 0;
-	for (auto &MaterialName : MaterialNames) {
-		CustomMaterialMap.emplace (MaterialName, CustomMaterial_t (CreateMaterial ("materials/dev/glowproperty.vmat", MaterialInfo[i]),
-			CreateMaterial ("materials/dev/glowproperty.vmat", MaterialInfo[i+1])));
+	for (auto &MaterialName : MaterialNames)
+	{
+		CustomMaterialMap.emplace(MaterialName, CustomMaterial_t(CreateMaterial("materials/dev/glowproperty.vmat", MaterialInfo[i]),
+																 CreateMaterial("materials/dev/glowproperty.vmat", MaterialInfo[i + 1])));
 		i += 2;
 	}
-
 }
 
-CMaterial2 *Visual::Chams::CreateMaterial (const char *szMaterialName, const char szVmatBuffer[])
+CMaterial2 *Visual::Chams::CreateMaterial(const char *szMaterialName, const char szVmatBuffer[])
 {
-	CKeyValues3 *pKeyValue = CreateMaterialResource ( );
-	if (!pKeyValue || !szVmatBuffer) return nullptr;  
+	CKeyValues3 *pKeyValue = CreateMaterialResource();
+	if (!pKeyValue || !szVmatBuffer)
+		return nullptr;
 
-	CUtilsBuff buffer (0, strlen (szVmatBuffer) + 10, 1);
+	CUtilsBuff buffer(0, strlen(szVmatBuffer) + 10, 1);
 
-	buffer.PutString (szVmatBuffer);
+	buffer.PutString(szVmatBuffer);
 
-	LoadKV3 (&buffer,pKeyValue);
+	LoadKV3(&buffer, pKeyValue);
 
 	CMaterial2 *pCustomMate = {};
 
-	CreateMaterialFunction (nullptr, &pCustomMate, szMaterialName, pKeyValue, 0, 1);
+	CreateMaterialFunction(nullptr, &pCustomMate, szMaterialName, pKeyValue, 0, 1);
 
 	return pCustomMate;
 }
 
-CKeyValues3 *Visual::Chams::CreateMaterialResource ( )
+CKeyValues3 *Visual::Chams::CreateMaterialResource()
 {
 	CKeyValues3 *pKeyValue = new CKeyValues3[0x10];
-	return SetTypeKV3 (pKeyValue, 1U, 6U);
+	return SetTypeKV3(pKeyValue, 1U, 6U);
 }
 
-bool Visual::Chams::LoadKV3 (CUtilsBuff *buff, CKeyValues3 *CkeyVal) 
+bool Visual::Chams::LoadKV3(CUtilsBuff *buff, CKeyValues3 *CkeyVal)
 {
 
-	KV3ID_t kv3ID = KV3ID_t ("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
+	KV3ID_t kv3ID = KV3ID_t("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
 
-	return LoadKeyValues (CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr,"");
+	return LoadKeyValues(CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr, "");
 }
 
-CUtilsBuff::CUtilsBuff (int a1, int nSize, int a3)
+CUtilsBuff::CUtilsBuff(int a1, int nSize, int a3)
 {
-	iVisual->m_Chams.BuffInit (this, a1, nSize, a3);
+	iVisual->m_Chams.BuffInit(this, a1, nSize, a3);
 }
 
-void CUtilsBuff::PutString (const char *szString)
+void CUtilsBuff::PutString(const char *szString)
 {
-	iVisual->m_Chams.BuffPutString (this, szString);
+	iVisual->m_Chams.BuffPutString(this, szString);
 }
 
-
-
-
-void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
+void Visual::OverlayRender::RenderHealth(C_PlayerPawn *Player)
 {
 	if (!Player || Player->pawnHealth <= 0)
 		return;
@@ -266,18 +261,18 @@ void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
 	Vec3 worldPos = Player->vOldOrigin;
 	Vec2 screenPos;
 
-	if (!worldPos.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
+	if (!worldPos.WorldToScreen(screenPos, iGameEntitySystem->ViewMatrix))
 		return;
 
-	ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+	ImDrawList *drawList = ImGui::GetForegroundDrawList();
 
-	Vec3 localPlayerPos = iGameEntitySystem->GetPlayerPawn ( )->vOldOrigin; 
-	double distance = CalculateDistance (localPlayerPos, worldPos);
+	Vec3 localPlayerPos = iGameEntitySystem->GetPlayerPawn()->vOldOrigin;
+	double distance = CalculateDistance(localPlayerPos, worldPos);
 
-	float minDistance = 100.0f; 
+	float minDistance = 100.0f;
 	float maxDistance = 1000.0f;
 	float scale = 1.0f - (distance - minDistance) / (maxDistance - minDistance);
-	scale = std::clamp (scale, 0.3f, 1.0f);
+	scale = std::clamp(scale, 0.3f, 1.0f);
 
 	float width = 60.0f * scale;
 	float height = 3.0f * scale;
@@ -286,119 +281,110 @@ void Visual::OverlayRender::RenderHealth (C_PlayerPawn *Player)
 	int health = Player->pawnHealth;
 	float healthPerc = static_cast<float>(health) / 100.0f;
 
-	ImU32 healthColor = IM_COL32 (
+	ImU32 healthColor = IM_COL32(
 		(1.0f - healthPerc) * 200,
 		healthPerc * 230,
-		50, 255
-	);
+		50, 255);
 
-	ImVec2 pos (screenPos.x - width / 2, screenPos.y + offsetY);
+	ImVec2 pos(screenPos.x - width / 2, screenPos.y + offsetY);
 
-	drawList->AddRectFilled (
-		ImVec2 (pos.x - 0.5f, pos.y - 0.5f),
-		ImVec2 (pos.x + width + 0.5f, pos.y + height + 0.5f),
-		IM_COL32 (30, 30, 30, 180)
-	);
+	drawList->AddRectFilled(
+		ImVec2(pos.x - 0.5f, pos.y - 0.5f),
+		ImVec2(pos.x + width + 0.5f, pos.y + height + 0.5f),
+		IM_COL32(30, 30, 30, 180));
 
-	drawList->AddRectFilled (
-		ImVec2 (pos.x, pos.y),
-		ImVec2 (pos.x + (width * healthPerc), pos.y + height),
-		healthColor
-	);
+	drawList->AddRectFilled(
+		ImVec2(pos.x, pos.y),
+		ImVec2(pos.x + (width * healthPerc), pos.y + height),
+		healthColor);
 }
 
-void Visual::OverlayRender::RenderPlayerBones (C_PlayerPawn *Player)
+void Visual::OverlayRender::RenderPlayerBones(C_PlayerPawn *Player)
 {
-	if (Player == iGameEntitySystem->GetPlayerPawn ( ))
+	if (Player == iGameEntitySystem->GetPlayerPawn())
 		return;
 
-		for (int bone = terroristBones::pelvis; bone <= terroristBones::leg_upper_r_twist1; ++bone)
-		{
-			Vec2 screenPos;
+	for (int bone = terroristBones::pelvis; bone <= terroristBones::leg_upper_r_twist1; ++bone)
+	{
+		Vec2 screenPos;
 
-			if (!Player->GetBone(bone)->vecPosition.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
-				continue;
+		if (!Player->GetBone(bone)->vecPosition.WorldToScreen(screenPos, iGameEntitySystem->ViewMatrix))
+			continue;
 
-			ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+		ImDrawList *drawList = ImGui::GetForegroundDrawList();
 
-			char buffer[20];
-			snprintf (buffer, sizeof (buffer), "%d", bone);
+		char buffer[20];
+		snprintf(buffer, sizeof(buffer), "%d", bone);
 
-			ImU32 boneColor = IM_COL32 (
-				(bone * 15) % 255, 
-				(bone * 35) % 255, 
-				(bone * 55) % 255,  
-				255);  
+		ImU32 boneColor = IM_COL32(
+			(bone * 15) % 255,
+			(bone * 35) % 255,
+			(bone * 55) % 255,
+			255);
 
-			drawList->AddText (ImVec2 (screenPos.x, screenPos.y), boneColor, buffer);
-		}
+		drawList->AddText(ImVec2(screenPos.x, screenPos.y), boneColor, buffer);
+	}
 }
 
-
-void Visual::OverlayRender::RenderSkeleton (C_PlayerPawn *Player)
+void Visual::OverlayRender::RenderSkeleton(C_PlayerPawn *Player)
 {
-	if (!Player || Player == iGameEntitySystem->GetPlayerPawn ( ))
+	if (!Player || Player == iGameEntitySystem->GetPlayerPawn())
 		return;
 
-	ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+	ImDrawList *drawList = ImGui::GetForegroundDrawList();
 	if (!drawList)
 		return;
 
 	auto &boneMap = Globals::boneMap;
 	std::unordered_map<const char *, ImVec2> boneScreenPositions;
 
-	for (const auto &bone : boneMap) {
+	for (const auto &bone : boneMap)
+	{
 		Vec2 bonePos;
-		if (Player->GetBone (bone.second) && Player->GetBone (bone.second)->vecPosition.WorldToScreen (bonePos, iGameEntitySystem->ViewMatrix)) {
-			boneScreenPositions[bone.first] = ImVec2 (bonePos.x, bonePos.y);
+		if (Player->GetBone(bone.second) && Player->GetBone(bone.second)->vecPosition.WorldToScreen(bonePos, iGameEntitySystem->ViewMatrix))
+		{
+			boneScreenPositions[bone.first] = ImVec2(bonePos.x, bonePos.y);
 		}
 	}
 
 	std::vector<std::pair<const char *, const char *>> boneConnections = {
-		{"Head", "Neck"}, {"Neck", "Torso"}, {"Torso", "Pelvis"},
-		{"Torso", "Left Clavicle"}, {"Left Clavicle", "Left Upper Arm"},
-		{"Left Upper Arm", "Left Lower Arm"}, {"Left Lower Arm", "Left Hand"},
-		{"Torso", "Right Clavicle"}, {"Right Clavicle", "Right Upper Arm"},
-		{"Right Upper Arm", "Right Lower Arm"}, {"Right Lower Arm", "Right Hand"},
-		{"Pelvis", "Left Upper Leg"}, {"Left Upper Leg", "Left Lower Leg"},
-		{"Left Lower Leg", "Left Feet"}, {"Pelvis", "Right Upper Leg"},
-		{"Right Upper Leg", "Right Lower Leg"}, {"Right Lower Leg", "Right Feet"}
-	};
-	
+		{"Head", "Neck"}, {"Neck", "Torso"}, {"Torso", "Pelvis"}, {"Torso", "Left Clavicle"}, {"Left Clavicle", "Left Upper Arm"}, {"Left Upper Arm", "Left Lower Arm"}, {"Left Lower Arm", "Left Hand"}, {"Torso", "Right Clavicle"}, {"Right Clavicle", "Right Upper Arm"}, {"Right Upper Arm", "Right Lower Arm"}, {"Right Lower Arm", "Right Hand"}, {"Pelvis", "Left Upper Leg"}, {"Left Upper Leg", "Left Lower Leg"}, {"Left Lower Leg", "Left Feet"}, {"Pelvis", "Right Upper Leg"}, {"Right Upper Leg", "Right Lower Leg"}, {"Right Lower Leg", "Right Feet"}};
+
 	std::vector<ImU32> boneColors = {
-		IM_COL32 (255, 255, 255, 255),  
-		IM_COL32 (255, 200, 0, 255),    
-		IM_COL32 (255, 0, 0, 255),      
-		IM_COL32 (255, 0, 0, 255),
-		IM_COL32 (255, 0, 0, 255),
-		IM_COL32 (255, 0, 0, 255),
-		IM_COL32 (255, 0, 0, 255),
+		IM_COL32(255, 255, 255, 255),
+		IM_COL32(255, 200, 0, 255),
+		IM_COL32(255, 0, 0, 255),
+		IM_COL32(255, 0, 0, 255),
+		IM_COL32(255, 0, 0, 255),
+		IM_COL32(255, 0, 0, 255),
+		IM_COL32(255, 0, 0, 255),
 
-		IM_COL32 (0, 255, 0, 255),    
-		IM_COL32 (0, 255, 0, 255),
-		IM_COL32 (0, 255, 0, 255),
-		IM_COL32 (0, 255, 0, 255),
+		IM_COL32(0, 255, 0, 255),
+		IM_COL32(0, 255, 0, 255),
+		IM_COL32(0, 255, 0, 255),
+		IM_COL32(0, 255, 0, 255),
 
-		IM_COL32 (0, 0, 255, 255),    
-		IM_COL32 (0, 0, 255, 255),
-		IM_COL32 (0, 0, 255, 255),
+		IM_COL32(0, 0, 255, 255),
+		IM_COL32(0, 0, 255, 255),
+		IM_COL32(0, 0, 255, 255),
 
-		IM_COL32 (255, 0, 255, 255),  
-		IM_COL32 (255, 0, 255, 255),
-		IM_COL32 (255, 0, 255, 255)
-	};
+		IM_COL32(255, 0, 255, 255),
+		IM_COL32(255, 0, 255, 255),
+		IM_COL32(255, 0, 255, 255)};
 
-	if (boneConnections.size ( ) != boneColors.size ( )) {
+	if (boneConnections.size() != boneColors.size())
+	{
 		return;
 	}
 
-	for (size_t i = 0; i < boneConnections.size ( ); ++i) {
-		auto it1 = boneScreenPositions.find (boneConnections[i].first);
-		auto it2 = boneScreenPositions.find (boneConnections[i].second);
+	for (size_t i = 0; i < boneConnections.size(); ++i)
+	{
+		auto it1 = boneScreenPositions.find(boneConnections[i].first);
+		auto it2 = boneScreenPositions.find(boneConnections[i].second);
 
-		if (it1 == boneScreenPositions.end ( ) || it2 == boneScreenPositions.end ( ))
+		if (it1 == boneScreenPositions.end() || it2 == boneScreenPositions.end())
 			continue;
 
-		drawList->AddLine (it1->second, it2->second, boneColors[i], 2.5f);
+		drawList->AddLine(it1->second, it2->second, boneColors[i], 2.5f);
 	}
 }

@@ -3,13 +3,9 @@
 #include "../../globals.h"
 #include "../../Classes/Classes.h"
 
-
 class Movement
 {
 public:
-
-	void BunnyHop (CUserCmd *CUserCmd, C_PlayerPawn *CPlayerPawn);
-
+	void BunnyHop(CUserCmd *CUserCmd, C_PlayerPawn *CPlayerPawn);
 };
-inline Movement *iMovement = new Movement ( );
-
+inline Movement *iMovement = new Movement();
