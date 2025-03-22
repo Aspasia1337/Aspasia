@@ -11,7 +11,6 @@
 #include "../globals.h"
 #include "../math/vector.h"
 
-#include "../visuals/Visuals.h"
 #include "../Interfaces/iManager.h"
 
 #include "../Features/Anti-Aim/AntiAim.h"
