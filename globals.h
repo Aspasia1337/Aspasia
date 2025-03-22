@@ -79,4 +79,6 @@ namespace Globals {
 	extern bool RenderPlayerBones;
 
 	extern std::unordered_map<const char*, terroristBones::tBones> boneMap;
+
+	extern bool RemoveScope;
 };

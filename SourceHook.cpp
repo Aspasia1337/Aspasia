@@ -94,6 +94,12 @@ namespace Globals {
         Feature (&PlayersChams,"Player Chams"),
         Feature (&WeaponChams,"Weapon Chams"),
         Feature (&AntiAim,"AntiAim"),
+        Feature (&RemoveScope,"RemoveScope"),
+        Feature(&ChangeSkyColor,"Sky Changer"),
+        Feature (&worldModulation, "World Modulation"),
+        Feature (&lightModulation, "Light Modulation"),
+        Feature (&RenderFlashHook, "Render Flash"),
+        Feature (&RenderSmokeHook, "Render Smoke")
     };
 
     bool RenderPlayerBones = false;
@@ -124,7 +130,7 @@ namespace Globals {
         {"Right Feet", terroristBones::ankle_r}
     };
 
-
+    bool RemoveScope = 0;
 
 }
 

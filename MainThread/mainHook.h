@@ -1,7 +1,6 @@
 ﻿
 #include "font.h"
 
-#include "../visuals/Visuals.h"
 #include "../includes/includes.h"
 
 #include <iostream>
@@ -273,7 +272,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 
 	if (Globals::ShowSpectators)
 	{
-		ImGui::SetNextWindowPos(ImVec2(15, 250));
+		ImGui::SetNextWindowPos(ImVec2(15, 450));
 		ImGui::SetNextWindowBgAlpha(0.85f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 6.0f);
 
@@ -568,6 +567,11 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 					{
 					}
 				}
+
+				if (ImGui::Checkbox ("Remove Scope", &Globals::RemoveScope))
+				{
+
+				}
 			}
 		}
 		ImGui::End();
@@ -579,7 +583,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 
 	if (Globals::smokeVisuals)
 	{
-		iVisuals->changeSmokeColor(Globals::smokeColorRGB);
 	}
 
 	if (Globals::CreateMoveHook)

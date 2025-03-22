@@ -21,7 +21,7 @@ void Helper::Console::printTime(void)
 	}
 }
 
-#ifdef DEBUG_MODE
+
 
 Helper::Console::Console()
 {
@@ -45,7 +45,7 @@ Helper::Console::~Console()
 		m_ConsoleFile = nullptr;
 	}
 
-	freopen("NUL", "w", stdout);
+	freopen_s(&m_ConsoleFile,"CONOUT$","w",stdout);
 	FreeConsole();
 
 	HWND hConsole = GetConsoleWindow();
@@ -55,7 +55,7 @@ Helper::Console::~Console()
 	}
 }
 
-#endif
+
 
 std::vector<std::uint32_t> Helper::Memory::PatternToBytes(const char *pattern)
 {

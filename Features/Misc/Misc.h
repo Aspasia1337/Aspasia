@@ -22,6 +22,14 @@ public:
 		static void(__fastcall *SetClantag)(const char *string);
 	};
 	ClantagChanger m_Clantag;
+
+	class ScopeRemoval {
+	public:
+		typedef void *(__fastcall *RemoveScopeFN)(void *a1, void *a2);
+		static RemoveScopeFN oRemoveScopeFn;
+		static void hRemoveScope(void *a1, void *a2);
+	};
+	ScopeRemoval m_ScopeRemoval;
 };
 
 inline Misc *iMisc = new Misc();

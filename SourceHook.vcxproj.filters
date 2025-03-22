@@ -63,9 +63,6 @@
     <ClCompile Include="includes\kiero\kiero.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="visuals\Visuals.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="HooksManager\HooksManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>

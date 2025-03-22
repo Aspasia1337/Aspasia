@@ -173,7 +173,6 @@
     <ClCompile Include="Features\Misc\Misc.cpp" />
     <ClCompile Include="SourceHook.cpp" />
     <ClCompile Include="Features\Visuals\Visual.cpp" />
-    <ClCompile Include="visuals\Visuals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\Classes.h" />

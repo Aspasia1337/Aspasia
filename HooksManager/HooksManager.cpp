@@ -40,6 +40,8 @@ Visual::FlashEffect::FlashEffectFunction Visual::FlashEffect::oFlashEffect = nul
 Visual::DrawObjectClass::DrawObjectFunction Visual::DrawObjectClass::oDrawObject = nullptr;
 Visual::WorldModulation::ModulateWorldColorFn Visual::WorldModulation::oModulateWorldColor = nullptr;
 
+Misc::ScopeRemoval::RemoveScopeFN Misc::ScopeRemoval::oRemoveScopeFn = nullptr;
+
 CKeyValues3 *(__fastcall *Visual::Chams::SetTypeKV3)(CKeyValues3 *, int, unsigned int) = nullptr;
 bool(__fastcall *Visual::Chams::LoadKeyValues)(CKeyValues3 *, void *, CUtilsBuff *, KV3ID_t *, void *, void *, void *, void *, const char *) = nullptr;
 int64_t(__fastcall *Visual::Chams::CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int) = nullptr;
@@ -334,6 +336,24 @@ bool HooksManager::initHook()
 	iVisual->m_Chams.InitChams();
 	iHelper->m_Console.printMessage(WARNING, "MATERIAL CREATED!");
 
+
+	uint8_t *ViewModelFov = iHelper->m_Mem.PatternScanner ("client.dll", "4C 8B DC 53 56 57 48 83 EC");
+
+	hookInit = MH_CreateHook (
+		ViewModelFov,
+		reinterpret_cast<LPVOID *>(iMisc->m_ScopeRemoval.hRemoveScope),
+		reinterpret_cast<LPVOID *>(&iMisc->m_ScopeRemoval.oRemoveScopeFn));
+
+	if (hookInit == MH_OK)
+	{
+		iHelper->m_Console.printMessage (DEBUG, "\t SetFovFn HOOKED! ");
+	}
+	else
+	{
+		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING SetFovFn! ");
+	}
+	
+
 	MH_EnableHook(MH_ALL_HOOKS);
 	return hookInit;
 }
@@ -522,7 +542,6 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO(CCSGOInput *a1, __int64 nSlot, 
 		iVisual->m_UpdateSkybox.ChangeSkybox();
 	}
 
-	return;
 }
 
 void HooksManager::SetViewAngles::hSetViewAngles(__int64 *a1, __int64 a2, Vec3 a3)
