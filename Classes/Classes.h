@@ -340,8 +340,9 @@ public:
     union
     {
         //              Type     Name    Offset
-        DEFINE_MEMBER_N(CModelState, m_modelState, 0x170); // linker!
-        DEFINE_MEMBER_N(Vec3, m_vecOrigin, 0x88);          // linker!
+        DEFINE_MEMBER_N(CModelState, m_modelState, 0x170);
+        DEFINE_MEMBER_N(Vec3, m_vecOrigin, 0x88);         
+        DEFINE_MEMBER_N (bool, m_bDormant, 0xEF);
     };
 
     //	return iHelper->m_Mem.CallVMT<CSkeletonInstance *, 8> (this);
@@ -366,10 +367,10 @@ public:
         DEFINE_MEMBER_N(char, m_iszPlayerName, 0x660);
         DEFINE_MEMBER_N(bool, pawnIsAlive, 0x814);
         DEFINE_MEMBER_N(uint32_t, pawnHealth, 0x818);
-        DEFINE_MEMBER_N(uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830); // linker!
-        DEFINE_MEMBER_N(char *, m_sSanitizedPlayerName, 0x770);               // linker!
-        DEFINE_MEMBER_N(uint32_t, m_iCompetitiveRanking, 0x790);              // linker!
-        DEFINE_MEMBER_N(uint32_t, m_iCompetitiveWins, 0x794);                 // linker!
+        DEFINE_MEMBER_N(uint32_t, m_hOriginalControllerOfCurrentPawn, 0x830);
+        DEFINE_MEMBER_N(char *, m_sSanitizedPlayerName, 0x770);              
+        DEFINE_MEMBER_N(uint32_t, m_iCompetitiveRanking, 0x790);             
+        DEFINE_MEMBER_N(uint32_t, m_iCompetitiveWins, 0x794);                
         DEFINE_MEMBER_N(uint32_t, ping, 0x740);
     };
 };
@@ -389,15 +390,15 @@ class PostProcessingVolume
 public:
     union
     {
-        DEFINE_MEMBER_N(float, m_flMaxExposure, 0xD58);   // linker!
-        DEFINE_MEMBER_N(float, m_flMinExposure, 0xD54);   // linker!
-        DEFINE_MEMBER_N(bool, m_bExposureControl, 0xD6D); // linker!
+        DEFINE_MEMBER_N(float, m_flMaxExposure, 0xD58);   
+        DEFINE_MEMBER_N(float, m_flMinExposure, 0xD54);   
+        DEFINE_MEMBER_N(bool, m_bExposureControl, 0xD6D); 
     };
 };
 
 class CBodyComponent
 {
-    DEFINE_MEMBER_N(CSkeletonInstance *, m_skeletonInstance, 0x50); // linker!
+    DEFINE_MEMBER_N(CSkeletonInstance *, m_skeletonInstance, 0x50);
 };
 
 class CPlayer_CameraServices
@@ -406,7 +407,7 @@ public:
     union
     {
 
-        DEFINE_MEMBER_N(PostProcessingVolume, m_hActivePostProcessingVolume, 0x1F4); // linker!
+        DEFINE_MEMBER_N(PostProcessingVolume, m_hActivePostProcessingVolume, 0x1F4); 
     };
 };
 
@@ -420,15 +421,34 @@ public:
     };
 };
 
+
+class GunEntity {
+public:
+    union {
+        DEFINE_MEMBER_N (char *, weapon_name, 0x20);
+    };
+};
+
+class C_CSWeaponBase {
+public:
+    union {
+        DEFINE_MEMBER_N (GunEntity *, m_pEntity, 0x10);
+    };
+};
+
+
+
+
+
 class C_PlayerPawn
 {
 public:
     union
     {
         //              Type     Name    Offset
-        DEFINE_MEMBER_N(uint32_t, m_armor, 0x241C);                 // linker!
-        DEFINE_MEMBER_N(CBodyComponent *, m_CBodyComponent, 0x38);  // linker!
-        DEFINE_MEMBER_N(CGameSceneNode *, m_pGameSceneNode, 0x328); // linker!
+        DEFINE_MEMBER_N(uint32_t, m_armor, 0x241C);                 
+        DEFINE_MEMBER_N(CBodyComponent *, m_CBodyComponent, 0x38);  
+        DEFINE_MEMBER_N(CGameSceneNode *, m_pGameSceneNode, 0x328); 
         DEFINE_MEMBER_N(int32_t, pawnHealth, 0x344);
         DEFINE_MEMBER_N(uint8_t, isAlive, 0x348);
         DEFINE_MEMBER_N(bool, pawnIsAlive, 0x814);
@@ -439,12 +459,16 @@ public:
         DEFINE_MEMBER_N(uintptr_t, CGlowProperty, 0xC00);
         DEFINE_MEMBER_N(Color, m_glowColorOverride, 0x40);
         DEFINE_MEMBER_N(bool, m_bGlowing, 0x51);
-        DEFINE_MEMBER_N(uint32_t, m_hOriginalController, 0x1508);             // linker!
-        DEFINE_MEMBER_N(Vec3, m_vecViewOffset, 0xCB0);                        // linker!
-        DEFINE_MEMBER_N(Vec3, v_angle, 0x124c);                               // linker!
-        DEFINE_MEMBER_N(CPlayer_CameraServices *, m_pCameraServices, 0x11E0); // linker!
+        DEFINE_MEMBER_N(uint32_t, m_hOriginalController, 0x1508);             
+        DEFINE_MEMBER_N(Vec3, m_vecViewOffset, 0xCB0);                        
+        DEFINE_MEMBER_N(Vec3, v_angle, 0x124c);                               
+        DEFINE_MEMBER_N(CPlayer_CameraServices *, m_pCameraServices, 0x11E0); 
         DEFINE_MEMBER_N(CPlayer_ObserverServices *, m_pObserverServices, 0x11C0);
         DEFINE_MEMBER_N(uint32_t, ObserverEntityHandle, 0x1510); // m_hDetectParentChange TODO MAKE THIS C_PLAYEROBSERVER AND NOT PAWN
+        DEFINE_MEMBER_N (C_CSWeaponBase *, m_pClippingWeapon, 0x13A0);
+        DEFINE_MEMBER_N (uint8_t , m_iTeamNum, 0x3E3);
+
+
     };
 
     C_PlayerPawn *GetSpectator(std::unordered_map<uint32_t, C_PlayerPawn *> PawnMap);

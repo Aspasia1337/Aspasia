@@ -27,8 +27,11 @@ C_PlayerPawn *C_PlayerPawn::GetSpectator(std::unordered_map<uint32_t, C_PlayerPa
 {
 	for (auto &spectators : SpectatorMap)
 	{
+		if (!spectators.second)
+			continue;
 		if (this->m_hOriginalController == spectators.second->m_hOriginalController)
 		{
+			
 			return spectators.second;
 		}
 	}
