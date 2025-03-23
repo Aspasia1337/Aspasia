@@ -26,11 +26,11 @@ void InitImGui()
 	ImGuiStyle &style = ImGui::GetStyle();
 	ImVec4 *colors = style.Colors;
 
-	style.WindowMinSize = ImVec2(160, 20);
-	style.FramePadding = ImVec2(6, 4);
-	style.ItemSpacing = ImVec2(8, 4);
-	style.ItemInnerSpacing = ImVec2(6, 4);
-	style.Alpha = 0.9f;
+	style.WindowMinSize = ImVec2 (160, 20);
+	style.FramePadding = ImVec2 (6, 4);
+	style.ItemSpacing = ImVec2 (8, 4);
+	style.ItemInnerSpacing = ImVec2 (6, 4);
+	style.Alpha = 0.95f;
 	style.WindowRounding = 6.0f;
 	style.FrameRounding = 4.0f;
 	style.IndentSpacing = 10.0f;
@@ -40,43 +40,43 @@ void InitImGui()
 	style.ScrollbarSize = 12.0f;
 	style.ScrollbarRounding = 12.0f;
 
-	style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.01f, 0.02f, 0.94f);
-	style.Colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style.Colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-	style.Colors[ImGuiCol_Border] = ImVec4(0.71f, 0.60f, 0.91f, 0.33f);
-	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.07f, 0.12f, 0.89f);
-	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.29f, 0.28f, 0.34f, 0.94f);
-	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
-	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.41f, 0.18f, 0.56f, 1.00f);
-	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
-	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-	style.Colors[ImGuiCol_CheckMark] = ImVec4(0.60f, 0.20f, 0.87f, 1.00f);
-	style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.65f, 0.24f, 0.88f, 1.00f);
-	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.88f, 0.06f, 0.47f, 1.00f);
-	style.Colors[ImGuiCol_Button] = ImVec4(0.86f, 0.18f, 0.61f, 0.40f);
-	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.76f, 0.21f, 0.74f, 1.00f);
-	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.40f, 0.10f, 0.52f, 1.00f);
-	style.Colors[ImGuiCol_Header] = ImVec4(0.97f, 0.21f, 0.49f, 0.31f);
-	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.87f, 0.37f, 0.65f, 0.80f);
-	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.78f, 0.10f, 0.30f, 1.00f);
-	style.Colors[ImGuiCol_Separator] = ImVec4(0.25f, 0.18f, 0.86f, 0.50f);
-	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.42f, 0.13f, 0.69f, 0.78f);
-	style.Colors[ImGuiCol_SeparatorActive] = ImVec4(0.55f, 0.04f, 0.80f, 1.00f);
-	style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.78f, 0.50f, 0.87f, 0.20f);
-	style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.54f, 0.14f, 0.92f, 0.67f);
-	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.51f, 0.04f, 0.86f, 0.95f);
-	style.Colors[ImGuiCol_Tab] = ImVec4(0.23f, 0.13f, 0.40f, 0.86f);
-	style.Colors[ImGuiCol_TabHovered] = ImVec4(0.45f, 0.23f, 0.86f, 0.80f);
-	style.Colors[ImGuiCol_TabActive] = ImVec4(0.30f, 0.17f, 0.76f, 1.00f);
-	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+	style.Colors[ImGuiCol_Text] = ImVec4 (1.00f, 0.96f, 0.98f, 1.00f);
+	style.Colors[ImGuiCol_TextDisabled] = ImVec4 (0.55f, 0.45f, 0.55f, 1.00f);
+	style.Colors[ImGuiCol_WindowBg] = ImVec4 (0.10f, 0.03f, 0.10f, 0.97f);
+	style.Colors[ImGuiCol_ChildBg] = ImVec4 (0.12f, 0.05f, 0.12f, 0.80f);
+	style.Colors[ImGuiCol_PopupBg] = ImVec4 (0.15f, 0.07f, 0.18f, 0.95f);
+	style.Colors[ImGuiCol_Border] = ImVec4 (0.60f, 0.30f, 0.70f, 0.45f);
+	style.Colors[ImGuiCol_BorderShadow] = ImVec4 (0.00f, 0.00f, 0.00f, 0.00f);
+	style.Colors[ImGuiCol_FrameBg] = ImVec4 (0.25f, 0.10f, 0.25f, 0.75f);
+	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4 (0.45f, 0.20f, 0.50f, 0.90f);
+	style.Colors[ImGuiCol_FrameBgActive] = ImVec4 (0.60f, 0.25f, 0.60f, 1.00f);
+	style.Colors[ImGuiCol_TitleBg] = ImVec4 (0.18f, 0.07f, 0.22f, 1.00f);
+	style.Colors[ImGuiCol_TitleBgActive] = ImVec4 (0.42f, 0.18f, 0.56f, 1.00f);
+	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4 (0.10f, 0.05f, 0.15f, 0.75f);
+	style.Colors[ImGuiCol_MenuBarBg] = ImVec4 (0.15f, 0.06f, 0.17f, 0.90f);
+	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4 (0.10f, 0.03f, 0.10f, 0.60f);
+	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4 (0.40f, 0.20f, 0.55f, 0.90f);
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4 (0.50f, 0.25f, 0.65f, 1.00f);
+	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4 (0.65f, 0.30f, 0.80f, 1.00f);
+	style.Colors[ImGuiCol_CheckMark] = ImVec4 (0.85f, 0.50f, 0.90f, 1.00f);
+	style.Colors[ImGuiCol_SliderGrab] = ImVec4 (0.70f, 0.30f, 0.80f, 1.00f);
+	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4 (0.90f, 0.20f, 0.60f, 1.00f);
+	style.Colors[ImGuiCol_Button] = ImVec4 (0.75f, 0.20f, 0.55f, 0.60f);
+	style.Colors[ImGuiCol_ButtonHovered] = ImVec4 (0.85f, 0.30f, 0.70f, 0.90f);
+	style.Colors[ImGuiCol_ButtonActive] = ImVec4 (0.60f, 0.15f, 0.50f, 1.00f);
+	style.Colors[ImGuiCol_Header] = ImVec4 (0.80f, 0.25f, 0.55f, 0.50f);
+	style.Colors[ImGuiCol_HeaderHovered] = ImVec4 (0.85f, 0.35f, 0.75f, 0.80f);
+	style.Colors[ImGuiCol_HeaderActive] = ImVec4 (0.90f, 0.10f, 0.40f, 1.00f);
+	style.Colors[ImGuiCol_Separator] = ImVec4 (0.50f, 0.25f, 0.70f, 0.60f);
+	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4 (0.70f, 0.30f, 0.90f, 0.80f);
+	style.Colors[ImGuiCol_SeparatorActive] = ImVec4 (0.90f, 0.40f, 0.95f, 1.00f);
+	style.Colors[ImGuiCol_ResizeGrip] = ImVec4 (0.60f, 0.20f, 0.75f, 0.40f);
+	style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4 (0.80f, 0.30f, 0.90f, 0.70f);
+	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4 (0.90f, 0.10f, 0.80f, 1.00f);
+	style.Colors[ImGuiCol_Tab] = ImVec4 (0.35f, 0.15f, 0.50f, 0.90f);
+	style.Colors[ImGuiCol_TabHovered] = ImVec4 (0.60f, 0.25f, 0.80f, 0.95f);
+	style.Colors[ImGuiCol_TabActive] = ImVec4 (0.50f, 0.20f, 0.70f, 1.00f);
+	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4 (0.10f, 0.05f, 0.10f, 0.60f);
 
 	ImFontConfig AspasiaFont;
 
@@ -176,7 +176,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 	if (localtime_s(&localTime, &now) == 0)
 	{
 		ImGui::SetNextWindowPos({15, 15});
-		ImGui::SetNextWindowSize({230, 35});
+		ImGui::SetNextWindowSize({295, 35});
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 6.0f);
 
 		ImGui::Begin("Watermark", NULL,
@@ -184,8 +184,11 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 						 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
 						 ImGuiWindowFlags_NoScrollbar);
 
-		ImGui::Text("Aspasia.win | %02d:%02d:%02d | %d ms",
-					localTime.tm_hour, localTime.tm_min, localTime.tm_sec, Globals::ping);
+		ImGui::Text("Welcome %s | %02d:%02d:%02d | %d ms", 
+			iGameEntitySystem->GetPlayerController()->m_sSanitizedPlayerName, localTime.tm_hour, 
+			localTime.tm_min, localTime.tm_sec, Globals::ping);
+
+
 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -193,7 +196,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 		ImDrawList *drawList = ImGui::GetForegroundDrawList();
 
 		ImVec2 p = ImVec2(15, 47);
-		float width = 230.0f;
+		float width = 295.0f;
 		float height = 4.0f;
 		float rounding = 6.0f;
 
@@ -209,6 +212,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 		if (gradientOffset > 1.0f)
 			gradientOffset = 0.0f;
 	}
+
 
 	static float spectatorsGradientOffset = 0.0f;
 
@@ -314,14 +318,12 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 				ImVec2(windowPos.x + width, windowPos.y + windowSize.y),
 				color1, color2, color2, color1);
 
-			// 🔹 Bordes redondeados
 			drawList->AddRectFilled(
 				ImVec2(windowPos.x, windowPos.y + windowSize.y - height),
 				ImVec2(windowPos.x + width, windowPos.y + windowSize.y),
 				ImColor(0, 0, 0, 50),
 				rounding);
 
-			// 🔹 Animación fluida del gradiente
 			spectatorsGradientOffset += 0.002f;
 			if (spectatorsGradientOffset > 1.0f)
 				spectatorsGradientOffset = 0.0f;
@@ -333,248 +335,166 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 	ImGui::SetNextWindowSize(ImVec2(800, 800));
 	if (Globals::showMenu)
 	{
-		ImGui::Begin(("Aspasia 1337 : dev"), NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+		ImGui::Begin ("Aspasia 1337 : dev", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+		if (ImGui::BeginTabBar ("MainTabs"))
 		{
-			ImGui::Spacing();
-
-			ImGui::SameLine();
-
-			if (ImGui::Button(("Visuals"), ImVec2(125, 40)))
+			// VISUALS EXPERIMENTAL
+			if (ImGui::BeginTabItem ("Visuals (Experimental)"))
 			{
-				Globals::tab = 0;
+				ImGui::TextColored (ImVec4 (1, 0.5f, 0.2f, 1), "VAC Features");
+
+				if (ImGui::CollapsingHeader ("Glow"))
+				{
+					ImGui::Checkbox ("Enable Glow", &Globals::glow);
+					if (Globals::glow)
+					{
+						ImGui::InputInt ("Glow Type", &Globals::glowType);
+						ImGui::ColorEdit4 ("Glow Color", Globals::chamsColor, ImGuiColorEditFlags_NoInputs);
+					}
+				}
+
+				if (ImGui::CollapsingHeader ("Smoke"))
+				{
+					ImGui::Checkbox ("No Smoke", &Globals::noSmoke);
+					ImGui::Checkbox ("Smoke Visuals", &Globals::smokeVisuals);
+					if (Globals::smokeVisuals)
+					{
+						ImGui::ColorEdit3 ("Smoke Color", Globals::smokeColorRGB, ImGuiColorEditFlags_NoInputs);
+					}
+				}
+
+				if (ImGui::CollapsingHeader ("Info Overlay"))
+				{
+					ImGui::Checkbox ("Show Info Boxes", &Globals::ShowInfo);
+				}
+
+				ImGui::EndTabItem ( );
 			}
 
-			ImGui::SameLine();
-			if (ImGui::Button(("Function hooks!"), ImVec2(125, 40)))
+			// HOOKS & EXPLOITS
+			if (ImGui::BeginTabItem ("Hooks & Exploits"))
 			{
-				Globals::tab = 1;
+				if (ImGui::CollapsingHeader ("Render Hooks"))
+				{
+					ImGui::Checkbox ("Render Smoke Hook", &Globals::RenderSmokeHook);
+					ImGui::Checkbox ("Render Flash Hook", &Globals::RenderFlashHook);
+				}
+
+				if (ImGui::CollapsingHeader ("Angle Hook"))
+				{
+					ImGui::Checkbox ("View Angles Hook", &Globals::SetViewAngles);
+					if (Globals::SetViewAngles)
+					{
+						ImGui::DragFloat3 ("View Angles", reinterpret_cast<float *>(&Globals::viewAngles), 0.1f);
+					}
+				}
+
+				if (ImGui::CollapsingHeader ("Aim Assist Settings"))
+				{
+					ImGui::DragFloat ("Smoothing", &Globals::smoothing, 0.1f, 0.01f, 100.f);
+					ImGui::DragFloat ("Aimbot FOV", &Globals::aimbotFov, 0.1f, 0.1f, 180.f);
+				}
+
+				if (ImGui::CollapsingHeader ("Exploits & Visuals"))
+				{
+					ImGui::Checkbox ("Anti Aim", &Globals::anti_aim);
+					ImGui::Checkbox ("Bhop", &Globals::bhop);
+					ImGui::Checkbox ("Third Person", &Globals::thirdPerson);
+
+					ImGui::DragFloat ("FOV 1", &Globals::fov1, 0.1f, 0.1f, 180.f);
+					ImGui::DragFloat ("FOV 2", &Globals::fov2, 0.1f, 0.1f, 180.f);
+					ImGui::DragFloat ("FOV 3", &Globals::fov3, 0.1f, 0.1f, 180.f);
+
+					ImGui::DragFloat ("Light Intensity", &Globals::lightIntensity, 0.001f, 0.0f, 10.0f, "%.3f");
+				}
+
+				ImGui::EndTabItem ( );
 			}
 
-			ImGui::SameLine();
-			if (ImGui::Button(("Legit bot!"), ImVec2(125, 40)))
+			// LEGIT BOT
+			if (ImGui::BeginTabItem ("Legit Bot"))
 			{
-				Globals::tab = 2;
-			}
+				ImGui::DragFloat ("Pitch Angle", &Globals::AAPitch, 15.f, -90.f, 90.f);
+				ImGui::DragFloat ("Jaw Angle", &Globals::AAJaw, 15.f, -180.f, 180.f);
+				ImGui::Checkbox ("Show Spectators", &Globals::ShowSpectators);
 
-			ImGui::Separator();
-
-			ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-			if (Globals::tab == 0)
-			{
-
-				if (ImGui::Checkbox("Glow", &Globals::glow))
+				if (ImGui::CollapsingHeader ("Sky & World Colors"))
 				{
-
-					ImGui::SetTooltip("Enable glow!");
-				}
-
-				if (Globals::glow)
-				{
-					ImGui::InputInt("Glow Type ", &Globals::glowType);
-
-					ImGui::ColorEdit4("Glow Visuals", Globals::chamsColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions);
-				}
-
-				if (ImGui::Checkbox("ShowInfo", &Globals::ShowInfo))
-				{
-
-					ImGui::SetTooltip("Enable rectangles!");
-				}
-
-				if (ImGui::Checkbox("Smoke Visuals", &Globals::smokeVisuals))
-				{
-				}
-				if (Globals::smokeVisuals)
-				{
-					if (ImGui::ColorEdit3("Smoke Color", &Globals::smokeColorRGB[0], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions))
+					ImGui::Checkbox ("Change Sky Color", &Globals::ChangeSkyColor);
+					if (Globals::ChangeSkyColor)
 					{
+						ImGui::ColorEdit3 ("Sky Color", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs);
+					}
+
+					ImGui::Checkbox ("World Modulation", &Globals::worldModulation);
+					if (Globals::worldModulation)
+					{
+						ImGui::ColorEdit3 ("World Color", Globals::worldModulationColor, ImGuiColorEditFlags_NoInputs);
+					}
+
+					ImGui::Checkbox ("Light Modulation", &Globals::lightModulation);
+					if (Globals::lightModulation)
+					{
+						ImGui::ColorEdit3 ("Light Color", Globals::lightModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_HDR);
 					}
 				}
 
-				if (ImGui::Checkbox("No Smoke", &Globals::noSmoke))
-				{
-				}
-			}
+				ImGui::Checkbox ("Health Bar", &Globals::HealthBar);
+				ImGui::Checkbox ("Render Skeleton", &Globals::RenderSkeleton);
+				ImGui::Checkbox ("Render Weapon", &Globals::PlayerInfo);
+				ImGui::Checkbox ("Render Bone Id", &Globals::RenderPlayerBones);
+				ImGui::Checkbox ("Remove Scope", &Globals::RemoveScope);
 
-			if (Globals::tab == 1)
-			{
-				if (ImGui::Checkbox("Render Smoke Hook!", &Globals::RenderSmokeHook))
-				{
-				}
-				if (ImGui::Checkbox("Render Flash Hook!", &Globals::RenderFlashHook))
-				{
-				}
-
-				if (ImGui::Checkbox("View Angles Hook!", &Globals::SetViewAngles))
-				{
-				}
-
-				if (Globals::SetViewAngles)
-				{
-					ImGui::DragFloat3("Vector", reinterpret_cast<float *>(&Globals::viewAngles), 0.1f, -360.0f, 360.0f, "%.2f");
-				}
-
-				if (ImGui::DragFloat("smoothing", &Globals::smoothing, 0.1f, 0.01f, 100.0f))
-				{
-					if (Globals::smoothing < 0.01f)
-						Globals::smoothing = 0.01f;
-				}
-
-				if (ImGui::DragFloat("fov", &Globals::aimbotFov, 0.1f, 0.1f, 180.0f))
-				{
-					if (Globals::aimbotFov < 0.1f)
-						Globals::aimbotFov = 0.1f;
-				}
-
-				if (ImGui::Checkbox("Anti Aim", &Globals::anti_aim))
-				{
-				}
-
-				if (ImGui::Checkbox("bhop", &Globals::bhop))
-				{
-				}
-
-				if (ImGui::Checkbox("AntiAim", &Globals::AntiAim))
-				{
-				}
-				if (ImGui::Checkbox("Third Person", &Globals::thirdPerson))
-				{
-				}
-
-				if (ImGui::DragFloat("fov1", &Globals::fov1, 0.1f, 0.1f, 180.0f))
-				{
-				}
-				if (ImGui::DragFloat("fov2", &Globals::fov2, 0.1f, 0.1f, 180.0f))
-				{
-				}
-				if (ImGui::DragFloat("fov3", &Globals::fov3, 0.1f, 0.1f, 180.0f))
-				{
-				}
-
-				if (ImGui::DragFloat("intensity", &Globals::lightIntensity, 0.001f, 0.0f, 10.0f, "%.3f"))
-				{
-				}
-			}
-
-			if (Globals::tab == 2)
-			{
-
-				if (ImGui::DragFloat("Pitch Angle", &Globals::AAPitch, 15.f, -90.0f, 90.0f, "%.2f"))
-				{
-				}
-				if (ImGui::DragFloat("Jaw Angle", &Globals::AAJaw, 15.f, -180.0f, 180.0f, "%.2f"))
-				{
-				}
-
-				if (ImGui::Checkbox("Show Spectators", &Globals::ShowSpectators))
-				{
-				}
-
-				if (ImGui::Checkbox("Sky color", &Globals::ChangeSkyColor))
-				{
-				}
-
-				if (Globals::ChangeSkyColor)
-				{
-					if (ImGui::ColorEdit3("Sky Color##SkyTint", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions))
-					{
-					}
-				}
-
-				if (ImGui::Checkbox("World Modulation", &Globals::worldModulation))
-				{
-				}
-
-				if (Globals::worldModulation)
-				{
-					if (ImGui::ColorEdit3("World Modulation##Color", Globals::worldModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions))
-					{
-					}
-				}
-
-				if (ImGui::Checkbox("Light Modulation", &Globals::lightModulation))
-				{
-				}
-
-				if (Globals::lightModulation)
-				{
-					// ImGuiColorEditFlags_HDR
-					if (ImGui::ColorEdit3("Light Mod", Globals::lightModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_HDR))
-					{
-					}
-				}
-
-				if (ImGui::Checkbox("Chams", &Globals::Chams))
-				{
-				}
-
-				if (ImGui::Checkbox("HealtBar", &Globals::HealthBar))
-				{
-				}
-
-				if (ImGui::Checkbox("Render Bones", &Globals::RenderPlayerBones))
-				{
-				}
-
-				if (Globals::Chams)
-				{
-
-					if (ImGui::Checkbox("PlayerChams", &Globals::PlayersChams))
-					{
-					}
-
-					if (Globals::PlayersChams)
-					{
-
-						if (ImGui::ColorEdit3("Chams##Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions))
-						{
-						}
-
-						if (ImGui::Combo("Chams Type Player", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE(Globals::MaterialNames)))
-						{
-						}
-					}
-
-					if (ImGui::Checkbox("Weapon Chams", &Globals::WeaponChams))
-					{
-					}
-
-					if (Globals::WeaponChams)
-					{
-
-						if (ImGui::ColorEdit3("Chams##ColorGun", Globals::ChamsColorGun, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoOptions))
-						{
-						}
-
-						if (ImGui::Combo("Chams Type Gun", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE(Globals::MaterialNames)))
-						{
-						}
-					}
-
-					if (ImGui::Checkbox("LegitBot Hook!", &Globals::CreateMoveHook))
-					{
-					}
-				}
-
-				if (ImGui::Checkbox("CreateMove Hook!", &Globals::CreateMoveHook))
-				{
-				}
-
+				ImGui::Checkbox ("CreateMove Hook", &Globals::CreateMoveHook);
 				if (Globals::CreateMoveHook)
 				{
-					if (ImGui::Combo("TARGET PLACE", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE(Globals::BoneNames)))
+					ImGui::Combo ("Target Bone", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE (Globals::BoneNames));
+				}
+
+				ImGui::EndTabItem ( );
+			}
+
+			// CHAMS
+			if (ImGui::BeginTabItem ("Chams"))
+			{
+				ImGui::Checkbox ("Enable Chams", &Globals::Chams);
+				if (Globals::Chams)
+				{
+					if (ImGui::CollapsingHeader ("Player Chams"))
 					{
+						ImGui::Checkbox ("Player Color", &Globals::PlayersChams);
+						if (Globals::PlayersChams)
+						{
+							ImGui::ColorEdit3 ("Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs);
+							ImGui::Combo ("Player Material", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+						}
+
+						if (ImGui::Checkbox ("Render Only Enemy Players", &Globals::OnlyEnemyRender)) {
+
+						}
+					}
+
+					if (ImGui::CollapsingHeader ("Weapon Chams"))
+					{
+						ImGui::Checkbox ("Weapons", &Globals::WeaponChams);
+						if (Globals::WeaponChams)
+						{
+							ImGui::ColorEdit3 ("Gun Color", Globals::ChamsColorGun, ImGuiColorEditFlags_NoInputs);
+							ImGui::Combo ("Gun Material", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+						}
 					}
 				}
 
-				if (ImGui::Checkbox ("Remove Scope", &Globals::RemoveScope))
-				{
 
-				}
+
+				ImGui::EndTabItem ( );
 			}
+
+			ImGui::EndTabBar ( );
 		}
-		ImGui::End();
+
+		ImGui::End ( );
 	}
 
 	if (Globals::noSmoke)
@@ -590,21 +510,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 		DrawFovCircle();
 	}
 
-	if (Globals::HealthBar)
+	if (Globals::HealthBar || Globals::PlayerInfo || Globals::RenderPlayerBones || Globals::RenderSkeleton)
 	{
-		for (auto &pawn : iGameEntitySystem->PawnMap)
-		{
-			iVisual->m_OverlayRender.RenderHealth(pawn.second);
-		}
-	}
-
-	if (Globals::RenderPlayerBones)
-	{
-		for (auto &pawn : iGameEntitySystem->PawnMap)
-		{
-			//		iVisual->m_OverlayRender.RenderPlayerBones (pawn.second);
-			iVisual->m_OverlayRender.RenderSkeleton(pawn.second);
-		}
+		for(auto & pawn : iGameEntitySystem->PawnMap)
+			iVisual->m_OverlayRender.RenderAllPlayerVisuals ( pawn.second);
 	}
 
 	ImGui::Render();

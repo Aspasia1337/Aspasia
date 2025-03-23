@@ -84,8 +84,8 @@ namespace Globals {
     byte lightType = 0x02;
 
     bool Chams = 0;
-    float ChamsColor [3] = { 0.5f, 0.5f, 1.0f };
-    float ChamsColorGun[3] = { 0.5f, 0.5f, 1.0f };
+    float ChamsColor [3] = { 0.5f, 1.5f, 1.0f };
+    float ChamsColorGun[3] = { 1.5f, 0.5f, 1.0f };
 
     void *MouseEvent = nullptr;
 
@@ -99,10 +99,16 @@ namespace Globals {
         Feature (&worldModulation, "World Modulation"),
         Feature (&lightModulation, "Light Modulation"),
         Feature (&RenderFlashHook, "Render Flash"),
-        Feature (&RenderSmokeHook, "Render Smoke")
+        Feature (&RenderSmokeHook, "Render Smoke"),
+        Feature (&RenderSkeleton, "Render Skeleton"),
+        Feature (&RenderPlayerBones, "Render Bone ID"),
+        Feature (&HealthBar, "Render Healt Bar"),
+        Feature (&PlayerInfo, "Render Info"),
+        Feature (&ShowSpectators, "Show Spectators"),
     };
 
     bool RenderPlayerBones = false;
+    bool RenderSkeleton = false;
 
     std::unordered_map<const char *, terroristBones::tBones> boneMap = {
         {"Head", terroristBones::head_0},
@@ -131,6 +137,8 @@ namespace Globals {
     };
 
     bool RemoveScope = 0;
+    bool PlayerInfo = 0;
+    bool OnlyEnemyRender = 0;
 
 }
 

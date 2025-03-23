@@ -418,7 +418,7 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 		{
 			C_PlayerPawn *enemy = anyenemy.second;
 
-			if (enemy != iGameEntitySystem->GetPlayerPawn() && !enemy->pawnIsAlive && enemy->pawnHealth > 0)
+			if (enemy != iGameEntitySystem->GetPlayerPawn() && !enemy->pawnIsAlive && enemy->pawnHealth > 0 && !enemy->m_pGameSceneNode->m_bDormant)
 			{
 				double distance = CalculateDistance(PlayerPos, enemy->vOldOrigin);
 
