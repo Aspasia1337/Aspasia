@@ -461,18 +461,21 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 				ImGui::Checkbox ("Enable Chams", &Globals::Chams);
 				if (Globals::Chams)
 				{
-					if (ImGui::CollapsingHeader ("Player Chams"))
+					ImGui::Checkbox ("Player Chams", &Globals::PlayersChams);
+					if (Globals::PlayersChams)
 					{
-						ImGui::Checkbox ("Player Color", &Globals::PlayersChams);
-						if (Globals::PlayersChams)
-						{
-							ImGui::ColorEdit3 ("Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs);
-							ImGui::Combo ("Player Material", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
-						}
-
-						if (ImGui::Checkbox ("Render Only Enemy Players", &Globals::OnlyEnemyRender)) {
+						ImGui::ColorEdit3 ("Chams Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs);
+						if (ImGui::Checkbox ("Render Invisible Chams", &Globals::InvisibleChams)) {
 
 						}
+						if (Globals::InvisibleChams) {
+							ImGui::ColorEdit3 ("Invisible Chams Color", Globals::InvisibleChamsColor, ImGuiColorEditFlags_NoInputs);
+						}
+						ImGui::Combo ("Player Material", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+					}
+
+					if (ImGui::Checkbox ("Render Only Enemy Players", &Globals::OnlyEnemyRender)) {
+
 					}
 
 					if (ImGui::CollapsingHeader ("Weapon Chams"))
@@ -484,9 +487,17 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 							ImGui::Combo ("Gun Material", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
 						}
 					}
+
+					if (ImGui::CollapsingHeader ("Arms Chams"))
+					{
+						ImGui::Checkbox ("Arms", &Globals::ArmsChams);
+						if (Globals::ArmsChams)
+						{
+							ImGui::ColorEdit3 ("Arms Color", Globals::ArmsColor, ImGuiColorEditFlags_NoInputs);
+							ImGui::Combo ("Arms Material", &Globals::MaterialArmSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+						}
+					}
 				}
-
-
 
 				ImGui::EndTabItem ( );
 			}

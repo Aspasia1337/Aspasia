@@ -48,7 +48,6 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
 
-		// Crear una copia local del puntero a SceneAnimatableObject para evitar cambios concurrentes
 		auto *sceneObject = arrMeshDraw->SceneAnimatableObject;
 		if (!sceneObject)
 		{
@@ -77,52 +76,67 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 		{
 			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
+		
 		auto schemaName = iGameEntitySystem->GetSchemaName(pEntity);
 
-		// iHelper->m_Console.printMessage (WARNING, schemaName);
 
 		// Menu MODEL
 		if (std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawn").c_str())==0)
 		{
 			ByteColor Color = ToByteColor(Globals::ChamsColor);
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[1]).pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterialVisible;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+
+			Color = ToByteColor (Globals::ChamsColorGun);
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
+
+			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+
 		}
 
-		// In Game Player Model
-		if (std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawnBase").c_str()) == 0 && Globals::PlayersChams)
+		 //In Game Player Model
+
+		if ((std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str ( )) == 0 || 
+			std::strcmp (schemaName.c_str ( ), std::string ("c_cs_player_for_precache").c_str ( )) == 0 ||
+			std::strcmp (schemaName.c_str ( ), std::string ("CBasePlayerController").c_str ( )) == 0) 
+			&& Globals::PlayersChams)
 		{
-			if (Globals::OnlyEnemyRender && ((C_PlayerPawn*)pEntity)->m_iTeamNum == iGameEntitySystem->GetPlayerPawn()->m_iTeamNum) {
-				return oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-			}
-			ByteColor Color = ToByteColor(Globals::ChamsColor);
+			ByteColor Color;
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
+			if (Globals::InvisibleChams) {
+				Color = ToByteColor (Globals::InvisibleChamsColor);
+
+				arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterialVisible;
+
+				*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
+				*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
+				*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
+				*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+
+				oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+			
+			}
+
+
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
+
+			Color = ToByteColor (Globals::ChamsColor);
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+
 		}
 
-		// OnGround Guns
-		// if (std::strcmp (schemaName.c_str ( ), std::string ("C_CSWeaponBaseGun").c_str ( )) == 0 && Globals::WeaponChams) {
-
-		//	ByteColor Color = ToByteColor (Globals::ChamsColorGun);
-
-		//	arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
-
-		//	*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
-		//	*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
-		//	*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
-		//	*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
-
-		//}
 
 		// Player Gun
 		if (std::strcmp(schemaName.c_str(), std::string("C_PredictedViewModel").c_str()) == 0 && Globals::WeaponChams)
@@ -136,8 +150,49 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+
+
+			oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
+
+			Color = ToByteColor (Globals::ChamsColorGun);
+
+			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 		}
+
+
+		//// Arms and Gloves
+		if (std::strcmp (schemaName.c_str ( ), std::string ("CBaseAnimGraph").c_str ( )) == 0 && Globals::ArmsChams)
+		{
+			ByteColor Color = ToByteColor (Globals::ArmsColor);
+
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialArmSelected]).pMaterial;
+
+			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+
+			oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialArmSelected]).pMaterial;
+
+
+			Color = ToByteColor (Globals::ArmsColor);
+
+			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
+			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
+		}
+
+		//iHelper->m_Console.printMessage (WARNING, schemaName);
 	}
+
 
 	return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }

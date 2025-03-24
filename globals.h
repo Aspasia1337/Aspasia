@@ -57,11 +57,13 @@ namespace Globals {
 	
 	extern int  MaterialSelected;
 	extern int MaterialGunSelected;
+	extern int MaterialArmSelected;
 
 	extern int BoneSelected;
 
 	extern bool PlayersChams;
 	extern bool WeaponChams;
+	extern bool ArmsChams;
 
 	extern bool HealthBar;
 
@@ -70,6 +72,9 @@ namespace Globals {
 	extern bool Chams;
 	extern float ChamsColor[3];
 	extern float ChamsColorGun[3];
+	extern float ArmsColor[3];
+	extern float InvisibleChamsColor[3];
+
 	extern float SkyTintColor[3];
 
 	extern  void *MouseEvent;
@@ -87,4 +92,6 @@ namespace Globals {
 	extern bool PlayerInfo;
 
 	extern bool OnlyEnemyRender;
+
+	extern bool InvisibleChams;
 };

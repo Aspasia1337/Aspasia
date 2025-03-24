@@ -52,11 +52,14 @@ namespace Globals {
 
     int MaterialSelected = 0;
     int MaterialGunSelected = 0;
+    int MaterialArmSelected = 0;
 
     int BoneSelected = 6;
 
     bool PlayersChams = 0;
     bool WeaponChams = 0;
+    bool ArmsChams = 0;
+
 
     bool HealthBar = 0;
 
@@ -86,6 +89,8 @@ namespace Globals {
     bool Chams = 0;
     float ChamsColor [3] = { 0.5f, 1.5f, 1.0f };
     float ChamsColorGun[3] = { 1.5f, 0.5f, 1.0f };
+    float ArmsColor[3] = { 0.5f, 0.5f, 1.3f };
+    float InvisibleChamsColor[3] = { 0.3f,0.1f,0.3f };
 
     void *MouseEvent = nullptr;
 
@@ -139,6 +144,7 @@ namespace Globals {
     bool RemoveScope = 0;
     bool PlayerInfo = 0;
     bool OnlyEnemyRender = 0;
+    bool InvisibleChams = 0;
 
 }
 

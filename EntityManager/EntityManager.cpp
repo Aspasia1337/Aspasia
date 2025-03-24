@@ -25,7 +25,20 @@ std::string GameEntitySystem::GetSchemaName(void *entity)
 	{
 		return "env_sky";
 	}
-	//	iHelper->m_Console.printMessage (WARNING, distinguisher);
+
+	if (strcmp (distinguisher, "chicken") == 0)
+	{
+		return "chicken";
+	}
+
+	if (strcmp (distinguisher, "c_cs_player_for_precache") == 0) {
+		return "c_cs_player_for_precache";
+	}
+	
+	if (strcmp (distinguisher, "cs_player_manager") == 0) {
+		return "cs_player_manager";
+	}
+	
 
 	const uintptr_t schema_class_info_data = *(uintptr_t *)(entity_class_info + 0x30);
 	if (!schema_class_info_data)
@@ -38,6 +51,9 @@ std::string GameEntitySystem::GetSchemaName(void *entity)
 	char buffer[1024];
 
 	lstrcpyA(buffer, class_name);
+	
+	//iHelper->m_Console.printMessage (WARNING, buffer);
+
 	return std::string(buffer);
 }
 
@@ -132,6 +148,7 @@ void GameEntitySystem::getGameEntities()
 			C_EnvSky *SkyEnt = (C_EnvSky *)Entity;
 			Visual::CEnvSkyVector.push_back(SkyEnt);
 		}
+
 	}
 }
 
