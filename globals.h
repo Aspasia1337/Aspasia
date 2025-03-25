@@ -40,7 +40,7 @@ namespace Globals {
 	extern float smokeColorRGB[3];
 	extern float lightModulationColor[3];
 	extern float worldModulationColor[3];
-	extern byte lightType;
+	extern unsigned char lightType;
 	extern float lightIntensity;
 
 	extern std::vector<std::string> Spectators;

@@ -149,22 +149,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="includes\imgui\blur\blur.cpp" />
     <ClCompile Include="Classes\Classes.cpp" />
     <ClCompile Include="Features\Anti-Aim\AntiAim.cpp" />
     <ClCompile Include="EntityManager\EntityManager.cpp" />
     <ClCompile Include="helper\helper.cpp" />
     <ClCompile Include="HooksManager\HooksManager.cpp" />
+    <ClCompile Include="includes\imgui\custom\custom.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="includes\imgui\imgui_tables.cpp" />
     <ClCompile Include="Interfaces\iManager.cpp" />
     <ClCompile Include="includes\imgui\imgui.cpp" />
     <ClCompile Include="includes\imgui\imgui_demo.cpp" />
     <ClCompile Include="includes\imgui\imgui_draw.cpp" />
     <ClCompile Include="includes\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="includes\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="includes\imgui\imgui_widgets.cpp" />
     <ClCompile Include="includes\kiero\kiero.cpp" />
     <ClCompile Include="includes\kiero\minhook\src\buffer.c" />
-    <ClCompile Include="includes\kiero\minhook\src\hde\hde32.c" />
     <ClCompile Include="includes\kiero\minhook\src\hde\hde64.c" />
+    <ClCompile Include="includes\kiero\minhook\src\hde\hde32.c" />
     <ClCompile Include="includes\kiero\minhook\src\hook.c" />
     <ClCompile Include="includes\kiero\minhook\src\trampoline.c" />
     <ClCompile Include="Features\Legitbot\Legitbot.cpp" />
@@ -175,6 +178,7 @@
     <ClCompile Include="Features\Visuals\Visual.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bytes.hpp" />
     <ClInclude Include="Classes\Classes.h" />
     <ClInclude Include="Features\Anti-Aim\AntiAim.h" />
     <ClInclude Include="EntityManager\EntityManager.h" />
@@ -182,6 +186,10 @@
     <ClInclude Include="globals.h" />
     <ClInclude Include="helper\helper.h" />
     <ClInclude Include="HooksManager\HooksManager.h" />
+    <ClInclude Include="includes\imgui\blur\blur.hpp" />
+    <ClInclude Include="includes\imgui\blur\blur_x.hpp" />
+    <ClInclude Include="includes\imgui\blur\blur_y.hpp" />
+    <ClInclude Include="includes\imgui\custom\custom.hpp" />
     <ClInclude Include="Interfaces\iManager.h" />
     <ClInclude Include="Features\Legitbot\Legitbot.h" />
     <ClInclude Include="MainThread\font.h" />
@@ -189,9 +197,9 @@
     <ClInclude Include="includes\imgui\imconfig.h" />
     <ClInclude Include="includes\imgui\imgui.h" />
     <ClInclude Include="includes\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="includes\imgui\imgui_impl_win32.h" />
     <ClInclude Include="includes\imgui\imgui_internal.h" />
     <ClInclude Include="includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_win32.h" />
     <ClInclude Include="includes\imgui\imstb_textedit.h" />
     <ClInclude Include="includes\imgui\imstb_truetype.h" />
     <ClInclude Include="includes\includes.h" />

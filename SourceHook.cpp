@@ -1,3 +1,5 @@
+#define IMGUI_DEFINE_MATH_OPERATORS
+
 #include <Windows.h>
 #include <ctime>
 #include <stdio.h>
@@ -11,10 +13,7 @@
 #include "HooksManager/HooksManager.h"
 
 #include "globals.h" 
-
-
 #include "MainThread/mainHook.h"
-
 
 
 namespace Globals {
@@ -84,7 +83,7 @@ namespace Globals {
     uint32_t ping = 0;
 
     float lightIntensity = 1;
-    byte lightType = 0x02;
+    unsigned char lightType = 0x02;
 
     bool Chams = 0;
     float ChamsColor [3] = { 0.5f, 1.5f, 1.0f };
