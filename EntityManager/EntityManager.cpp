@@ -30,14 +30,6 @@ std::string GameEntitySystem::GetSchemaName(void *entity)
 	{
 		return "chicken";
 	}
-
-	if (strcmp (distinguisher, "c_cs_player_for_precache") == 0) {
-		return "c_cs_player_for_precache";
-	}
-	
-	if (strcmp (distinguisher, "cs_player_manager") == 0) {
-		return "cs_player_manager";
-	}
 	
 
 	const uintptr_t schema_class_info_data = *(uintptr_t *)(entity_class_info + 0x30);

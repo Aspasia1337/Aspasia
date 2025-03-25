@@ -132,7 +132,9 @@ void DrawFovCircle()
 		2.0f);
 }
 
+const char *TempUserName = "";
 bool init = false;
+
 HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags)
 {
 	if (!init)
@@ -184,8 +186,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 						 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
 						 ImGuiWindowFlags_NoScrollbar);
 
+
+		C_PlayerController *TempController = iGameEntitySystem->GetPlayerController ( );
+		
+		if (TempController)
+			TempUserName = TempController->m_sSanitizedPlayerName;
+
 		ImGui::Text("Welcome %s | %02d:%02d:%02d | %d ms", 
-			iGameEntitySystem->GetPlayerController()->m_sSanitizedPlayerName, localTime.tm_hour, 
+			TempUserName, localTime.tm_hour,
 			localTime.tm_min, localTime.tm_sec, Globals::ping);
 
 

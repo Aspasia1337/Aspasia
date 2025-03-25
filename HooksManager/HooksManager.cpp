@@ -395,58 +395,60 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 		{
 			iGameEntitySystem->getGameEntities();
 		}
-	}
 
-	if (Globals::CreateMoveHook && iGameEntitySystem->PawnMap.size() >= 1)
-	{
-
-		// C_PlayerPawn *EnemyTemp = nullptr;
-		//	for(auto &anyenemy: iGameEntitySystem->PawnMap){
-		//		if (anyenemy.second != iGameEntitySystem->GetPlayerPawn ( ) && !anyenemy.second->pawnIsAlive && anyenemy.second->pawnHealth > 0)
-		//		{
-		//			EnemyTemp = anyenemy.second;
-		//			break;
-		//		}
-		//	}
-
-		C_PlayerPawn *EnemyTemp = nullptr;
-		double MinDistance = 99999999;
-
-		Vec3 PlayerPos = iGameEntitySystem->GetPlayerPawn()->vOldOrigin;
-
-		for (auto &anyenemy : iGameEntitySystem->PawnMap)
+		if (Globals::CreateMoveHook && iGameEntitySystem->PawnMap.size() >= 1)
 		{
-			C_PlayerPawn *enemy = anyenemy.second;
 
-			if (enemy != iGameEntitySystem->GetPlayerPawn() && !enemy->pawnIsAlive && enemy->pawnHealth > 0 && !enemy->m_pGameSceneNode->m_bDormant)
+			// C_PlayerPawn *EnemyTemp = nullptr;
+			//	for(auto &anyenemy: iGameEntitySystem->PawnMap){
+			//		if (anyenemy.second != iGameEntitySystem->GetPlayerPawn ( ) && !anyenemy.second->pawnIsAlive && anyenemy.second->pawnHealth > 0)
+			//		{
+			//			EnemyTemp = anyenemy.second;
+			//			break;
+			//		}
+			//	}
+
+			C_PlayerPawn *EnemyTemp = nullptr;
+			double MinDistance = 99999999;
+
+			Vec3 PlayerPos = iGameEntitySystem->GetPlayerPawn()->vOldOrigin;
+
+			for (auto &anyenemy : iGameEntitySystem->PawnMap)
 			{
-				double distance = CalculateDistance(PlayerPos, enemy->vOldOrigin);
+				C_PlayerPawn *enemy = anyenemy.second;
 
-				if (distance < MinDistance)
+				if (enemy != iGameEntitySystem->GetPlayerPawn() && !enemy->pawnIsAlive && enemy->pawnHealth > 0 && !enemy->m_pGameSceneNode->m_bDormant)
 				{
-					MinDistance = distance;
-					EnemyTemp = enemy;
+					double distance = CalculateDistance(PlayerPos, enemy->vOldOrigin);
+
+					if (distance < MinDistance)
+					{
+						MinDistance = distance;
+						EnemyTemp = enemy;
+					}
 				}
 			}
+
+			if (!EnemyTemp || EnemyTemp->pawnIsAlive && EnemyTemp->pawnHealth <= 0 && !EnemyTemp->pawnIsAlive)
+				return;
+
+			Vec3 tempMe = Vec3(
+				iGameEntitySystem->GetPlayerPawn()->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->GetPlayerPawn()->m_vecViewOffset.x,
+				iGameEntitySystem->GetPlayerPawn()->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->GetPlayerPawn()->m_vecViewOffset.y,
+				iGameEntitySystem->GetPlayerPawn()->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->GetPlayerPawn()->m_vecViewOffset.z);
+
+			Vec3 pos = iLegitBot->m_BonePosition.GetBonePosFromIndex(Globals::boneMap.at(Globals::BoneNames[Globals::BoneSelected]), EnemyTemp, iGameEntitySystem->GetPlayerPawn());
+
+			Vec3 tempEnemy = Vec3(
+				pos.x,
+				pos.y,
+				pos.z);
+
+			SetViewAngles::hSetViewAngles((__int64 *)csgoInput, 0, CalculateAngles(tempMe, tempEnemy, Globals::aimbotFov));
 		}
 
-		if (!EnemyTemp || EnemyTemp->pawnIsAlive && EnemyTemp->pawnHealth <= 0 && !EnemyTemp->pawnIsAlive)
-			return;
-
-		Vec3 tempMe = Vec3(
-			iGameEntitySystem->GetPlayerPawn()->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->GetPlayerPawn()->m_vecViewOffset.x,
-			iGameEntitySystem->GetPlayerPawn()->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->GetPlayerPawn()->m_vecViewOffset.y,
-			iGameEntitySystem->GetPlayerPawn()->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->GetPlayerPawn()->m_vecViewOffset.z);
-
-		Vec3 pos = iLegitBot->m_BonePosition.GetBonePosFromIndex(Globals::boneMap.at(Globals::BoneNames[Globals::BoneSelected]), EnemyTemp, iGameEntitySystem->GetPlayerPawn());
-
-		Vec3 tempEnemy = Vec3(
-			pos.x,
-			pos.y,
-			pos.z);
-
-		SetViewAngles::hSetViewAngles((__int64 *)csgoInput, 0, CalculateAngles(tempMe, tempEnemy, Globals::aimbotFov));
 	}
+
 }
 
 void *HooksManager::IsRelativeMouseMode::hIsRelativeMouseFunction(void *pThisptr, bool bActive)

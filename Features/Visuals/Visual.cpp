@@ -365,14 +365,12 @@ void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
 	// 2. Render Weapon Name
 	if (Globals::PlayerInfo)
 	{
-		const char *weaponName = nullptr;
+		const char *weaponName = "??";
 
 		if (Player && Player->m_pClippingWeapon && Player->m_pClippingWeapon->m_pEntity) {
 			weaponName = Player->m_pClippingWeapon->m_pEntity->weapon_name;
 		}
 
-		if (weaponName && strlen(weaponName)>0) // Solo si es válido
-		{
 			float fontSize = 12.0f;
 
 			ImFont *font = ImGui::GetFont ( );
@@ -383,7 +381,6 @@ void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
 			ImU32 softColor = IM_COL32 (100, 200, 180, 160);
 
 			drawList->AddText (font, fontSize, textPos, softColor, weaponName);
-		}
 	}
 
 	// 3. Render Bone IDs (colorful text at bone positions)
