@@ -108,43 +108,46 @@ void c_custom::picker_widget( const char* str_id, const char* content, const ImV
 
 }
 
-bool c_custom::tab( const char* icon, const char* label, bool selected, float rounding, ImDrawFlags flags ) {
+bool c_custom::tab (const char *icon, const char *label, bool selected, float rounding, ImDrawFlags flags) {
+    ImGuiContext &g = *GImGui;
+    ImGuiWindow *window = GetCurrentWindow ( );
 
-    ImGuiContext& g = *GImGui;
-    ImGuiWindow* window = GetCurrentWindow( );
+    ImGuiID id = window->GetID (icon);
 
-    ImGuiID id = window->GetID( icon );
+    ImFont *icon_font = (GetIO ( ).Fonts->Fonts.Size > 4) ? GetIO ( ).Fonts->Fonts[4] : GetIO ( ).Fonts->Fonts[0];
+    ImFont *text_font = (GetIO ( ).Fonts->Fonts.Size > 1) ? GetIO ( ).Fonts->Fonts[1] : GetIO ( ).Fonts->Fonts[0];
 
-    ImVec2 label_size = CalcTextSize( label, 0, 1 );
-    ImVec2 icon_size  = GetIO( ).Fonts->Fonts[4]->CalcTextSizeA( GetIO( ).Fonts->Fonts[4]->FontSize, FLT_MAX, 0, icon );
+    ImVec2 label_size = CalcTextSize (label, 0, 1);
+    ImVec2 icon_size = icon_font->CalcTextSizeA (icon_font->FontSize, FLT_MAX, 0, icon);
 
     ImVec2 pos = window->DC.CursorPos;
-    ImVec2 size( { label_size.x + 40, 40 } );
-    ImRect bb( pos, pos + size );
+    ImVec2 size = ImVec2 (label_size.x + 40, 40);
+    ImRect bb (pos, pos + size);
 
     auto draw = window->DrawList;
 
-    ItemAdd( bb, id );
-    ItemSize( ImRect( bb.Min.x, bb.Min.y, bb.Max.x - 8, bb.Max.y ) );
+    ItemAdd (bb, id);
+    ItemSize (ImRect (bb.Min.x, bb.Min.y, bb.Max.x - 8, bb.Max.y));
 
     bool hovered, held;
-    bool pressed = ButtonBehavior( bb, id, &hovered, &held );
+    bool pressed = ButtonBehavior (bb, id, &hovered, &held);
 
-    static std::unordered_map < ImGuiID, float > values;
-    auto value = values.find( id );
-    if ( value == values.end( ) ) {
-
-        values.insert( { id, { 0.f } } );
-        value = values.find( id );
+    static std::unordered_map<ImGuiID, float> values;
+    auto value = values.find (id);
+    if (value == values.end ( )) {
+        values.insert ({ id, 0.f });
+        value = values.find (id);
     }
 
-    value->second = ImLerp( value->second, ( selected ? 1.f : 0.f ), 0.045f );
-    //(226, 230, 233);
-    draw->AddRectFilled( bb.Min, bb.Max, to_vec4( 19, 20, 23, value->second * GetStyle( ).Alpha ), rounding, flags );
-    draw->AddText( GetIO( ).Fonts->Fonts[4], GetIO( ).Fonts->Fonts[4]->FontSize, ImVec2( bb.Min.x + 10, bb.GetCenter( ).y - icon_size.y / 2 ), GetColorU32( ImGuiCol_Text2 ), icon );
-    draw->AddText(GetIO().Fonts->Fonts[4], GetIO().Fonts->Fonts[4]->FontSize, ImVec2(bb.Min.x + 10, bb.GetCenter().y - icon_size.y / 2), ImColor( 226 / 255.f, 230 / 255.f, 233 / 255.f, 0.5f * value->second * GetStyle( ).Alpha ), icon);
-    draw->AddText( ImVec2( bb.Min.x + 30, bb.GetCenter( ).y - label_size.y / 2 ), GetColorU32( ImGuiCol_Text2 ), label );
-    draw->AddText( ImVec2( bb.Min.x + 30, bb.GetCenter( ).y - label_size.y / 2 ), ImColor(226 / 255.f, 230 / 255.f, 233 / 255.f, 0.5f * value->second * GetStyle( ).Alpha ), label );
+    value->second = ImLerp (value->second, (selected ? 1.f : 0.f), 0.045f);
+
+    draw->AddRectFilled (bb.Min, bb.Max, to_vec4 (19, 20, 23, value->second * GetStyle ( ).Alpha), rounding, flags);
+
+    draw->AddText (icon_font, icon_font->FontSize, ImVec2 (bb.Min.x + 10, bb.GetCenter ( ).y - icon_size.y / 2), GetColorU32 (ImGuiCol_Text2), icon);
+    draw->AddText (icon_font, icon_font->FontSize, ImVec2 (bb.Min.x + 10, bb.GetCenter ( ).y - icon_size.y / 2), ImColor (226 / 255.f, 230 / 255.f, 233 / 255.f, 0.5f * value->second * GetStyle ( ).Alpha), icon);
+
+    draw->AddText (text_font, text_font->FontSize, ImVec2 (bb.Min.x + 30, bb.GetCenter ( ).y - label_size.y / 2), GetColorU32 (ImGuiCol_Text2), label);
+    draw->AddText (text_font, text_font->FontSize, ImVec2 (bb.Min.x + 30, bb.GetCenter ( ).y - label_size.y / 2), ImColor (226 / 255.f, 230 / 255.f, 233 / 255.f, 0.5f * value->second * GetStyle ( ).Alpha), label);
 
     return pressed;
 }
@@ -444,7 +447,8 @@ st_lua c_custom::lua( const char* label, bool selected ) {
     ImVec2 size( { GetWindowWidth( ), 30 } );
     ImRect bb( pos, pos + size );
 
-    ImVec2 icon_size = GetIO( ).Fonts->Fonts[4]->CalcTextSizeA( GetIO( ).Fonts->Fonts[4]->FontSize, FLT_MAX, 0, "E" );
+    ImVec2 icon_size = GetIO ( ).Fonts->Fonts[4]->CalcTextSizeA (GetIO ( ).Fonts->Fonts[4]->FontSize, FLT_MAX, 0, "E");
+
     ImRect status_bb( ImVec2( bb.Max.x - 17 - icon_size.x / 2, bb.GetCenter( ).y - icon_size.y / 2 ), ImVec2( bb.Max.x - 17 + icon_size.x / 2, bb.GetCenter( ).y + icon_size.y / 2 ) );
 
     bool s_hovered = false, s_pressed = false;

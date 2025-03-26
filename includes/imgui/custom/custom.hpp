@@ -27,7 +27,7 @@ public:
     float col_buf[4] = { 1.f, 1.f, 1.f, 1.f };
 
     int m_tab = 0;
-    vector < const char* > tabs = { "Aimbot", "Visuals", "Misc.", "Scripts", "Settings" }, tabs_icons = { "H", "I", "J", "K", "L" };
+    vector < const char* > tabs = { "Aimbot", "Visuals", "Misc" }, tabs_icons = { "A", "V", "M"};
 
     int m_aimbot_sub_tab = 0;
     vector < const char* > aimbot_sub_tabs = { "Ragebot", "Legitbot", "Miscellaneous" };
