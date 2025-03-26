@@ -405,7 +405,6 @@ void DrawMainUI() {
             ImGui::Checkbox ("Render Weapon", &Globals::PlayerInfo);
             ImGui::Checkbox ("Render Bone Id", &Globals::RenderPlayerBones);
             ImGui::Checkbox ("Remove Scope", &Globals::RemoveScope);
-            ImGui::Checkbox("Show Info Boxes", &Globals::ShowInfo);
 
             if (ImGui::CollapsingHeader ("Sky & World Colors"))
             {
@@ -414,18 +413,17 @@ void DrawMainUI() {
                 {
                     ImGui::ColorEdit3 ("Sky Color", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs);
                 }
-
                 ImGui::Checkbox ("World Modulation", &Globals::worldModulation);
                 if (Globals::worldModulation)
                 {
                     ImGui::ColorEdit3 ("World Color", Globals::worldModulationColor, ImGuiColorEditFlags_NoInputs);
                 }
-
                 ImGui::Checkbox ("Light Modulation", &Globals::lightModulation);
                 if (Globals::lightModulation)
                 {
                     ImGui::ColorEdit3 ("Light Color", Globals::lightModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_HDR);
                 }
+                ImGui::DragFloat ("Light Intensity", &Globals::lightIntensity, 0.001f, 0.0f, 10.0f, "%.3f");
             }
 
             break;
@@ -439,6 +437,11 @@ void DrawMainUI() {
             ImGui::Spacing();
             ImGui::DragFloat("Smoothing", &Globals::smoothing, 0.1f, 0.01f, 100.f);
             ImGui::DragFloat("Aimbot FOV", &Globals::aimbotFov, 0.1f, 0.1f, 180.f);
+            ImGui::Separator ( );
+            ImGui::Checkbox ("Anti Aim", &Globals::anti_aim);
+            ImGui::Checkbox ("Bhop", &Globals::bhop);
+            ImGui::Checkbox ("Third Person", &Globals::thirdPerson);
+
             break;
 
         case 2: // Legit
@@ -476,6 +479,10 @@ void DrawMainUI() {
         ImGui::PopFont();
         ImGui::EndChild();
     }
+    
+
+
+
 
     ImGui::End();
     ImGui::PopStyleColor();
@@ -484,13 +491,6 @@ void DrawMainUI() {
 
 
 
-
-
-void DrawFovCircle ( ) {
-    ImVec2 center = ImGui::GetIO ( ).DisplaySize * 0.5f;
-    float radius = (Globals::aimbotFov / 90.0f) * (ImGui::GetIO ( ).DisplaySize.x / 2.0f);
-    ImGui::GetBackgroundDrawList ( )->AddCircle (center, radius, IM_COL32 (255, 0, 0, 255), 64, 2.0f);
-}
 
 LRESULT __stdcall WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (ImGui_ImplWin32_WndProcHandler (hWnd, uMsg, wParam, lParam)) return true;
@@ -560,8 +560,11 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
 
     RenderWatermark ( );
 
-    if (Globals::CreateMoveHook)
-        DrawFovCircle ( );
+    if (Globals::HealthBar || Globals::PlayerInfo || Globals::RenderPlayerBones || Globals::RenderSkeleton){
+        for (auto &pawn : iGameEntitySystem->PawnMap)
+            iVisual->m_OverlayRender.RenderAllPlayerVisuals (pawn.second);
+    }
+
 
     ImGui::Render ( );
 
