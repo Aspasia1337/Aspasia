@@ -622,6 +622,16 @@ public:
     }
 };
 
+
+
+class CInterfaceRegister
+{
+public:
+    void *fnCreate;
+    const char *szName;
+    CInterfaceRegister *pNext;
+};
+
 class CustomMaterial_t
 {
 public:

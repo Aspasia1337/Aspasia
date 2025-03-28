@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "helper.h"
+#include "pe64.h"
 
 void Helper::Console::printTime(void)
 {
@@ -145,6 +146,9 @@ std::uint8_t *Helper::Memory::ResolveRip(std::uint8_t *address, std::uint32_t rv
 	return reinterpret_cast<uint8_t *>(rva + rip);
 }
 
+
+
+
 template <typename C> requires (std::is_same_v<C, char> || std::is_same_v<C, wchar_t>)
 constexpr int StringCompareN (const C *tszLeft, const C *tszRight, std::size_t nCount)
 {
@@ -250,4 +254,103 @@ bool GetSectionInfo (const void *hModuleBase, const char *szSectionName, std::ui
 	}
 
 	return false;
+}
+
+template <typename C> requires (std::is_same_v<C, char> || std::is_same_v<C, wchar_t>)
+constexpr int StringCompare (const C *tszLeft, const C *tszRight)
+{
+	if (tszLeft == nullptr)
+		return -1;
+
+	if (tszRight == nullptr)
+		return 1;
+
+	using ComparisonType_t = std::conditional_t<std::is_same_v<C, char>, std::uint8_t, std::conditional_t<sizeof (wchar_t) == 2U, std::int16_t, std::int32_t>>;
+
+	ComparisonType_t nLeft, nRight;
+	do
+	{
+		nLeft = static_cast<ComparisonType_t>(*tszLeft++);
+		nRight = static_cast<ComparisonType_t>(*tszRight++);
+
+		if (nLeft == C ('\0'))
+			break;
+	} while (nLeft == nRight);
+
+	return nLeft - nRight;
+}
+
+void *GetModuleBaseHandle (const wchar_t *wszModuleName)
+{
+	const _PEB *pPEB = reinterpret_cast<_PEB *>(__readgsqword (0x60));
+
+	if (wszModuleName == nullptr)
+		return pPEB->ImageBaseAddress;
+
+	void *pModuleBase = nullptr;
+	for (LIST_ENTRY *pListEntry = pPEB->Ldr->InMemoryOrderModuleList.Flink; pListEntry != &pPEB->Ldr->InMemoryOrderModuleList; pListEntry = pListEntry->Flink)
+	{
+		const _LDR_DATA_TABLE_ENTRY *pEntry = CONTAINING_RECORD (pListEntry, _LDR_DATA_TABLE_ENTRY, InMemoryOrderLinks);
+
+		if (pEntry->FullDllName.Buffer != nullptr && StringCompare (wszModuleName, pEntry->BaseDllName.Buffer) == 0)
+		{
+			pModuleBase = pEntry->DllBase;
+			break;
+		}
+	}
+
+	if (pModuleBase == nullptr)
+
+	return pModuleBase;
+}
+
+const wchar_t *GetModuleBaseFileName (const void *hModuleBase, const bool bGetFullPath)
+{
+	const _PEB *pPEB = reinterpret_cast<_PEB *>(__readgsqword (0x60));
+
+	if (hModuleBase == nullptr)
+		hModuleBase = pPEB->ImageBaseAddress;
+
+	::EnterCriticalSection (pPEB->LoaderLock);
+
+	const wchar_t *wszModuleName = nullptr;
+	for (LIST_ENTRY *pListEntry = pPEB->Ldr->InMemoryOrderModuleList.Flink; pListEntry != &pPEB->Ldr->InMemoryOrderModuleList; pListEntry = pListEntry->Flink)
+	{
+		const _LDR_DATA_TABLE_ENTRY *pEntry = CONTAINING_RECORD (pListEntry, _LDR_DATA_TABLE_ENTRY, InMemoryOrderLinks);
+
+		if (pEntry->DllBase == hModuleBase)
+		{
+			wszModuleName = bGetFullPath ? pEntry->FullDllName.Buffer : pEntry->BaseDllName.Buffer;
+			break;
+		}
+	}
+
+	::LeaveCriticalSection (pPEB->LoaderLock);
+
+	return wszModuleName;
+}
+
+
+std::uint8_t *ResolveRelativeAddress (std::uint8_t *nAddressBytes, std::uint32_t nRVAOffset, std::uint32_t nRIPOffset)
+{
+	std::uint32_t nRVA = *reinterpret_cast<std::uint32_t *>(nAddressBytes + nRVAOffset);
+	std::uint64_t nRIP = reinterpret_cast<std::uint64_t>(nAddressBytes) + nRIPOffset;
+
+	return reinterpret_cast<std::uint8_t *>(nRVA + nRIP);
+}
+
+CInterfaceRegister *Helper::Memory::GetRegisterList (const wchar_t *wszModuleName)
+{
+	void *hModule = GetModuleBaseHandle (wszModuleName);
+	if (hModule == nullptr)
+		return nullptr;
+
+	std::uint8_t *pCreateInterface = reinterpret_cast<std::uint8_t *>(GetExportAddress (hModule, "CreateInterface"));
+
+	if (pCreateInterface == nullptr)
+	{
+		return nullptr;
+	}
+
+	return *reinterpret_cast<CInterfaceRegister **>(ResolveRelativeAddress (pCreateInterface, 0x3, 0x7));
 }

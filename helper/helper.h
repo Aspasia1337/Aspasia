@@ -1,4 +1,9 @@
 #pragma once
+#include "../Classes/Classes.h"
+
+
+class CInterfaceRegister;
+
 
 enum messageMode {
 	DEBUG = 0,
@@ -75,6 +80,9 @@ public:
 			pRelativeAddress += nPostOffset;
 			return pRelativeAddress;
 		}
+
+		CInterfaceRegister *GetRegisterList (const wchar_t *wszModuleName);
+
 	};
 	Memory m_Mem;
 };

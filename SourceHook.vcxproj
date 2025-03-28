@@ -192,6 +192,7 @@
     <ClInclude Include="includes\imgui\custom\custom.hpp" />
     <ClInclude Include="Interfaces\iManager.h" />
     <ClInclude Include="Features\Legitbot\Legitbot.h" />
+    <ClInclude Include="helper\pe64.h" />
     <ClInclude Include="MainThread\font.h" />
     <ClInclude Include="MainThread\mainHook.h" />
     <ClInclude Include="includes\imgui\imconfig.h" />
