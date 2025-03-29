@@ -397,7 +397,7 @@ void DrawMainUI() {
         ImGui::Separator();
         ImGui::PopFont();
 
-        ImGui::PushFont(fontSemi);
+        ImGui::PushFont (fontSemi);
         switch (currentTab) {
         case 0: // Visuals
             ImGui::Checkbox ("Health Bar", &Globals::HealthBar);
@@ -406,73 +406,84 @@ void DrawMainUI() {
             ImGui::Checkbox ("Render Bone Id", &Globals::RenderPlayerBones);
             ImGui::Checkbox ("Remove Scope", &Globals::RemoveScope);
 
-            if (ImGui::CollapsingHeader ("Sky & World Colors"))
-            {
-                ImGui::Checkbox ("Change Sky Color", &Globals::ChangeSkyColor);
-                if (Globals::ChangeSkyColor)
-                {
-                    ImGui::ColorEdit3 ("Sky Color", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs);
-                }
-                ImGui::Checkbox ("World Modulation", &Globals::worldModulation);
-                if (Globals::worldModulation)
-                {
-                    ImGui::ColorEdit3 ("World Color", Globals::worldModulationColor, ImGuiColorEditFlags_NoInputs);
-                }
-                ImGui::Checkbox ("Light Modulation", &Globals::lightModulation);
-                if (Globals::lightModulation)
-                {
-                    ImGui::ColorEdit3 ("Light Color", Globals::lightModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_HDR);
-                }
+            ImGui::Spacing ( );
+            ImGui::SeparatorText ("Sky & World Colors");
+
+            ImGui::Checkbox ("Change Sky Color", &Globals::ChangeSkyColor);
+            if (Globals::ChangeSkyColor) {
+                ImGui::ColorEdit3 ("Sky Color", Globals::SkyTintColor, ImGuiColorEditFlags_NoInputs);
+            }
+
+            ImGui::Spacing ( );
+            ImGui::Checkbox ("World Modulation", &Globals::worldModulation);
+            if (Globals::worldModulation) {
+                ImGui::ColorEdit3 ("World Color", Globals::worldModulationColor, ImGuiColorEditFlags_NoInputs);
+            }
+
+            ImGui::Spacing ( );
+            ImGui::Checkbox ("Light Modulation", &Globals::lightModulation);
+            if (Globals::lightModulation) {
+                ImGui::ColorEdit3 ("Light Color", Globals::lightModulationColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_HDR);
                 ImGui::DragFloat ("Light Intensity", &Globals::lightIntensity, 0.001f, 0.0f, 10.0f, "%.3f");
             }
 
             break;
 
+
         case 1: // Hooks
-            ImGui::Checkbox("Render Smoke Hook", &Globals::RenderSmokeHook);
-            ImGui::Checkbox("Render Flash Hook", &Globals::RenderFlashHook);
-            ImGui::Checkbox("View Angles Hook", &Globals::SetViewAngles);
+            ImGui::Checkbox ("Render Smoke Hook", &Globals::RenderSmokeHook);
+            ImGui::Checkbox ("Render Flash Hook", &Globals::RenderFlashHook);
+            ImGui::Checkbox ("View Angles Hook", &Globals::SetViewAngles);
             if (Globals::SetViewAngles)
-                ImGui::DragFloat3("View Angles", (float*)&Globals::viewAngles, 0.1f);
-            ImGui::Spacing();
-            ImGui::DragFloat("Smoothing", &Globals::smoothing, 0.1f, 0.01f, 100.f);
-            ImGui::DragFloat("Aimbot FOV", &Globals::aimbotFov, 0.1f, 0.1f, 180.f);
-            ImGui::Separator ( );
+                ImGui::DragFloat3 ("View Angles", (float *)&Globals::viewAngles, 0.1f);
+
+            ImGui::Spacing ( );
+            ImGui::SeparatorText ("Aimbot Settings");
+            ImGui::DragFloat ("Smoothing", &Globals::smoothing, 0.1f, 0.01f, 100.f);
+            ImGui::DragFloat ("Aimbot FOV", &Globals::aimbotFov, 0.1f, 0.1f, 180.f);
+
+            ImGui::Spacing ( );
+            ImGui::SeparatorText ("Misc");
             ImGui::Checkbox ("Anti Aim", &Globals::anti_aim);
             ImGui::Checkbox ("Bhop", &Globals::bhop);
             ImGui::Checkbox ("Third Person", &Globals::thirdPerson);
-
             break;
 
         case 2: // Legit
-            ImGui::DragFloat("Pitch Angle", &Globals::AAPitch, 15.f, -90.f, 90.f);
-            ImGui::DragFloat("Jaw Angle", &Globals::AAJaw, 15.f, -180.f, 180.f);
-            ImGui::Checkbox("Show Spectators", &Globals::ShowSpectators);
-            ImGui::Spacing();
-            ImGui::Checkbox("CreateMove Hook", &Globals::CreateMoveHook);
+            ImGui::DragFloat ("Pitch Angle", &Globals::AAPitch, 15.f, -90.f, 90.f);
+            ImGui::DragFloat ("Jaw Angle", &Globals::AAJaw, 15.f, -180.f, 180.f);
+            ImGui::Checkbox ("Show Spectators", &Globals::ShowSpectators);
+
+            ImGui::Spacing ( );
+            ImGui::Checkbox ("Aimbot", &Globals::CreateMoveHook);
             if (Globals::CreateMoveHook)
-                ImGui::Combo("Target Bone", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE(Globals::BoneNames));
+                ImGui::Combo ("Target Bone", &Globals::BoneSelected, Globals::BoneNames, IM_ARRAYSIZE (Globals::BoneNames));
             break;
 
         case 3: // Chams
-                ImGui::Checkbox("Player Chams", &Globals::PlayersChams);
-                if (Globals::PlayersChams) {
-                    ImGui::ColorEdit3("Chams Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs);
-                    ImGui::Checkbox("Invisible Chams", &Globals::InvisibleChams);
-                    if (Globals::InvisibleChams)
-                        ImGui::ColorEdit3("Invisible Color", Globals::InvisibleChamsColor, ImGuiColorEditFlags_NoInputs);
-                    ImGui::Combo("Material", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE(Globals::MaterialNames));
-                }
-                ImGui::Checkbox ("Weapon Chams", &Globals::WeaponChams);
-                if (Globals::WeaponChams) {
-                    ImGui::ColorEdit3 ("Weapon Chams Color", Globals::ChamsColorGun, ImGuiColorEditFlags_NoInputs);
-                    ImGui::Combo ("Weapon Material", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
-                }
-                ImGui::Checkbox ("Arms Chams", &Globals::ArmsChams);
-                if (Globals::WeaponChams) {
-                    ImGui::ColorEdit3 ("Arms Chams Color", Globals::ArmsColor, ImGuiColorEditFlags_NoInputs);
-                    ImGui::Combo ("Arms Material", &Globals::MaterialArmSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
-                }
+            ImGui::SeparatorText ("Player Chams");
+            ImGui::Checkbox ("Player Chams", &Globals::PlayersChams);
+            if (Globals::PlayersChams) {
+                ImGui::ColorEdit3 ("Chams Color", Globals::ChamsColor, ImGuiColorEditFlags_NoInputs);
+                ImGui::Checkbox ("Invisible Chams", &Globals::InvisibleChams);
+                if (Globals::InvisibleChams)
+                    ImGui::ColorEdit3 ("Invisible Color", Globals::InvisibleChamsColor, ImGuiColorEditFlags_NoInputs);
+                ImGui::Combo ("Material", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+            }
+
+            ImGui::SeparatorText ("Weapon Chams");
+            ImGui::Checkbox ("Weapon Chams", &Globals::WeaponChams);
+            if (Globals::WeaponChams) {
+                ImGui::ColorEdit3 ("Weapon Chams Color", Globals::ChamsColorGun, ImGuiColorEditFlags_NoInputs);
+                ImGui::Combo ("Weapon Material", &Globals::MaterialGunSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+            }
+
+            ImGui::SeparatorText ("Arms Chams");
+            ImGui::Checkbox ("Arms Chams", &Globals::ArmsChams);
+            if (Globals::ArmsChams) {
+                ImGui::ColorEdit3 ("Arms Chams Color", Globals::ArmsColor, ImGuiColorEditFlags_NoInputs);
+                ImGui::Combo ("Arms Material", &Globals::MaterialArmSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+            }
             break;
         }
 
@@ -558,13 +569,16 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
         RenderFeatureWindow ( );
     }
 
+    if (Globals::ShowSpectators) {
+        RenderSpectatorList ( );
+    }
+
     RenderWatermark ( );
 
     if (Globals::HealthBar || Globals::PlayerInfo || Globals::RenderPlayerBones || Globals::RenderSkeleton){
         for (auto &pawn : iGameEntitySystem->PawnMap)
             iVisual->m_OverlayRender.RenderAllPlayerVisuals (pawn.second);
     }
-
 
     ImGui::Render ( );
 
