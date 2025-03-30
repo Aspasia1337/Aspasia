@@ -1,0 +1,268 @@
+\documentclass[12pt]{report}
+
+%------------------ Fonts ------------------
+\usepackage{charter} % Palatino-style font (serif)
+\usepackage[scaled]{beramono} % Nicer monospaced font for listings
+
+%------------------ Language ------------------
+\usepackage[english]{babel} 
+\usepackage[babel, english=american]{csquotes}
+\AtBeginEnvironment{quote}{\small}
+
+%------------------ Geometry ------------------
+\usepackage[a4paper, vmargin=2.5cm, hmargin=3cm]{geometry}
+\renewcommand{\baselinestretch}{1.15}
+\parskip=6pt
+
+%------------------ Math ------------------
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+
+%------------------ Code and Colors ------------------
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+% Background and border colors
+\definecolor{codebg}{rgb}{0.97, 0.97, 0.97}
+\definecolor{framegray}{rgb}{0.65, 0.65, 0.65}
+
+% Syntax highlighting
+\definecolor{keywordcolor}{rgb}{0.85, 0.1, 0.1}
+\definecolor{commentcolor}{rgb}{0.3, 0.4, 0.3}
+\definecolor{stringcolor}{rgb}{0.75, 0.2, 0.2}
+\definecolor{numbercolor}{rgb}{0.4, 0.4, 0.4}
+
+\lstdefinestyle{cppstyle}{
+    language=C++,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    commentstyle=\color{commentcolor}\itshape,
+    stringstyle=\color{stringcolor},
+    numbers=left,
+    numberstyle=\color{numbercolor}\tiny,
+    stepnumber=1,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{framegray},
+    captionpos=b,
+    keepspaces=true,
+    columns=fullflexible,
+    upquote=true
+}
+
+%------------------ Figures and Tables ------------------
+\usepackage{graphicx}
+\graphicspath{{imagenes/}}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+
+%------------------ Drawing ------------------
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+%------------------ Headers and Footers ------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\rfoot{\thepage}
+
+%------------------ Section Formatting ------------------
+\usepackage{titlesec}
+\titleformat{\chapter}[block]
+  {\LARGE\bfseries\color{azulUC3M}\filcenter}
+  {\thechapter.}
+  {5pt}
+  {\MakeUppercase}
+\titlespacing{\chapter}{0pt}{0pt}{*3}
+
+
+\titlespacing{\chapter}{0pt}{0pt}{1.5cm}
+\usepackage{etoolbox}
+\preto\chapter{\vspace{1cm}\hrule\vspace{1cm}} % línea horizontal antes del capítulo
+
+%------------------ Typography Enhancements ------------------
+\usepackage{microtype}
+\usepackage[all]{nowidow}
+\usepackage{needspace}
+\usepackage{parskip}
+
+%------------------ Hyperlinks ------------------
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=black
+}
+\urlstyle{same} 
+
+\let\oldhref\href
+\renewcommand{\href}[2]{\oldhref{#1}{{\bfseries\itshape #2}}}
+
+
+%------------------ Bibliography (APA) ------------------
+\usepackage[style=apa, backend=biber, natbib=true, hyperref=true]{biblatex}
+\addbibresource{references.bib}
+
+%------------------ Cite style -----------------------
+
+\DeclareFieldFormat{labelnumberwidth}{\mkbibbold{\mkbibemph{#1}}}
+\DeclareFieldFormat{shorthandwidth}{\mkbibbold{\mkbibemph{#1}}}
+
+\DeclareFieldFormat{labelnumber}{\mkbibbold{\mkbibemph{#1}}}
+\DeclareFieldFormat{extraalpha}{\mkbibbold{\mkbibemph{#1}}}
+
+\DeclareFieldFormat{citehyperref}{\mkbibbold{\mkbibemph{\hyperref[#1]{\autocite{#1}}}}}
+
+\DeclareFieldFormat{citetitle}{\mkbibbold{\mkbibemph{#1}}}
+\DeclareFieldFormat{title}{\mkbibbold{\mkbibemph{#1}}}
+
+\DeclareFieldFormat{titlecase}{\mkbibbold{\mkbibemph{#1}}}
+
+
+\DeclareCiteCommand{\cite}
+  {\usebibmacro{prenote}}
+  {\mkbibbold{\mkbibemph{\usebibmacro{citeindex}\usebibmacro{cite}}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+
+
+%------------------ Custom UC3M Color ------------------
+\definecolor{azulUC3M}{RGB}{0,51,153}
+
+%------------------ Section Numbering Depth ------------------
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+
+% Footer styling
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancyfoot[C]{%
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[font=\small\ttfamily\color{gray}] at (current page.south) [yshift=12pt] {%
+        \rule[0.5ex]{1.5cm}{0.4pt}~\nouppercase{\leftmark}~\rule[0.5ex]{1.5cm}{0.4pt} \hfill \thepage};
+    \end{tikzpicture}%
+  }
+}
+
+\pagestyle{plain}
+
+\begin{document}
+\begin{titlepage}
+	\begin{sffamily}
+	\color{azulUC3M}
+	\begin{center}
+		\includegraphics[width=16cm]{images/logo_UC3M.png}
+		\vspace{2.5cm}
+		\begin{Large}
+			Master Degree in Cybersecurity\\			
+			Academic Year: 2024-2025\\
+			\vspace{2cm}		
+			\textsl{Master Thesis}
+			\bigskip
+		\end{Large}
+		 	{\Huge ``The Game Beneath the Game: The Evolution of Cheats and Anti-Cheat Systems in Counter-Strike 2''}\\
+		 	\vspace*{0.5cm}
+	 		\rule{10.5cm}{0.1mm}\\
+			\vspace*{0.9cm}
+			{\LARGE Pablo Valiente}\\ 
+			\vspace*{1cm}
+		\begin{Large}
+			Tutor: Antonio Nappa\\
+			Universidad Carlos III de Madrid\\
+			Date: February 2025\\
+		\end{Large}
+	\end{center}
+	\end{sffamily}
+\end{titlepage}
+
+% Blank page
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+%----------
+%	ABSTRACT
+%----------	
+\begin{abstract}
+\thispagestyle{plain}
+\setcounter{page}{3}
+
+This thesis examines the evolution of cheating in video games, from early debugging tools to modern external and internal exploits. It explores key cheating techniques, anti-cheat countermeasures, and the ongoing arms race between both sides. Additionally, a practical implementation of a cheat in \textbf{Counter-Strike 2} is developed to assess the effectiveness of contemporary anti-cheat systems and identify potential vulnerabilities.
+
+\textbf{Keywords:} Cheating, Video Games, Counter-Strike 2, Anti-Cheat Systems, Game Hacking, Memory Manipulation
+\end{abstract}
+
+\thispagestyle{empty}
+\mbox{}
+
+%----------
+%	DEDICATION
+%----------	
+\chapter*{Dedication}
+% Space for dedication text
+\vfill
+\newpage
+
+%----------
+%	TABLE OF CONTENTS
+%----------
+\tableofcontents
+\thispagestyle{fancy}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+% List of figures
+\listoffigures
+\thispagestyle{fancy}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+% List of tables
+\listoftables
+\thispagestyle{fancy}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+%----------
+%	THESIS CONTENT
+%----------
+\clearpage
+\pagenumbering{arabic}
+
+% Include chapters from separate files
+\input{text/introduction.tex}
+\input{text/ch1.tex} % Introduction
+\input{text/ch2.tex} % Introduction
+\input{text/ch3.tex} % Introduction
+\input{text/ch4.tex} % Introduction
+\input{text/ch5.tex} % Introduction
+
+
+
+
+%----------
+%	BIBLIOGRAPHY
+%----------
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\printbibliography
+
+\end{document}

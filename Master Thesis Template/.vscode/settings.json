@@ -1,0 +1,26 @@
+{
+    "latex-workshop.latex.tools": [
+      {
+        "name": "xelatexmk",
+        "command": "latexmk",
+        "args": [
+          "-xelatex",
+          "-synctex=1",
+          "-interaction=nonstopmode",
+          "-file-line-error",
+          "%DOC%"
+        ]
+      }
+    ],
+    "latex-workshop.latex.recipes": [
+      {
+        "name": "latexmk xelatex",
+        "tools": ["xelatexmk"]
+      }
+    ],
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.view.pdf.viewer": "external",
+    "latex-workshop.view.pdf.external.viewer.command": "open",
+    "latex-workshop.view.pdf.external.viewer.args": ["-a", "Zathura", "%PDF%"]
+  }
+  

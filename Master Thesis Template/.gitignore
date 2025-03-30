@@ -1,0 +1,39 @@
+# ===== LaTeX / latexmk auxiliary files =====
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.xdv
+*.synctex.gz
+*.out
+*.toc
+*.nav
+*.snm
+*.lof
+*.lot
+*.lol
+*.run.xml
+*.bbl
+*.bcf
+*.blg
+*.xmpdata
+
+# ===== ConTeXt temporary files =====
+*.tuc
+*.tmp
+*.tuo
+*.mpx
+*.mps
+
+# ===== Editor & system backup files =====
+*~
+*.bak
+*.swp
+*.swo
+.DS_Store
+
+# ===== Optional: exclude compiled files (uncomment to ignore PDFs) =====
+# *.pdf
+# out
+# output.*
+

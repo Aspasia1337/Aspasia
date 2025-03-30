@@ -398,3 +398,50 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# ===== LaTeX / LaTeXmk auxiliary files =====
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.xdv
+*.synctex.gz
+*.bbl-SAVE-ERROR
+*.out
+*.toc
+*.nav
+*.snm
+*.lof
+*.lot
+*.lol
+*.run.xml
+*.bll
+*.bcf
+*.xmpdata
+
+# ===== Intermediate ConTeXt files (if any) =====
+*.tuc
+*.tmp
+*.tuo
+*.mpx
+*.mps
+
+# ===== Editor & system backup files =====
+*~
+*.bak
+*.swp
+*.swo
+*.DS_Store
+
+# ===== Optional: exclude output files =====
+# Uncomment if you don't want to track compiled PDFs or output data
+# *.pdf
+# *.xmpdata
+# out
+# output.*
+
+# ===== Optional: ignore image thumbnails or exports =====
+# Uncomment if you generate temporary images
+# *.png
+# *.jpg
+

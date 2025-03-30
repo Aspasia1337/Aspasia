@@ -1,0 +1,130 @@
+\chapter{Injection and Detection Techniques}
+
+Modern cheat development relies heavily on code injection—techniques that introduce arbitrary code into a game process to manipulate behavior, render information, or automate gameplay. With increasingly sophisticated anti-cheat systems like \textbf{Valve Anti-Cheat (VAC)}, traditional injection methods such as \texttt{LoadLibrary} or 	\texttt{CreateRemoteThread} have become obsolete due to their predictability and ease of detection. As a result, cheat developers have adopted more advanced methods like \textbf{Manual Mapping}, which currently represents the gold standard in stealth and effectiveness.
+
+\textbf{Manual Mapping} is widely recognized as the most effective and stealthy method for injecting unauthorized code into game processes like \textit{Counter-Strike 2}. Unlike traditional injection methods that rely on well-known Windows APIs, Manual Mapping simulates the PE loader's behavior manually. It avoids triggering typical detection vectors monitored by VAC, such as API calls, DLL registration in the PEB, and new thread creation.
+
+\section{Understanding Manual Mapping}
+
+Manual Mapping replicates the Windows PE loader’s workflow entirely in user space. The injector reads the PE headers of a DLL, allocates remote memory, writes the necessary sections, manually resolves imports, performs relocations, and executes the entry point—often through shellcode or hijacked threads—without ever calling 	exttt{LoadLibrary} or registering the DLL with the operating system.
+
+\subsection*{Why Manual Mapping is Superior for CS2 Cheats}
+
+In the context of VAC, Manual Mapping stands out for several reasons:
+
+\begin{itemize}
+    \item It avoids detection from module enumeration since the injected DLL never appears in the target's PEB.
+    \item It bypasses DLL injection flags and avoids triggering monitored APIs like 	exttt{CreateRemoteThread} or 	exttt{LoadLibrary}.
+    \item Execution can be achieved through stealth techniques like thread hijacking or return address spoofing, masking malicious control flow.
+    \item It enables further obfuscation, such as encryption of payloads or restoring original memory after patching.
+\end{itemize}
+
+\subsection*{Manual Mapping Steps}
+
+\begin{enumerate}
+    \item Parse the PE headers of the DLL.
+    \item Allocate memory in the target process using \texttt{VirtualAllocEx}.
+    \item Write the DLL’s sections into the allocated memory.
+    \item Manually resolve imports using \texttt{GetProcAddress}.
+    \item Perform base relocations to correct address offsets.
+    \item Transfer execution using thread hijacking or a trampoline.
+\end{enumerate}
+
+\section{TLS Callbacks as a Detection Primitive}
+
+One of the most effective primitives available to anti-cheat developers is the use of \textbf{Thread Local Storage (TLS) callbacks}. Defined within the PE format, these callbacks are executed automatically by the Windows loader whenever a thread is created or a module is loaded. This occurs \textit{before} the thread reaches its intended start address, providing a unique window for inspection.
+
+Anti-cheats use this to examine newly created threads before they begin execution. A typical implementation involves querying the thread’s start address using \texttt{NtQueryInformationThread}, then verifying whether this address lies within known, legitimate modules or in anonymous memory.
+
+\subsection*{Simplified TLS Detection Code for Cheats}
+
+The following example illustrates how an anti-cheat might use a TLS callback to detect potentially injected threads:
+
+\begin{lstlisting}[style=cppstyle, caption={Simplified TLS-based detection}]
+void NTAPI tls_callback(PVOID, DWORD reason, PVOID) {
+    if (reason != DLL_THREAD_ATTACH && reason != DLL_PROCESS_ATTACH)
+        return;
+
+    void* startAddr = nullptr;
+    auto NtQueryInformationThread = (decltype(&::NtQueryInformationThread))
+        GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationThread");
+
+    NtQueryInformationThread((HANDLE)-2, (THREADINFOCLASS)0x9,
+                             &startAddr, sizeof(startAddr), nullptr);
+
+    HMODULE hMods[128]; DWORD cbNeeded;
+    EnumProcessModules(GetCurrentProcess(), hMods, sizeof(hMods), &cbNeeded);
+
+    for (unsigned int i = 0; i < cbNeeded / sizeof(HMODULE); i++) {
+        MODULEINFO modInfo;
+        GetModuleInformation(GetCurrentProcess(), hMods[i], &modInfo, sizeof(modInfo));
+        if ((uintptr_t)startAddr >= (uintptr_t)modInfo.lpBaseOfDll &&
+            (uintptr_t)startAddr <  (uintptr_t)modInfo.lpBaseOfDll + modInfo.SizeOfImage)
+            return; // Thread is safe
+    }
+
+    printf("[!] Suspicious thread start address detected\n");
+}
+\end{lstlisting}
+
+\subsection*{Why TLS Callbacks Matter in Cheat Detection}
+
+TLS callbacks offer anti-cheats a method to intercept thread initialization in a way that doesn’t rely on fragile hooks or active polling. Since callbacks run \textit{before} the thread’s entry point is reached, they allow anti-cheats to inspect the thread’s context while it is still in a trustworthy state.
+
+This makes them particularly effective against shellcode or Manual Mapping payloads that rely on stealthy execution.
+
+
+\section{Evasion and Limitations}
+
+Despite the effectiveness of Thread Local Storage (TLS) callbacks in detecting unauthorized module loads, advanced cheat developers have engineered multiple strategies to circumvent this mechanism. These techniques are specifically designed to minimize the visibility of injected code and blend execution seamlessly into the target process’s control flow, reducing the likelihood of detection by anti-cheat systems that monitor TLS activity.
+
+\subsection*{Bypassing TLS Callbacks}
+
+Several evasion strategies have emerged to avoid triggering TLS callbacks:
+
+\begin{itemize}
+    \item \textbf{Overwriting or Removing the TLS Directory:} By modifying the PE headers of the injected module and either overwriting or zeroing out the TLS directory, cheats can effectively suppress the registration of TLS callbacks. This prevents the operating system from executing any associated initialization routines, thereby avoiding detection vectors tied to those callbacks.
+
+    \item \textbf{Thread Hijacking:} Rather than spawning new threads—which are often monitored and can trigger TLS execution—cheats can hijack existing in-game threads. This involves suspending a legitimate thread, altering its instruction pointer (via \texttt{SetThreadContext}), and redirecting execution to the injected payload. Since the thread is already part of the game’s thread pool, it is less likely to be flagged by TLS-based or behavioral heuristics.
+
+    \item \textbf{Trusted Thread Creation via Legitimate Modules:} Cheats may delegate thread creation to trusted game modules such as \texttt{tier0.dll} or \texttt{engine.dll}. By invoking internal thread management routines or mimicking the structure of native game threads, the injected logic can operate under the guise of legitimate execution flows. This approach takes advantage of the game's own thread spawning mechanisms to obscure the presence of foreign code.
+
+    \item \textbf{Return Address Spoofing:} When calling internal functions or executing injected code, return address spoofing is used to fabricate a legitimate call stack. This involves placing a plausible return address—typically pointing to a known game function or system API—on the stack before transferring control to the payload. Anti-cheat systems that perform stack walking or trace-based validation are thus deceived into interpreting the call as genuine.
+\end{itemize}
+
+
+\subsection*{ROP-Based Start Address Evasion}
+
+One particularly effective method to evade VAC’s StartAddress integrity checks during thread creation is to use a basic Return-Oriented Programming (ROP) technique. Rather than pointing the thread’s entry point directly to the injected code—which might raise suspicion—this approach utilizes a small instruction sequence (gadget) already present within a trusted game module.
+
+A common gadget used for this purpose is the `jmp rcx` instruction (`FF E1` in hexadecimal), which can be found in several CS2 modules, including \texttt{client.dll}, \texttt{tier0.dll}, or even the main binary \texttt{cs2.exe}. Since these modules are part of the legitimate game distribution, using their code pages helps blend the injected thread into normal execution flows.
+
+The technique works as follows:
+
+\begin{enumerate}
+    \item Search for the opcode sequence `FF E1` (representing \texttt{jmp rcx}) in any loaded game module (e.g., \texttt{cs2.exe}).
+    \item Pass the address of this gadget as the \texttt{lpStartAddress} parameter in a call to \texttt{CreateThread}.
+    \item Set \texttt{lpParameter} to point to your actual shellcode or mapped DLL entry point.
+\end{enumerate}
+
+When the thread is created, it will begin execution at the gadget address. The `jmp rcx` instruction will immediately redirect control to the payload stored in \texttt{rcx}, which was preloaded with \texttt{lpParameter}. This technique not only circumvents direct jumps into untrusted memory regions but also preserves plausible execution flow through trusted module code.
+
+This method is a minimalistic form of ROP chaining and is particularly valuable when combined with return address spoofing and thread mimicry. It allows the injected code to appear as if it originated from within CS2 itself, thereby evading thread-based and call stack integrity checks performed by VAC.
+
+
+\subsection*{Limitations and Detection Risks}
+
+While these techniques provide a higher degree of stealth, they are not without limitations. For instance, removing the TLS directory may lead to compatibility issues with standard PE loaders or trigger suspicion during integrity verification. Thread hijacking introduces potential instability if the hijacked thread is performing time-sensitive operations. Similarly, return address spoofing must be carefully calibrated to avoid corrupting stack traces, especially when exceptions are thrown or debugging features are active.
+
+Moreover, modern anti-cheat engines increasingly incorporate behavioral heuristics, kernel-level monitoring, and anomaly detection through machine learning, making even sophisticated evasion techniques susceptible to eventual detection. Thus, while these methods significantly reduce the likelihood of TLS-based detection, they must be implemented with precision and constantly adapted to evolving countermeasures.
+
+
+\section{VAC-Specific Capabilities}
+
+While the exact workings of VAC are undisclosed, community research shows that VAC inspects memory regions, thread start addresses, and stack traces. Suspicious patterns, such as start addresses in anonymous memory or shellcode trampolines, may be uploaded to Valve’s servers for further analysis. Combined with delayed banning, this makes VAC harder to reverse-engineer.
+
+\section{Summary}
+
+Manual Mapping remains the most effective injection method in modern cheat development. Its stealth, control, and flexibility give it an edge over traditional techniques. However, VAC’s increasing sophistication—particularly with TLS-based inspection—means that even Manual Mapping requires careful implementation. Avoiding detection today demands not just technical skill, but an intimate understanding of the Windows internals and anti-cheat heuristics.
+
+
