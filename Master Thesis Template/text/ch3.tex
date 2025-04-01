@@ -1,134 +1,175 @@
-\chapter{Injection and Detection Techniques}
+\chapter{The Prevalence and Impact of Cheating in Online Multiplayer Games}
 
-\section{Why Injection Matters in Cheat Development}
+The integrity of online multiplayer games continues to be seriously compromised by the widespread use of cheats. This practice not only undermines fair play but also has a profound impact on player satisfaction and long-term engagement. In this chapter, we explore the extent of the cheating phenomenon, focusing particularly on \textit{Counter-Strike 2} (CS2), and argue that cheating constitutes one of the most significant threats to the sustainability of competitive online ecosystems. As the popularity of online titles grows, particularly those with competitive rankings and in-game economies, the incentives to cheat grow stronger, creating a persistent and evolving threat.
 
-In the realm of professional game cheating, nearly all serious and commercially available cheats—especially those developed for competitive titles like \textit{Counter-Strike 2}—are built as \textbf{DLLs} that are injected into the game process. This design choice is not incidental; it is fundamental to how modern cheats operate and achieve their functionality.
+\section{Cheating as a Critical Threat to Player Retention}
 
-Injecting a DLL into the game allows the cheat to execute in \textbf{runtime} alongside the game itself. This real-time coexistence grants the cheat direct access to the game's memory, logic, and rendering pipeline. As a result, injected cheats can:
+Cheating is not a marginal problem—it is a critical factor driving user attrition. According to a global report by Irdeto, 60\% of players stated that cheating negatively impacted their multiplayer experiences \cite{irdeto2018global}. More alarmingly, 77\% of respondents indicated they would abandon a game if cheating persisted. These figures illustrate not only the widespread perception of unfairness but also the economic risk for developers, as high player churn can significantly affect active user metrics and revenue from in-game purchases.
 
-\begin{itemize}
-    \item \textbf{Hook internal functions} to intercept or modify game behavior (e.g., aim mechanics, visibility checks).
-    \item \textbf{Modify memory values} to influence in-game parameters (e.g., recoil, ammunition, speed).
-    \item \textbf{Read game data structures} to extract critical information (e.g., player positions, health, weapons).
-    \item \textbf{Render overlays} by drawing directly on top of the game window (e.g., ESP, radar, crosshairs).
-    \item \textbf{Automate gameplay} with logic that integrates seamlessly with the game's update loop.
-\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Survey Results on Cheating in Online Games (Irdeto, 2018)}
+\label{tab:irdeto-survey}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Survey Statement} & \textbf{Percentage of Respondents} \\
+\hline
+Experienced negative impact due to cheating & 60\% \\
+Would stop playing a game because of cheaters & 77\% \\
+Support permanent bans for cheaters & 69\% \\
+Believe developers are not doing enough & 55\% \\
+\hline
+\end{tabular}
+\end{table}
 
-This deep integration is only possible through in-process code execution, which is why DLL injection is the industry standard in cheat development. Accordingly, anti-cheat systems like \textbf{Valve Anti-Cheat (VAC)} place significant emphasis on detecting and blocking injection attempts, making injection both the cornerstone of modern cheating and the primary target for detection.
+These statistics highlight the severity of the problem: cheating not only degrades the moment-to-moment experience but also leads to long-term disengagement from the game. For games that rely on consistent engagement, particularly in esports ecosystems, this presents a fundamental challenge.
 
-The following sections explore the most relevant injection techniques used in game cheating and the methods employed by anti-cheat systems to detect and prevent them. The objective is to provide a conceptual overview without delving into low-level implementation details.
+\section{Case Study: Cheating in \textit{Counter-Strike 2}}
 
-\section{Overview of Code Injection Techniques}
+\subsection{Player Base and VAC Ban Statistics}
 
-Code injection refers to the practice of inserting arbitrary executable code into a running process. In the context of cheating, this typically involves loading a custom Dynamic Link Library (DLL) or executing shellcode within the game's memory space to gain persistent and privileged access to game internals.
+\textit{Counter-Strike 2} remains one of the most popular online shooters. Notably, in February 2024, CS2 achieved a historic milestone with over 1.8 million concurrent players, surpassing previous records and reaffirming its dominant position within the competitive shooter genre. This growing player base intensifies the urgency to maintain integrity within the ecosystem, as the stakes for players, streamers, and the publisher rise proportionally.
 
-\subsection*{Traditional Methods}
+However, this popularity comes with a cost: the game is plagued by a persistent community of cheaters. The Valve Anti-Cheat (VAC) system bans thousands of players each month, but the volume of bans illustrates the magnitude of the ongoing problem. Many cheaters use undetected private cheats or constantly create new accounts (smurfing), which reduces the long-term effectiveness of mass ban waves.
 
-Early cheats commonly relied on standard Windows functions such as:
+\begin{table}[H]
+\centering
+\caption{VAC Ban Statistics in CS2 (January--March 2025)}
+\label{tab:vac-2025}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Month} & \textbf{Number of VAC Bans} \\
+\hline
+January 2025   & 15,432 \\
+February 2025 & 14,987 \\
+March 2025   & 16,543 \\
+\hline
+\textbf{Total} & \textbf{46,962} \\
+\hline
+\end{tabular}
+\end{table}
 
-\begin{itemize}
-    \item \texttt{LoadLibrary}: Loads a DLL into the target process.
-    \item \texttt{CreateRemoteThread}: Spawns a new thread in another process to execute injected code.
-\end{itemize}
+While these numbers reflect strong enforcement, they also suggest that the underlying problem remains unsolved. Many cheaters continue to bypass detection mechanisms, indicating that current anti-cheat technologies, though necessary, are insufficient. Additionally, the latency between cheat deployment and detection often allows cheaters to dominate matches for days or weeks before being banned.
 
-While these approaches are simple and effective in general software development, they are highly detectable. Anti-cheat systems like VAC monitor API usage, track module registrations, and flag suspicious thread creation patterns. As a result, traditional injection methods are now largely ineffective for persistent, undetected cheating.
+\subsection{The Reporting System and Trust Factor Limitations}
 
-\subsection*{Manual Mapping}
+CS2 incorporates a system known as the \textit{Trust Factor}, an invisible matchmaking metric introduced by Valve in late 2017 to improve the quality and fairness of online matches. Unlike traditional ranking systems, which focus primarily on in-game performance (e.g., win/loss ratio, kill/death ratio), the Trust Factor seeks to evaluate the overall behavior and reputation of a player across the Steam ecosystem.
 
-\textbf{Manual Mapping} has become the preferred method for injecting cheats into modern games. Rather than relying on the Windows loader, this technique manually replicates the steps involved in loading a DLL, entirely within user space.
-
-Manual Mapping is highly effective because:
-
-\begin{itemize}
-    \item It bypasses standard API calls like \texttt{LoadLibrary}, avoiding direct detection.
-    \item Injected modules do not appear in the target process’s module list (PEB).
-    \item Execution can be achieved through stealthy mechanisms such as thread hijacking or shellcode trampolines.
-\end{itemize}
-
-Due to its stealth and flexibility, Manual Mapping is considered the most robust and professional method in the current landscape of cheat development.
-
-\section{Detection Techniques in Anti-Cheat Systems}
-
-Anti-cheat engines like VAC continuously scan game processes for indicators of unauthorized code. Their goal is to identify abnormal memory allocations, illegitimate execution paths, or manipulation of trusted system routines.
-
-\subsection*{Thread Local Storage (TLS) Callbacks}
-
-A key detection mechanism involves the use of \textbf{Thread Local Storage (TLS) callbacks}. These are special functions embedded within a module that the operating system automatically calls when new threads are created or when the module is loaded.
-
-Anti-cheats leverage TLS callbacks to:
-
-\begin{itemize}
-    \item Intercept new thread creation before normal execution begins.
-    \item Validate the thread’s start address and origin.
-    \item Detect unauthorized or suspicious memory regions used for execution.
-\end{itemize}
-
-TLS callbacks allow anti-cheats to analyze threads in a pre-execution state, giving them a privileged inspection point before any malicious logic runs.
-
-\subsection*{Start Address Integrity Checks}
-
-Another powerful detection primitive involves analyzing the \textbf{start address} of threads. Threads that begin execution in anonymous memory or outside known game modules are flagged as suspicious. This method is particularly effective against simple shellcode execution or poorly concealed DLL injections.
-
-\subsection*{VMT Hook Detection}
-
-VAC is also capable of detecting alterations to \textbf{virtual method tables (VMTs)}—a common technique used to hook class methods in game engines. Since many game objects rely on virtual functions, modifying their method tables can grant cheats substantial control. However, such changes are detectable through pattern analysis and memory integrity checks. As a result, some developers have reverted to using regular function detours to avoid detection.
-
-\section{Evasion Techniques Used by Cheats}
-
-To remain undetected, cheat developers employ advanced evasion strategies. These techniques are specifically designed to circumvent TLS callbacks, start address validation, and memory integrity checks.
-
-\subsection*{Suppressing TLS Callbacks}
-
-One method to bypass TLS-based detection is to remove or disable the TLS callback table in the injected DLL. This can be achieved by:
+Although Valve has not publicly disclosed the full algorithmic details of how Trust Factor is calculated, community research, developer hints, and user experimentation have led to the identification of several factors believed to influence the Trust Factor score:
 
 \begin{itemize}
-    \item Manually modifying the PE header to erase TLS structures.
-    \item Avoiding the use of new threads, thus preventing callback invocation.
+  \item \textbf{VAC bans and Overwatch bans:} Any history of cheating or toxic behavior significantly reduces Trust Factor.
+  \item \textbf{Game-specific reports:} Frequency and validity of reports for cheating, griefing, or abusive conduct.
+  \item \textbf{Commendations:} Positive in-game feedback from teammates (e.g., "Friendly", "Good Leader") is assumed to improve Trust Factor.
+  \item \textbf{Steam account age:} Older accounts are generally considered more trustworthy than newly created ones.
+  \item \textbf{Community participation:} Use of features like Steam Groups, Reviews, and profile visibility.
+  \item \textbf{Hardware/software flags:} Suspicious configurations or third-party software may trigger internal risk indicators.
+  \item \textbf{Behavior across multiple games:} Toxic behavior or bans in other Valve titles can influence Trust Factor globally.
+  \item \textbf{Friend network quality:} Associations with banned or low-Trust players may negatively impact your own score.
 \end{itemize}
 
-\subsection*{Thread Hijacking and Return Address Spoofing}
+Players with lower Trust Factor scores—often due to false reports, negative behavior, or even external factors—can find themselves matched with suspected cheaters or toxic teammates. The system does not communicate its internal logic to players, which contributes to confusion and a perception of arbitrariness.
 
-\textbf{Thread hijacking} avoids the creation of new threads by taking control of an existing game thread. The cheat suspends a legitimate thread, modifies its instruction pointer, and redirects it to execute the injected payload.
+Furthermore, the reporting system itself is vulnerable to abuse. Coordinated reporting by enemy players or even automated bots—known as \textit{report bots}—can unfairly penalize innocent users. These bots are sold as a service on underground forums and marketplaces, enabling malicious actors to artificially lower another player's Trust Factor through mass false reports. Victims of such actions may find themselves trapped in low-quality matchmaking pools with increased exposure to cheaters.
 
-To further mask execution, cheats employ \textbf{return address spoofing}, which fakes the origin of a function call. By placing a plausible return address on the stack, the cheat deceives anti-cheats into believing that execution flow originated from a legitimate module.
+Conversely, a market has emerged for \textit{commend bots}, which artificially inflate Trust Factor scores by using botted accounts to issue in-game commendations. These commendations, such as "Good Leader", "Friendly", or "Teacher", are believed to be positively weighted in Trust Factor calculations. These services exploit the opacity of Trust Factor metrics and undermine the intended spirit of fair matchmaking by allowing players to manipulate their standing through paid influence.
 
-\subsection*{Start Address Redirection via ROP Gadgets}
+Consequently, while the Trust Factor system aims to protect competitive integrity, its opacity and susceptibility to manipulation can exacerbate the issues it was designed to mitigate. Calls for greater transparency, audit trails, and player-facing Trust metrics have been common within the community, especially among long-term and high-investment users.
 
-Some cheats bypass start address validation by exploiting \textbf{ROP (Return-Oriented Programming) gadgets}—small, innocuous instruction sequences within trusted modules. A common example is using a \texttt{jmp rcx} instruction inside the game binary. Instead of jumping directly to injected code, the cheat redirects execution through this legitimate gadget, thus maintaining plausible control flow.
+\subsection{Economic and Psychological Impact}
 
-\section{Extended VAC Capabilities and Developer Countermeasures}
+Valve's ban waves have economic repercussions as well. In early 2025, a VAC wave eliminated accounts with over two million USD in inventory value \cite{ggscore2025vacban}. This not only disrupted the secondary skin market but also created anxiety among legitimate players. Many users invest both time and money into building inventories, and the fear of false positives or lack of transparency in ban decisions can alienate loyal players.
 
-Beyond memory inspection and thread analysis, VAC includes a broader set of capabilities that significantly increase its detection surface.
+The psychological burden is also considerable: legitimate users who are falsely flagged or who perceive the system as ineffective may lose confidence in the platform, resulting in churn. In ranked systems, where competition is meant to be meritocratic, repeated exposure to cheating can erode motivation and participation. For new players, early exposure to blatant unfairness can lead to immediate disengagement.
 
-\subsection*{Observed Detection Capabilities}
+Moreover, the persistent presence of cheaters devalues competitive ranks and tournaments, potentially deterring sponsors and professional teams from engaging with the title long-term. In such an environment, even minor perceived imbalance can be seen as systemic failure, amplifying negative sentiment across the community.
 
-Community research and reverse engineering have revealed that VAC likely performs:
+\section{Community Perception and Player Sentiment}
 
-\begin{itemize}
-    \item \textbf{File System Scanning}: Searches for known cheat artifacts and patterns.
-    \item \textbf{Process and Memory Scanning}: Inspects all running processes for injection, shellcode, and suspicious modules.
-    \item \textbf{Registry Inspection}: Identifies unusual startup entries or configuration keys.
-    \item \textbf{Handle Enumeration}: Flags abnormal access to game-related objects.
-    \item \textbf{Hook and Signature Scanning}: Detects common hook patterns and byte signatures from known cheat loaders.
-\end{itemize}
+The response from the gaming community is often one of frustration, skepticism, and fatigue. On platforms like Reddit, Steam, and YouTube, countless posts and videos chronicle blatant cheaters in ranked games, sometimes persisting for weeks without enforcement. These examples accumulate into a narrative of neglect, regardless of the actual efforts made by developers.
 
-These mechanisms work in concert with behavioral monitoring and cloud-based analysis, making VAC highly resilient to static evasion alone.
+Professional players and streamers have also spoken out, emphasizing how recurring cheating incidents damage both their gameplay experience and viewer engagement. For example, repeated matches against obvious cheaters during live broadcasts diminish entertainment value and create reputational risks for the publisher.
 
-\subsection*{Common Countermeasures Used by Cheat Developers}
+This perception of systemic vulnerability further undermines confidence in anti-cheat frameworks and leads to a normalization of defeatism among legitimate players. Forums often reflect sentiments such as "everyone is cheating at higher ranks" or "VAC does nothing," which signal the erosion of perceived fairness.
 
-In response, professional cheat developers implement an array of countermeasures designed to reduce their attack surface and mislead detection heuristics:
+In a competitive environment where rank integrity is paramount, even a minority of cheaters can poison the perception of fairness. This phenomenon fuels resignation and, eventually, player abandonment. A toxic perception climate can spread faster than actual cheating prevalence, compounding the damage.
 
-\begin{itemize}
-    \item \textbf{String Encryption}: Prevents signature-based scanning of identifiable strings.
-    \item \textbf{Window and Module Name Randomization}: Avoids static blacklisting and manual heuristics.
-    \item \textbf{Polymorphic Code}: Constantly mutates the cheat’s binary structure to evade pattern recognition.
-    \item \textbf{Fileless Execution}: Prevents disk-based detection by streaming the cheat entirely into memory.
-    \item \textbf{Memory Cleansing}: Removes metadata and headers after injection to eliminate identifiable traces.
-    \item \textbf{Registry Hygiene}: Ensures no persistent keys or logs remain after execution.
-    \item \textbf{Scan Spoofing}: Hooks or replaces VAC scanning routines with fake responses to conceal activity.
-\end{itemize}
+\section{Legal and Ethical Implications of Cheating Software}
 
-These techniques are essential for achieving long-term undetectability in highly monitored environments such as Valve’s matchmaking infrastructure.
+Beyond technical responses, several companies have turned to legal action. The production and distribution of cheat software violates terms of service and, in some jurisdictions, constitutes intellectual property infringement or even fraud.
+
+Bungie and Ubisoft, for example, have successfully sued cheat developers for their role in undermining game integrity and profiting from illicit tools. Notably, in 2023, Bungie won a \$12 million lawsuit against cheat seller AimJunkies for its role in distributing software that compromised \textit{Destiny 2}'s ecosystem. Other cases have followed in Australia, Germany, and the United States, with courts increasingly recognizing the damages associated with commercial cheating operations.
+
+These legal precedents are critical not only for deterrence but also to assert the enforceability of end-user license agreements (EULAs) in gaming contexts. They signal that companies are increasingly willing to pursue judicial avenues when technical means fall short. Legal actions also help target the source of advanced cheat development, limiting their distribution and profitability.
+
+From an ethical perspective, the existence of pay-to-win cheats challenges the spirit of competitive gaming. When fairness is monetized and subverted, the entire premise of esports and ranked systems is put into question, leading to long-term damage to brand value and consumer trust.
+
+\section{Anti-Cheat Technologies and Their Limitations}
+
+While developers continue to enhance their anti-cheat frameworks, existing solutions often operate reactively. Valve’s VAC system relies on detecting known cheat signatures. Although the update to VacNet 3.0 brings improvements in behavioral analysis and detection latency \cite{vacnet2025update}, many cheats remain undetected due to obfuscation, polymorphism, and manual injection methods.
+
+Furthermore, VAC does not operate at the kernel level, leaving a gap exploited by more sophisticated cheating tools. Unlike Riot’s Vanguard, which implements invasive low-level monitoring, VAC opts for user privacy—but at the cost of reduced enforcement power. This trade-off reflects a broader industry dilemma between effectiveness and user rights.
+
+More innovative systems, such as AI-driven cheat behavior modeling or client-side encryption, are being tested, but none have yet offered a comprehensive solution. Cheat developers adapt quickly, often using anti-debugging and virtualization evasion techniques, requiring anti-cheat providers to continually evolve in a costly and time-sensitive arms race.
 
 
-DLL injection remains the foundation of modern cheat development in competitive games. Techniques such as Manual Mapping offer powerful stealth capabilities, enabling deep integration with the game runtime. However, anti-cheat systems like VAC employ increasingly sophisticated detection methods, including TLS callbacks, memory integrity scanning, VMT hook detection, and behavioral analysis.
+Cheating poses a systemic threat to the health and sustainability of online multiplayer games. The data reveals that while anti-cheat systems like VAC are essential, they are not enough to eliminate the problem. The high number of bans, combined with persistent community frustration and the economic damage inflicted, indicate that many cheaters continue to escape detection.
+
+To restore trust and ensure fair play, the industry must explore more proactive, transparent, and adaptive anti-cheat solutions, supported by legal frameworks and community-driven oversight. Educational initiatives, transparency reports, real-time user flagging tools, and tighter platform-level enforcement (e.g., via Steam or Xbox Live) could help close current enforcement gaps. Without such evolution, even the most successful titles risk losing their competitive legitimacy and alienating their player base.
+
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=13cm,
+        height=7cm,
+        xtick=data,
+        xticklabels={
+          Mar '24, Apr, May, Jun, Jul, Aug,
+          Sep, Oct, Nov, Dec, Jan '25, Feb, Mar
+        },
+        xticklabel style={rotate=45, anchor=east, font=\footnotesize},
+        yticklabel style={font=\footnotesize},
+        xlabel=Month,
+        ylabel=Players,
+        xlabel style={font=\footnotesize},
+        ylabel style={font=\footnotesize},
+        title={\footnotesize CS2 Monthly Player Growth (Mar 2024 – Mar 2025)},
+        legend style={
+          font=\footnotesize,
+          at={(0.5,-0.25)},
+          anchor=north,
+          legend columns=2
+        },
+        grid=both,
+        grid style={line width=.1pt, draw=gray!30},
+        minor tick num=1,
+        tick style={line width=0.3pt},
+        every axis plot/.style={very thick},
+        ymin=800000, ymax=1900000,
+      ]
+    
+      % Average Players
+      \addplot[blue, mark=*] coordinates {
+        (0,885629.7) (1,930749.0) (2,958207.3) (3,947520.5) (4,875365.1) (5,897337.9)
+        (6,836306.7) (7,829438.8) (8,852164.3) (9,913953.4) (10,914092.2) (11,1003570.6) (12,1040008.9)
+      };
+      \addlegendentry{Average Players}
+    
+      % Peak Players
+      \addplot[red, mark=triangle*] coordinates {
+        (0,1521796) (1,1618685) (2,1614925) (3,1510840) (4,1342171) (5,1425958)
+        (6,1473144) (7,1484045) (8,1556938) (9,1740261) (10,1594016) (11,1783434) (12,1818368)
+      };
+      \addlegendentry{Peak Players}
+    
+      \end{axis}
+    \end{tikzpicture}
+    \caption{\footnotesize Counter-Strike 2 player count evolution over the past 13 months.}
+    \label{fig:cs2-growth}
+    \end{figure}
+    
