@@ -38,6 +38,7 @@ When focusing on player-related data, two core classes emerge as central compone
 
 Both classes derive from the common superclass \textbf{C\_BaseEntity}, which serves as the foundation for all entities in the engine. It exposes core functionality and network-relevant properties. Below are simplified, annotated representations of these structures:
 
+
 \vspace{1em}
 \noindent\textbf{1. Base Entity – \texttt{C\_BaseEntity}}
 
@@ -57,6 +58,7 @@ public:
     // * ... Additional base class members used engine-wide
 };
 \end{lstlisting}
+
 
 \vspace{1em}
 \noindent\textbf{2. Player Controller – \texttt{CBasePlayerController}}
@@ -206,42 +208,53 @@ This multi-path approach is extensively documented and discussed by reverse engi
 In conclusion, identifying the correct entity list—whether through dynamic analysis or disassembly-guided pattern matching—is a foundational skill for external tooling. It unlocks the ability to systematically access and manipulate in-game objects with high confidence and reliability, forming the basis for any higher-level system such as ESP, aimbots, or replay parsers.
 
 
+
+
 \subsection{Reverse Engineering the Engine's Entity Resolution Logic}
 
-Through static analysis of the CS2 binary, one can uncover the internal logic used to resolve handles. The following IDA signature corresponds to the function responsible for locating entities within the paged entity list:
+Through static analysis of the CS2 binary, specifically within the \texttt{client.dll}, one can uncover the internal logic used to resolve handles. The following C pseudocode, extracted from Ghidra, corresponds to the function responsible for locating entities within the paged entity list:
 
-\subsubsection*{Known Byte Pattern}
-\begin{lstlisting}[style=cppstyle]
-81 FA ?? ?? ?? ?? 77 36 8B C2 C1 F8 09 83 F8 3F 77 2C
-48 98 48 8B 4C C1 ?? 48 85 C9 74 20 8B C2 25 ?? ?? ?? ??
-48 6B C0 78 48 03 C8 74 10 8B 41 10 25 ?? ?? ?? ?? 
-3B C2 75 04 48 8B 01 C3
-\end{lstlisting}
-
-\subsubsection*{Decompiled Logic (Simplified)}
-\begin{lstlisting}[style=cppstyle]
-while (true)
+\begin{lstlisting}[style=cppstyle,caption={Accessing an Entity in the Entity List}]
+Entity_t *EntityList(longlong EntityListPointer, uint EntityListIndex)
 {
-    if ((v7 & 0x7FFF) <= 0x7FFE && (v7 >> 9) <= 63)
+    Entity_t *Entity;
+    longlong EntitySublist;
+
+    if ((((EntityListIndex < 32767) && (EntityListIndex >> 9 < 64)) &&
+         (EntitySublist = *(EntityListPointer + 16 + (EntityListIndex >> 9) * 8), EntitySublist != 0))
+        && ((Entity = EntitySublist + (EntityListIndex & 511) * 120, Entity != NULL &&
+             ((*(Entity + 2) & 32767) == EntityListIndex))))
     {
-        uint64_t page = *(uint64_t*)(entityList + 8 * (v7 >> 9) + 0x10);
-        if (page)
-        {
-            uint64_t entry = page + 120 * (v7 & 0x1FF);
-            if (entry)
-            {
-                if ((*(uint32_t*)(entry + 0x10) & 0x7FFF) == v7)
-                    break;
-            }
-        }
+        return *Entity;
     }
-    if (--v7 < 0)
-        break;
-}
-*(uint32_t*)(entityList + 0x20F0) = v7;
+    return 0;
+}   
 \end{lstlisting}
 
-This logic demonstrates how the engine navigates a paged entity list using high and low bits of the handle as page and slot indices, respectively. A verification step ensures that the slot matches the original handle, maintaining integrity.
+The algorithm follows these main steps:
+
+\begin{enumerate}
+    \item \textbf{Index Validation}: First, the index \texttt{EntityListIndex} is validated to ensure it falls within a valid range. Specifically:
+    \begin{itemize}
+        \item \texttt{EntityListIndex < 32767} ensures the index does not exceed a predefined maximum value. The game defines that 32766 is the maximum number of entities it can handle at any given time.
+        \item \texttt{EntityListIndex >> 9 < 64} uses a right shift operation, which effectively divides the index by 512, ensuring that the index belongs to one of the 64 available sublists. In this way, each list can contain 512 entities.
+    \end{itemize}
+    
+    \item \textbf{Accessing the Sublist}: The function calculates the appropriate sublist that contains the entity:
+    \begin{itemize}
+        \item \texttt{EntitySublist = *(EntityListPointer + 16 + (EntityListIndex >> 9) * 8)} computes the address of the specific sublist by using the shifted index to determine its location in memory.
+        \item The condition \texttt{EntitySublist != 0} ensures the sublist is valid (i.e., it exists and can be accessed).
+    \end{itemize}
+    
+    \item \textbf{Locating the Entity Within the Sublist}: If the sublist is valid, the algorithm calculates the position of the entity within that sublist:
+    \begin{itemize}
+        \item \texttt{Entity = EntitySublist + (EntityListIndex \& 511) * 120} calculates the position of the entity inside the sublist. The bitwise AND operation \texttt{EntityListIndex \& 511} extracts the last 9 bits of the index, which helps pinpoint the entity’s exact position within the sublist.
+        \item The condition \texttt{Entity != NULL} ensures that the entity actually exists, and \texttt{(*(Entity + 2) \& 32767) == EntityListIndex} checks that the entity’s index matches the requested one.
+    \end{itemize}
+    
+    \item \textbf{Returning the Entity}: Once all conditions are met, the algorithm returns the entity. If any of the conditions fail, the function returns \texttt{0}, indicating that the entity could not be found.
+\end{enumerate}
+
 
 \subsubsection{Alternative Method: Hooking \texttt{OnAddEntity} and \texttt{OnRemoveEntity}}
 
