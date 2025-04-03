@@ -23,14 +23,68 @@ Believe developers are not doing enough & 55\% \\
 \end{table}
 
 These statistics highlight the severity of the problem: cheating not only degrades the moment-to-moment experience but also leads to long-term disengagement from the game. For games that rely on consistent engagement, particularly in esports ecosystems, this presents a fundamental challenge.
-
 \section{Case Study: Cheating in \textit{Counter-Strike 2}}
+
 
 \subsection{Player Base and VAC Ban Statistics}
 
-\textit{Counter-Strike 2} remains one of the most popular online shooters. Notably, in February 2024, CS2 achieved a historic milestone with over 1.8 million concurrent players, surpassing previous records and reaffirming its dominant position within the competitive shooter genre. This growing player base intensifies the urgency to maintain integrity within the ecosystem, as the stakes for players, streamers, and the publisher rise proportionally.
+\textit{Counter-Strike 2} (CS2) remains one of the most prominent titles in the competitive first-person shooter (FPS) genre. In February 2024, the game reached a historic peak of over 1.8 million concurrent players, surpassing all previous records and reaffirming its dominant position in the online gaming landscape. This expanding player base underscores the increasing importance of maintaining competitive integrity, especially as the stakes grow for professional players, streamers, and the developer, Valve.
 
-However, this popularity comes with a cost: the game is plagued by a persistent community of cheaters. The Valve Anti-Cheat (VAC) system bans thousands of players each month, but the volume of bans illustrates the magnitude of the ongoing problem. Many cheaters use undetected private cheats or constantly create new accounts (smurfing), which reduces the long-term effectiveness of mass ban waves.
+Figure~\ref{fig:cs2-growth} illustrates the evolution of the CS2 player base over the past year, highlighting both average and peak monthly player counts as reported by Valve.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=13cm,
+      height=7cm,
+      xtick=data,
+      xticklabels={
+        Mar '24, Apr, May, Jun, Jul, Aug,
+        Sep, Oct, Nov, Dec, Jan '25, Feb, Mar
+      },
+      xticklabel style={rotate=45, anchor=east, font=\footnotesize},
+      yticklabel style={font=\footnotesize},
+      xlabel=Month,
+      ylabel=Players,
+      xlabel style={font=\footnotesize},
+      ylabel style={font=\footnotesize},
+      title={\footnotesize CS2 Monthly Player Growth (Mar 2024 – Mar 2025)},
+      legend style={
+        font=\footnotesize,
+        at={(0.5,-0.25)},
+        anchor=north,
+        legend columns=2
+      },
+      grid=both,
+      grid style={line width=.1pt, draw=gray!30},
+      minor tick num=1,
+      tick style={line width=0.3pt},
+      every axis plot/.style={very thick},
+      ymin=800000, ymax=1900000,
+    ]
+  
+    % Average Players
+    \addplot[blue, mark=*] coordinates {
+      (0,885629.7) (1,930749.0) (2,958207.3) (3,947520.5) (4,875365.1) (5,897337.9)
+      (6,836306.7) (7,829438.8) (8,852164.3) (9,913953.4) (10,914092.2) (11,1003570.6) (12,1040008.9)
+    };
+    \addlegendentry{Average Players}
+  
+    % Peak Players
+    \addplot[red, mark=triangle*] coordinates {
+      (0,1521796) (1,1618685) (2,1614925) (3,1510840) (4,1342171) (5,1425958)
+      (6,1473144) (7,1484045) (8,1556938) (9,1740261) (10,1594016) (11,1783434) (12,1818368)
+    };
+    \addlegendentry{Peak Players}
+  
+    \end{axis}
+  \end{tikzpicture}
+  \caption{\footnotesize Counter-Strike 2 player count evolution over the past 13 months.}
+  \label{fig:cs2-growth}
+\end{figure}
+
+Despite its popularity, CS2 continues to face significant challenges due to cheating. The Valve Anti-Cheat (VAC) system bans thousands of accounts each month, underscoring the scale of the issue. As shown in Table~\ref{tab:vac-2025}, over 45,000 VAC bans were issued in the first quarter of 2025 alone.
 
 \begin{table}[H]
 \centering
@@ -41,15 +95,46 @@ However, this popularity comes with a cost: the game is plagued by a persistent 
 \textbf{Month} & \textbf{Number of VAC Bans} \\
 \hline
 January 2025   & 15,432 \\
-February 2025 & 14,987 \\
-March 2025   & 16,543 \\
+February 2025  & 14,987 \\
+March 2025     & 16,543 \\
 \hline
 \textbf{Total} & \textbf{46,962} \\
 \hline
 \end{tabular}
 \end{table}
 
-While these numbers reflect strong enforcement, they also suggest that the underlying problem remains unsolved. Many cheaters continue to bypass detection mechanisms, indicating that current anti-cheat technologies, though necessary, are insufficient. Additionally, the latency between cheat deployment and detection often allows cheaters to dominate matches for days or weeks before being banned.
+While these figures indicate proactive enforcement, they also reveal the limitations of current anti-cheat mechanisms. Many cheaters continue to operate undetected for extended periods, often using private or custom-developed cheats that evade signature-based detection. Furthermore, the widespread use of smurfing—creating multiple low-profile accounts to circumvent bans—diminishes the long-term effectiveness of VAC.
+
+Another critical concern is the detection delay: cheats frequently remain effective for days or even weeks before countermeasures are deployed. This window allows cheaters to impact competitive integrity, frustrate legitimate players, and erode trust in the matchmaking system. According to a recent analysis, the average delay between a cheater’s last match and their eventual VAC ban was around 20 days, with only 28\% of bans occurring within 24 hours \cite{bo3gg2024}. During this time, banned players had already participated in over 32,000 matches, with most games featuring only a single cheater. This confirms that cheaters actively participate in regular gameplay rather than confined abuse scenarios like case farming, severely degrading the experience for legitimate players.
+
+\begin{table}[H]
+  \centering
+  \small % Reduce font size
+  \setlength{\tabcolsep}{6pt} % Optional: tighten column spacing
+  \caption{Activity of Banned Accounts Prior to Enforcement (Jan–Apr 2024)}
+  \label{tab:cheater-impact}
+  \begin{tabular}{|p{5.2cm}|c|}
+  \hline
+  \textbf{Metric} & \textbf{Estimated Value} \\
+  \hline
+  Average delay between last match and VAC ban & 20 days \\
+  \hline
+  Percentage of bans issued within 24 hours & 28\% \\
+  \hline
+  Total matches played by banned accounts & 32,000+ \\
+  \hline
+  Percentage of matches with only one banned player & 97\% \\
+  \hline
+  Evidence of case farming behavior & Not significant \\
+  \hline
+  Gameplay pattern analysis & Consistent with competitive play \\
+  \hline
+  \end{tabular}
+  \end{table}  
+
+These statistics highlight not only the persistence of the cheating problem but also the urgent need for more advanced, adaptive anti-cheat technologies that prioritize early detection and real-time behavioral analysis.
+
+
 
 \subsection{The Reporting System and Trust Factor Limitations}
 
@@ -117,59 +202,3 @@ Cheating poses a systemic threat to the health and sustainability of online mult
 
 To restore trust and ensure fair play, the industry must explore more proactive, transparent, and adaptive anti-cheat solutions, supported by legal frameworks and community-driven oversight. Educational initiatives, transparency reports, real-time user flagging tools, and tighter platform-level enforcement (e.g., via Steam or Xbox Live) could help close current enforcement gaps. Without such evolution, even the most successful titles risk losing their competitive legitimacy and alienating their player base.
 
-
-
-
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-      \begin{axis}[
-        width=13cm,
-        height=7cm,
-        xtick=data,
-        xticklabels={
-          Mar '24, Apr, May, Jun, Jul, Aug,
-          Sep, Oct, Nov, Dec, Jan '25, Feb, Mar
-        },
-        xticklabel style={rotate=45, anchor=east, font=\footnotesize},
-        yticklabel style={font=\footnotesize},
-        xlabel=Month,
-        ylabel=Players,
-        xlabel style={font=\footnotesize},
-        ylabel style={font=\footnotesize},
-        title={\footnotesize CS2 Monthly Player Growth (Mar 2024 – Mar 2025)},
-        legend style={
-          font=\footnotesize,
-          at={(0.5,-0.25)},
-          anchor=north,
-          legend columns=2
-        },
-        grid=both,
-        grid style={line width=.1pt, draw=gray!30},
-        minor tick num=1,
-        tick style={line width=0.3pt},
-        every axis plot/.style={very thick},
-        ymin=800000, ymax=1900000,
-      ]
-    
-      % Average Players
-      \addplot[blue, mark=*] coordinates {
-        (0,885629.7) (1,930749.0) (2,958207.3) (3,947520.5) (4,875365.1) (5,897337.9)
-        (6,836306.7) (7,829438.8) (8,852164.3) (9,913953.4) (10,914092.2) (11,1003570.6) (12,1040008.9)
-      };
-      \addlegendentry{Average Players}
-    
-      % Peak Players
-      \addplot[red, mark=triangle*] coordinates {
-        (0,1521796) (1,1618685) (2,1614925) (3,1510840) (4,1342171) (5,1425958)
-        (6,1473144) (7,1484045) (8,1556938) (9,1740261) (10,1594016) (11,1783434) (12,1818368)
-      };
-      \addlegendentry{Peak Players}
-    
-      \end{axis}
-    \end{tikzpicture}
-    \caption{\footnotesize Counter-Strike 2 player count evolution over the past 13 months.}
-    \label{fig:cs2-growth}
-    \end{figure}
-    
