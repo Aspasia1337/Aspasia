@@ -1,8 +1,13 @@
 \documentclass[12pt]{report}
 
 %------------------ Fonts ------------------
-\usepackage{charter} % Palatino-style font (serif)
-\usepackage[scaled]{beramono} % Nicer monospaced font for listings
+\usepackage{libertinus} 
+
+\usepackage{sansmath}
+\sansmath 
+
+\usepackage{sectsty}
+\allsectionsfont{\sffamily} 
 
 %------------------ Language ------------------
 \usepackage[english]{babel} 
@@ -15,7 +20,7 @@
 \parskip=6pt
 
 %------------------ Math ------------------
-\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{amsmath}
 
 %------------------ Code and Colors ------------------
 \usepackage{listings}
@@ -59,7 +64,7 @@
     upquote=true,                                   
     xleftmargin=15pt,                               
     xrightmargin=15pt,
-    morekeywords={longlong, uint, undefined8, int, char, double, float, void, class, struct, return, const, static, public, private, protected, namespace, virtual, uint64_t, Entity_t, new, delete, template, inline, friend, typeid}, % Palabras clave adicionales
+    morekeywords={longlong, uint, undefined8, int, char, double, float, void, class, p, return, const, static, public, private, protected, namespace, virtual, uint64_t, Entity_t, new, delete, template, inline, friend, typeid}, % Palabras clave adicionales
     sensitive=true,                                     
     literate={\&\&}{\textcolor{operatorcolor}{\&\&}}1 {\|\|}{\textcolor{operatorcolor}{||}}1 
 }
@@ -118,7 +123,7 @@
 
 
 %------------------ Bibliography (APA) ------------------
-\usepackage[style=apa, backend=biber, natbib=true, hyperref=true]{biblatex}
+\usepackage[style=ieee, backend=biber, natbib=true, hyperref=true]{biblatex}
 \addbibresource{references.bib}
 
 %------------------ Cite style -----------------------
