@@ -608,10 +608,57 @@ This skeleton representation provides a clean and intuitive view of player pose 
     \label{fig:skeleton_overlay}
 \end{figure}
 
+\section{Anti-Aim: Misleading Enemy Targeting Systems}
 
+Anti-Aim is a cheat technique designed to manipulate the visible orientation of a player’s model in order to confuse enemy aimbots and reduce the likelihood of being hit in combat. Rather than improving offensive capabilities like an aimbot or triggerbot, Anti-Aim provides a defensive advantage by making it significantly harder for both human players and automated cheats to land accurate shots.
 
+\subsection{What Is Anti-Aim?}
 
+In \textit{Counter-Strike 2}, a player's view direction is broadcast to the server and other clients to render the model's orientation. Normally, this direction reflects where the player is actually looking and aiming. Anti-Aim breaks this consistency by desynchronizing the player's real viewing direction from the one seen by others. As a result, opponents and external cheats perceive the cheater as facing in the wrong direction, leading them to aim at incorrect hitboxes.
 
+This desynchronization creates an illusion where, for example, the cheater may be looking forward from their own perspective, but appear to be looking sideways or even backwards to others. Since many cheats rely on model orientation to predict aim points, this strategy effectively disrupts their logic.
+
+\subsection{Types of Anti-Aim}
+
+There are several ways Anti-Aim can be implemented, each with different goals such as stealth, aggressiveness, or maximum desync:
+
+\begin{itemize}
+    \item \textbf{Fake Yaw (Yaw Desync):} The player's view direction (yaw angle) is faked to appear offset from their real direction. This is the most common and effective form of Anti-Aim.
+    
+    \item \textbf{Pitch Exploits:} Sends pitch values that are outside the game's allowed viewing range (e.g., looking completely up or down), which causes visual glitches in the player model. This can result in the head being rendered inside the chest or legs, making headshots harder.
+    
+    \item \textbf{Yaw Jitter:} Rapidly switches between multiple fake yaw angles, making the model “shake” or spin unpredictably. While easy to spot visually, this is highly effective against poorly written aimbots.
+    
+    \item \textbf{Spinbot:} Continuously rotates the model in a full 360° loop at high speed. This guarantees total desync but is highly obvious and generally used in rage hacking contexts rather than legit cheating.
+    
+    \item \textbf{Static Desync:} Applies a fixed yaw offset to the model, making the cheater appear to always be looking in a different direction. This is more subtle and used in “legit” cheating configurations.
+\end{itemize}
+
+\subsection{Lower Body Yaw (LBY) and the LBY Breaker}
+
+In older Source-based games like CS:GO, the engine separated the upper and lower body yaw (LBY) values for animation purposes. LBY would only update under specific conditions, such as when a player stopped moving. Exploiting this timing, cheaters could delay the LBY update and create a temporary desynchronization window between the real view angles and the visible model. This method was known as the \textbf{LBY Breaker}.
+
+While CS2’s Source 2 engine has changed animation handling, similar concepts still apply. Some anti-aim techniques attempt to delay animation state updates or force inconsistent transitions to create fake angles, although LBY is no longer exposed in the same way. Nonetheless, the idea of exploiting animation update delays remains an active area in cheat development.
+
+\subsection{Benefits for the Cheater}
+
+Anti-Aim provides several key advantages:
+
+\begin{itemize}
+    \item \textbf{Aimbot Evasion:} Many aimbots target the visible model's head or chest hitbox based on predicted angles. Anti-Aim misaligns these predictions, causing the aimbot to miss entirely.
+    
+    \item \textbf{Confusing Human Opponents:} Players may struggle to read movement or pre-aim accurately when the enemy model behaves unpredictably or appears to be looking away.
+    
+    \item \textbf{Reduced Headshot Risk:} By forcing the head into glitched positions (e.g., inside the torso), it becomes harder to land critical hits, especially for players relying on flick shots or crosshair placement.
+    
+    \item \textbf{Overwatch Safety:} When configured subtly, Anti-Aim can provide these benefits without looking suspicious in demos, reducing the risk of bans from human reviewers.
+\end{itemize}
+
+\subsection{Importance in Modern Cheats}
+
+Anti-Aim has become one of the most essential components in competitive cheat configurations, especially in cheat-vs-cheat environments (e.g., HvH—Hack vs. Hack matches). In such scenarios, defensive capabilities are as important as offensive ones, and the ability to evade incoming fire becomes a major strategic advantage.
+
+Furthermore, as anti-cheat systems become more advanced in detecting aimbots and wallhacks, subtle and effective Anti-Aim techniques provide cheaters with a low-profile method to gain survivability without triggering automated bans.
 
 
 
