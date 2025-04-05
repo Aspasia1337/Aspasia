@@ -42,31 +42,58 @@
 \definecolor{framegray}{rgb}{0.8, 0.8, 0.8}     
 \definecolor{operatorcolor}{rgb}{0.0, 0.5, 0.0} 
 \definecolor{builtincolor}{rgb}{0.0, 0.0, 0.8}  
-
-% Estilo de código para C++ con resaltado mejorado
 \lstdefinestyle{cppstyle}{
     language=C++,
     backgroundcolor=\color{codebg},
-    basicstyle=\ttfamily\small,
-    keywordstyle=\color{azulUC3M}\bfseries,         
-    commentstyle=\color{commentcolor}\itshape,      
-    stringstyle=\color{stringcolor},                
-    numberstyle=\color{numbercolor}\tiny,           
+    basicstyle=\ttfamily\lst@ifdisplaystyle\small\else\footnotesize\fi,
+    keywordstyle=\color{azulUC3M}\bfseries,
+    commentstyle=\color{commentcolor}\itshape,
+    stringstyle=\color{stringcolor},
+    numberstyle=\color{numbercolor}\scriptsize,
     numbers=left,
     stepnumber=1,
-    numbersep=5pt,                                  
+    numbersep=10pt,
+    frame=single,
+    rulecolor=\color{framegray},
+    captionpos=b,
     breaklines=true,
-    frame=single,                                   
-    rulecolor=\color{framegray},                    
-    captionpos=b,                                   
+    breakatwhitespace=false,
+    showstringspaces=false,
     keepspaces=true,
+    tabsize=4,
     columns=fullflexible,
-    upquote=true,                                   
-    xleftmargin=15pt,                               
+    upquote=true,
+    aboveskip=1em,
+    belowskip=1em,
+    xleftmargin=15pt,
     xrightmargin=15pt,
-    morekeywords={longlong, uint, undefined8, int, char, double, float, void, class, p, return, const, static, public, private, protected, namespace, virtual, uint64_t, Entity_t, new, delete, template, inline, friend, typeid}, % Palabras clave adicionales
-    sensitive=true,                                     
-    literate={\&\&}{\textcolor{operatorcolor}{\&\&}}1 {\|\|}{\textcolor{operatorcolor}{||}}1 
+    morekeywords={
+        longlong, uint, undefined8, int, char, double, float, void,
+        class, struct, enum, union, p, return, const, static, public,
+        private, protected, namespace, virtual, uint64_t, Entity_t,
+        new, delete, template, inline, friend, typeid, typename,
+        constexpr, noexcept, decltype, override, nullptr
+    },
+    literate={
+        {->}{{\textcolor{operatorcolor}{\texttt{->}}}}2
+        {=>}{{\textcolor{operatorcolor}{\texttt{=>}}}}2
+        {==}{{\textcolor{operatorcolor}{\texttt{==}}}}2
+        {!=}{{\textcolor{operatorcolor}{\texttt{!=}}}}2
+        {<=}{{\textcolor{operatorcolor}{\texttt{<=}}}}2
+        {>=}{{\textcolor{operatorcolor}{\texttt{>=}}}}2
+        {&&}{{\textcolor{operatorcolor}{\texttt{\&\&}}}}2
+        {||}{{\textcolor{operatorcolor}{\texttt{||}}}}2
+        {*}{{\textcolor{operatorcolor}{\texttt{*}}}}1
+        {&}{{\textcolor{operatorcolor}{\texttt{\&}}}}1
+        {=}{{\textcolor{operatorcolor}{\texttt{=}}}}1
+        {-}{{\textcolor{operatorcolor}{\texttt{-}}}}1
+        {+}{{\textcolor{operatorcolor}{\texttt{+}}}}1
+        {/}{{\textcolor{operatorcolor}{\texttt{/}}}}1
+        {:}{{\textcolor{operatorcolor}{\texttt{:}}}}1
+        {<}{{\textcolor{operatorcolor}{\texttt{<}}}}1
+        {>}{{\textcolor{operatorcolor}{\texttt{>}}}}1
+    },
+    sensitive=true
 }
 
 %------------------ Figures and Tables ------------------
