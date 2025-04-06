@@ -57,9 +57,91 @@ As \textbf{competitive gaming and esports} continued to grow, \textbf{Riot Games
 
 The \textbf{evolution of anti-cheat systems} reflects an \textbf{ongoing technological arms race} between \textbf{cheat developers and game security teams}. While early efforts relied on \textbf{rudimentary server-side validation}, modern solutions integrate \textbf{behavioral analysis, machine learning, and kernel-level access} to provide more robust protection. Despite these advancements, the constant adaptation of cheat developers ensures that no anti-cheat system remains \textbf{impenetrable for long}, perpetuating a \textbf{continuous cycle of exploitation and countermeasures} in the digital battlefield of competitive gaming.
 
+This historical evolution has given rise to a wide variety of anti-cheat implementations, each shaped by the needs and challenges of its era.
+
+The continuous development of anti-cheat solutions over the past two decades can be summarized through a timeline of key technologies. Figure~\ref{fig:timeline-anticheat-balanced} provides a chronological overview of the most influential anti-cheat systems, from early client-side detectors to modern kernel-level and behavior-based solutions.
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[x=0.85cm, y=1cm]
+        % Línea del tiempo
+        \draw[thick, -{Latex[length=3mm]}] (0,0) -- (16,0);
+        \node[below=0.5cm] at (16,0) {\textbf{Year}};
+
+        % Eventos ajustados manualmente (x ≠ año directamente)
+        \foreach \x/\year/\label/\ypos in {
+            0/2000/PunkBuster/1.6,
+            1.5/2001/NProtect\\GameGuard/-1.6,
+            3/2002/VAC\\(Valve Anti-Cheat)/1.6,
+            4.5/2004/BattleEye/-1.6,
+            7/2012/FairFight/1.6,
+            10/2018/Easy Anti-Cheat/-1.6,
+            12/2020/Vanguard/1.6,
+            14.5/2023/VAC Live/-1.6
+        } {
+            \draw[gray, dashed] (\x,0) -- (\x,\ypos);
+            \filldraw[black] (\x,0) circle (2pt);
+            \node[align=center, font=\small] at (\x,\ypos) {\label\\(\year)};
+        }
+
+        % Marcas de tiempo estilizadas
+        \foreach \x/\label in {
+            0/2000, 3/2002, 4.5/2004, 7/2012,
+            10/2018, 12/2020, 14.5/2023
+        } {
+            \draw (\x,0.1) -- (\x,-0.1);
+            \node[below] at (\x,-0.2) {\label};
+        }
+
+    \end{tikzpicture}
+    \caption{Chronological overview of key anti-cheat systems introduced between 2000 and 2023.}
+    \label{fig:timeline-anticheat-balanced}
+\end{figure}
+
+Among the systems depicted in the timeline, several stand out for their unique approach and impact.
+
+\textbf{nProtect GameGuard}, launched in 2001, was one of the first anti-cheats to adopt rootkit-like behavior. Widely used in Asian MMORPGs, it embedded itself deeply in the operating system to prevent cheats from interacting with game processes, although this also raised concerns about privacy and system stability.
+
+\textbf{FairFight}, introduced in 2012, departed from traditional detection mechanisms by using server-side statistical analysis to flag abnormal player behavior. Rather than inspecting memory or processes, it relied on gameplay metrics such as accuracy, reaction time, and movement patterns—making it less intrusive, but also vulnerable to both false positives and high-skill players.
+
+\textbf{Easy Anti-Cheat (EAC)}, which gained traction in 2018, became a popular choice for fast-paced competitive games. It combines kernel-level access with performance-friendly design and supports real-time detection of unauthorized drivers, injected DLLs, and tampering attempts—balancing robustness and user transparency.
+
+Finally, \textbf{VAC Live}, unveiled in 2023, represents Valve's shift toward real-time, data-driven cheat prevention. Unlike the original VAC system, which relied on delayed bans, VAC Live aims to detect and react to cheats during gameplay, making it a critical component in safeguarding the integrity of high-stakes esports matches.
+
+
 \section{The Commercialization of Cheating}
 
 The rapid commercialization of cheating has transformed it from a niche activity into a highly organized industry, offering both software-based and hardware-level exploits. Specialized forums such as \textbf{UnKnoWnCheaTs}, \textbf{MPGH}, and \textbf{ElitePVPers} have become central hubs for distributing cheats, providing resources for reverse engineering, memory manipulation, and anti-cheat evasion. These platforms, along with encrypted messaging services like \textbf{Discord} and \textbf{Telegram}, have facilitated the sale and distribution of sophisticated cheats through subscription models and private communities.
+
+Table~\ref{tab:cs2_cheat_providers} summarizes some of the most prominent cheat providers currently active in the CS2 ecosystem.
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{|p{3cm}|c|p{4cm}|p{3.5cm}|}
+        \hline
+        \textbf{Provider} & \textbf{Released} & \textbf{Subscription Price} & \textbf{Access Model} \\
+        \hline
+        \textbf{Neverlose} & 2020 & €17.10/month, €44.10/3 months, €134.10/year & Invite-only \\
+        \hline
+        \textbf{Memesense} & 2023 & \$4/14 days, \$8/month, \$12/3 months & Public access \\
+        \hline
+        \textbf{Fatality.win} & 2022 & Premium pricing (variable) & Invite-only \\
+        \hline
+        \textbf{Project Infinity} & 2017 & €14.99/month, €29.99/3 months, €99.99 lifetime & Public access \\
+        \hline
+        \textbf{Midnight} & 2019 & £5.42/month & Public access \\
+        \hline
+        \textbf{Onetap} & 2024 & Pricing not publicly disclosed & Public access \\
+        \hline
+        \textbf{Skeet (Gamesense)} & 2016 & \$16/month (via tokens, fluctuating) & Invite-only + HWID locked \\
+        \hline
+    \end{tabular}
+    \caption{Overview of major CS2 cheat providers, including their release year, pricing, and access models.}
+    \label{tab:cs2_cheat_providers}
+\end{table}
+
+
+
 
 As cheat developers adopt increasingly advanced techniques, such as kernel-level drivers and DMA-based exploits, anti-cheat systems are forced into a continuous state of adaptation. The emergence of software-based cheats, particularly those using DLL injection, code hooking, and API interception, has proven to be one of the most adaptable and challenging threats. These methods allow cheat developers to modify game functions dynamically, bypassing traditional detection systems.
 
