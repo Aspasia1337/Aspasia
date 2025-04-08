@@ -396,15 +396,22 @@ Expressed in vector form:
 \end{bmatrix}
 \]
 
-This transformation ensures that the player’s position is effectively at the origin \((0,0,0)\), making it easier to compute aiming angles.
-
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{images/Aimbot/Two.png}
-    \caption{Computation of the displacement vector \( D \) from the player's eye to the target.}
-    \label{fig:displacement_vector}
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/Aimbot/Two.png}
+        \caption{Vista original con los ejes coordenados.}
+        \label{fig:original_view}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/Aimbot/perspective.png}
+        \caption{Cálculo del vector de desplazamiento \( D \).}
+        \label{fig:displacement_vector}
+    \end{minipage}
 \end{figure}
-
 
 \subsubsection{Local Coordinate System and Angle Calculation}
 

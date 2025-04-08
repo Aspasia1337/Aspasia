@@ -53,25 +53,48 @@ Anti-cheat engines like VAC continuously scan game processes for indicators of u
 
 \subsection*{Thread Local Storage (TLS) Callbacks}
 
-A key detection mechanism involves the use of \textbf{Thread Local Storage (TLS) callbacks}. These are special functions embedded within a module that the operating system automatically calls when new threads are created or when the module is loaded.
+A key detection mechanism involves the use of \textbf{Thread Local Storage (TLS) callbacks}, a feature in the Windows PE (Portable Executable) format that allows developers to specify functions to be executed automatically by the system when threads are created or destroyed, or when the module is loaded or unloaded.
 
-Anti-cheats leverage TLS callbacks to:
+In the context of anti-cheat systems, TLS callbacks are strategically valuable because they are executed \textbf{before the application’s main entry point is reached}, and even \textbf{before asynchronous procedure calls (APCs)} are processed. This early execution allows anti-cheat software to inspect and validate the runtime environment at an extremely privileged stage of process initialization.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{images/tls_callback.png}
+    \caption{Windows thread initialization flow with TLS Callback highlighted.}
+    \label{fig:tls-callback-diagram}
+\end{figure}
 
 \begin{itemize}
-    \item Intercept new thread creation before normal execution begins.
-    \item Validate the thread’s start address and origin.
-    \item Detect unauthorized or suspicious memory regions used for execution.
+    \item On thread creation, the Windows loader invokes TLS callbacks \textit{within} the routine \texttt{ntdll!LdrpInitializeProcess}, giving anti-cheat DLLs a head start to perform memory integrity checks or verify thread origins.
+    \item If an injected DLL includes its own TLS callback, it may be triggered at load time—potentially revealing its presence to the anti-cheat if not properly concealed or removed.
 \end{itemize}
 
-TLS callbacks allow anti-cheats to analyze threads in a pre-execution state, giving them a privileged inspection point before any malicious logic runs.
+Figure~\ref{fig:tls-callback-diagram} illustrates the initialization sequence of a thread in Windows. The TLS callback is highlighted to show its execution point \textbf{before APC dispatch} and \textbf{long before reaching the game’s code}. This makes it a powerful mechanism for early detection of injected modules or tampered execution states.
+
+\vspace{1em}
+For cheat developers, understanding the timing of TLS execution is critical. If not disabled or manually stripped from injected DLLs, a TLS callback can inadvertently betray the presence of the cheat before it even begins executing its logic. Consequently, many modern cheats using manual mapping techniques explicitly remove the TLS directory from the PE header to avoid this detection vector.
+
 
 \subsection*{Start Address Integrity Checks}
 
 Another powerful detection primitive involves analyzing the \textbf{start address} of threads. Threads that begin execution in anonymous memory or outside known game modules are flagged as suspicious. This method is particularly effective against simple shellcode execution or poorly concealed DLL injections.
 
+
 \subsection*{VMT Hook Detection}
 
-VAC is also capable of detecting alterations to \textbf{virtual method tables (VMTs)}—a common technique used to hook class methods in game engines. Since many game objects rely on virtual functions, modifying their method tables can grant cheats substantial control. However, such changes are detectable through pattern analysis and memory integrity checks. As a result, some developers have reverted to using regular function detours to avoid detection.
+Valve Anti-Cheat (VAC) is capable of detecting manipulations to \textbf{virtual method tables (VMTs)}—a powerful technique commonly used by cheats to hijack the behavior of in-game objects. In object-oriented game engines, many entities expose functionality through virtual methods. By modifying the VMT of such an object, a cheat can effectively redirect calls to its own code, gaining precise control over rendering, physics, and logic routines.
+
+However, VMT hooking leaves detectable traces in memory. Since VMTs are stored in writable memory regions and follow well-defined structural patterns, VAC can perform \textbf{pattern recognition} and \textbf{integrity verification} to identify tampering. This includes checking whether VMT pointers still reference legitimate memory ranges, or if the functions they point to fall outside of expected modules.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/vmthooking.png}
+    \caption{Illustration of Virtual Method Table (VMT) Hooking. Function A is redirected to a custom implementation by modifying the object's VMT.}
+    \label{fig:vmt-hooking-diagram}
+\end{figure}
+
+To evade detection, some cheats attempt to clone the original VMT, apply hooks to the clone, and then swap the object’s VMT pointer. Others periodically restore and reapply the hook depending on the scan timing. In more recent developments, some developers have abandoned VMT hooking altogether in favor of inline detours or Return-Oriented Programming (ROP) chains, which are harder to attribute to specific objects.
+
 
 \section{Evasion Techniques Used by Cheats}
 
