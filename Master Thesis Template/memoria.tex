@@ -93,6 +93,58 @@
     sensitive=true
 }
 
+\lstdefinestyle{asmstyle}{
+    language={[x86masm]Assembler},
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\lst@ifdisplaystyle\small\else\footnotesize\fi,
+    keywordstyle=\color{azulUC3M}\bfseries,
+    commentstyle=\color{commentcolor}\itshape,
+    stringstyle=\color{stringcolor},
+    numberstyle=\color{numbercolor}\scriptsize,
+    numbers=left,
+    stepnumber=1,
+    numbersep=10pt,
+    frame=single,
+    rulecolor=\color{framegray},
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    showstringspaces=false,
+    keepspaces=true,
+    tabsize=4,
+    columns=fullflexible,
+    upquote=true,
+    aboveskip=1em,
+    belowskip=1em,
+    xleftmargin=15pt,
+    xrightmargin=15pt,
+    xrightmargin=15pt,
+    morekeywords={
+        mov, push, pop, sub, add, jmp, call, ret, lea,
+        xor, or, and, cmp, test, nop, jz, jnz, je, jne,
+        jg, jl, jge, jle, inc, dec, shr, shl, sar, sal,
+        int, leave, enter, db, dw, dd, dq, ptr
+    },
+    literate={
+        {*}{{\textcolor{operatorcolor}{\texttt{*}}}}1
+        {+}{{\textcolor{operatorcolor}{\texttt{+}}}}1
+        {-}{{\textcolor{operatorcolor}{\texttt{-}}}}1
+        {/}{{\textcolor{operatorcolor}{\texttt{/}}}}1
+        {= }{{\textcolor{operatorcolor}{\texttt{= }}}}1
+        {<}{{\textcolor{operatorcolor}{\texttt{<}}}}1
+        {>}{{\textcolor{operatorcolor}{\texttt{>}}}}1
+        {[}{{\textcolor{operatorcolor}{[}}}1
+        {]}{{\textcolor{operatorcolor}{]}}}1
+        {(}{{\textcolor{operatorcolor}{(}}}1
+        {)}{{\textcolor{operatorcolor}{)}}}1
+        {,}{{\textcolor{operatorcolor}{,}}}1
+        {:}{{\textcolor{operatorcolor}{:}}}1
+    },
+    sensitive=true
+}
+
+
+
 %------------------ Figures and Tables ------------------
 \usepackage{graphicx}
 \graphicspath{{imagenes/}}
