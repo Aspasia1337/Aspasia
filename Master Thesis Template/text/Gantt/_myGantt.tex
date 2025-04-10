@@ -1,0 +1,66 @@
+\chapter*{Project Timeline (Gantt Chart)}
+\addcontentsline{toc}{chapter}{Project Timeline (Gantt Chart)}
+\markboth{Project Timeline (Gantt Chart)}{}
+
+\begin{landscape}
+  \scriptsize
+  \vspace*{-3.3cm}
+  \hspace*{-2.35cm}
+  \begin{ganttchart}[
+    x unit=0.135cm,
+    y unit title=0.83cm,
+    y unit chart=0.83cm,
+    time slot format=isodate-yearmonth,
+    vgrid,
+    title/.append style={draw=none, fill=titlepurple},
+    title label font=\sffamily\bfseries\color{white},
+    title label node/.append style={below=-1.6ex},
+    title height=1,
+    bar/.append style={draw=none, fill=barpurple},
+    bar height=0.55,
+    bar label font=\scriptsize\color{black!85},
+    bar incomplete/.append style={fill=barprogress},
+    group/.append style={fill=groupviolet!80},
+    group incomplete/.append style={fill=groupviolet!50},
+    group right shift=0,
+    group top shift=.5,
+    group height=.25,
+    group peaks height=.15,
+  ]{2025-01}{2025-06-30}  
+  
+\gantttitlecalendar{month=shortname} \\
+
+% --- Investigación ---
+\ganttgroup{Initial Research}{2025-01}{2025-02} \\
+\ganttbar{Cheat ecosystem overview}{2025-01}{2025-02} \\
+\ganttbar{Injection methods \& loaders}{2025-01}{2025-01-20} \\
+\ganttbar{Forum analysis (UC, GH)}{2025-01}{2025-02} \\
+
+% --- Reversing ---
+\ganttgroup{Reversing \& Recon}{2025-01}{2025-04} \\
+\ganttbar{Client.dll reversing}{2025-01}{2025-03} \\
+\ganttbar{Entity list \& offsets}{2025-02}{2025-02-18} \\
+\ganttbar{Netvars + engine classes}{2025-02}{2025-04} \\
+\ganttbar{Hook points + VMT tracing}{2025-03}{2025-03} \\
+\ganttbar{Advanced pattern scanning}{2025-03}{2025-04} \\
+
+% --- Desarrollo Cheat ---
+\ganttgroup{Cheat Development}{2025-03}{2025-06} \\
+\ganttbar{Hooking engine functions}{2025-03}{2025-04} \\
+\ganttbar{Chams v1 (basic)}{2025-04}{2025-04-12} \\
+\ganttbar{Aimbot core development}{2025-04}{2025-05} \\
+\ganttbar{Aimbot refinement + smoothing}{2025-05}{2025-06} \\
+\ganttbar{Chams rework (invisibility, walls)}{2025-05}{2025-06} \\
+\ganttbar{Menu, config system, UX polish}{2025-05}{2025-05} \\
+
+% --- Testing & Evasion ---
+\ganttgroup{Evasion \& Testing}{2025-05}{2025-06} \\
+\ganttbar{VAC behavior testing}{2025-05}{2025-06} \\
+\ganttbar{Packing / renaming / stub tweaks}{2025-06}{2025-06} \\
+
+% --- Tesis ---
+\ganttgroup{Thesis Writing}{2025-04}{2025-06} \\
+\ganttbar{Figures \& diagrams (Gantt, graphs)}{2025-05}{2025-06} \\
+
+\end{ganttchart}
+\end{landscape}

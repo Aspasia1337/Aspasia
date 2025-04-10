@@ -6,10 +6,37 @@
 \usepackage{sectsty}
 \allsectionsfont{\sffamily} 
 
+%---------- Landscape for Gantt ------------%
+
+\usepackage{pdflscape}
+
+
 %------------------ Language ------------------
 \usepackage[english]{babel} 
 \usepackage[babel, english=american]{csquotes}
 \AtBeginEnvironment{quote}{\small}
+
+%------------------ Gantt ------------------
+
+\usepackage{pgfgantt}
+
+\definecolor{barblue}{RGB}{102,153,204}
+\definecolor{barprogress}{RGB}{153,204,255}
+\newlength{\myxunit}
+\setlength{\myxunit}{0.6cm}
+\def\mystartdate{2022-3-1}
+\def\myenddate{2023-5-15}
+
+
+\definecolor{barpurple}{RGB}{120, 81, 169}      
+\definecolor{barprogress}{RGB}{177, 156, 217}   
+\definecolor{groupviolet}{RGB}{102, 0, 204}      
+\definecolor{titlepurple}{RGB}{80, 35, 115}      
+
+
+\definecolor{barblue}{RGB}{153,204,254}
+\definecolor{groupblue}{RGB}{51,102,254}
+\definecolor{linkred}{RGB}{165,0,33} 
 
 %------------------ Geometry ------------------
 \usepackage[a4paper, vmargin=2.5cm, hmargin=3cm]{geometry}
@@ -254,6 +281,10 @@
 
 \pagestyle{plain}
 
+
+
+%------------------        -----------------
+
 \begin{document}
 \begin{titlepage}
 	\begin{sffamily}
@@ -337,6 +368,9 @@ This thesis examines the evolution of cheating in video games, from early debugg
 \thispagestyle{empty}
 \mbox{}
 
+
+
+
 %----------
 %	THESIS CONTENT
 %----------
@@ -351,6 +385,8 @@ This thesis examines the evolution of cheating in video games, from early debugg
 \input{text/ch4.tex}
 \input{text/ch5.tex}
 \input{text/ch6.tex}
+
+\input{text/Gantt/_myGantt.tex}
 
 
 
