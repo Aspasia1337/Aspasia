@@ -1,0 +1,107 @@
+\chapter{Function Hooking and Trampoline-Based Interception}
+
+\section*{Overview}
+
+At the core of our cheat framework lies a fundamental technique: function hooking. This allows us to intercept calls to internal game functions, modify their behavior, and optionally resume execution without breaking the application flow. The most stable and undetectable method used is known as the \textbf{trampoline hook}.
+
+Trampoline hooking provides a powerful and safe way to redirect execution to custom payloads while preserving the original function's behavior. In this chapter, we explain what trampoline hooks are, how they work under the hood, and how we implement them using the \texttt{MinHook} library.
+
+\section{What is a Trampoline Hook?}
+
+A trampoline hook works by modifying the beginning of a target function to insert a jump to a custom handler (our hook function). Since this overwrites a few bytes of the original function, we first save these instructions into a new piece of memory—the \textit{trampoline}. After our hook executes, we call this trampoline to resume normal function execution.
+
+The full process consists of four main steps:
+
+\begin{enumerate}
+  \item \textbf{Original Function (Hooked)} – We patch the first few bytes with a jump to our relay.
+  \item \textbf{Relay Function} – Transfers control to our actual hook payload.
+  \item \textbf{Hook Payload} – Performs cheat logic and calls the trampoline.
+  \item \textbf{Trampoline} – Executes the original instructions that were overwritten, then jumps back to the original function.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/trampolinehook.png}
+  \caption{Flow of execution in a trampoline hook setup.}
+\end{figure}
+
+\section{Reverse Engineering and Function Discovery}
+
+Before hooking any functions, we must first identify which functions within the game are responsible for the behaviors we want to manipulate. To do this, we reverse engineered several of the game's dynamic link libraries (DLLs). The most useful among them was \texttt{client.dll}, as it contains the majority of the code executed on the client-side rather than the server.
+
+Once interesting functions were identified by name and behavior—often using reverse engineering tools such as IDA Pro or Ghidra—we obtained their function signatures and analyzed how they operated.
+
+To ensure our hook could find the same function across different executions (even when Address Space Layout Randomization, or ASLR, shifts their locations), we extracted a unique byte pattern, or \textbf{signature}, from each target function. This sequence of bytes acts as a fingerprint that we can use to scan memory for that function at runtime.
+
+The injected DLL uses these patterns to locate the functions dynamically every time the game starts. Once found, our hooking mechanism is deployed.
+
+\section{Why Trampoline Hooks Are Effective}
+
+Trampoline hooks have a major advantage over inline or detour hooks: they preserve the original control flow and return address. This means:
+
+\begin{itemize}
+  \item The original function executes normally after our payload.
+  \item Return address checks performed by anti-cheat systems (like VAC) are bypassed, since the call stack and return address remain consistent with expected behavior.
+  \item We do not inject code into unfamiliar memory regions, reducing detection surface.
+\end{itemize}
+
+\section{Implementing Hooks with MinHook}
+
+To hook functions safely and efficiently, we use \textbf{MinHook}, a lightweight and open-source x86/x64 API hooking library for Windows.
+
+Before installing the hook, we first define the structure of the original function inside a dedicated class. This class also contains the trampoline pointer and our custom hook implementation. For example:
+
+\begin{lstlisting}[style=cppstyle]
+class WorldModulation {
+private:
+    static ByteColor ColorCache;
+
+public:
+    typedef void* (__fastcall* ModulateWorldColorFn)(CAggregateSceneObjectWorld*, void*);
+    static ModulateWorldColorFn oModulateWorldColor;
+    static void* __fastcall hModulateWorldColor(CAggregateSceneObjectWorld* pAggregateSceneObject, void* a2);
+};
+
+WorldModulation m_WorldModulation;
+\end{lstlisting}
+
+This setup provides a clean and organized structure where:
+\begin{itemize}
+  \item We define the function type via a typedef.
+  \item We store a pointer to the original (trampoline) function.
+  \item We implement our custom hook logic inside a static method.
+\end{itemize}
+
+Then we proceed with the actual installation using MinHook:
+
+\begin{lstlisting}[style=cppstyle]
+void* __fastcall WorldModulation::hModulateWorldColor(CAggregateSceneObjectWorld* pWorld, void* a2) {
+    ByteColor Color = Visual::ToByteColor(Globals::worldModulationColor);
+
+    if (Globals::worldModulation && Color != ColorCache) {
+        for (int i = 0; i < pWorld->count; i++) {
+            auto& obj = pWorld->array[i];
+            obj.r = Color.r;
+            obj.g = Color.g;
+            obj.b = Color.b;
+        }
+        ColorCache = Color;
+    }
+
+    return oModulateWorldColor(pWorld, a2); // Call trampoline
+}
+
+void InitHook() {
+    MH_Initialize();
+    MH_CreateHook((LPVOID)TargetAddress, &WorldModulation::hModulateWorldColor, (LPVOID*)&WorldModulation::oModulateWorldColor);
+    MH_EnableHook((LPVOID)TargetAddress);
+}
+\end{lstlisting}
+
+\section{Conclusion}
+
+Trampoline hooking provides a stable and stealthy way to manipulate game logic without crashing the game or alerting anti-cheat systems. By preserving the return address and execution flow, it forms the backbone of our entire cheat architecture.
+
+The process begins with reverse engineering target DLLs—most notably \texttt{client.dll}—to locate and understand the relevant functions. Then, byte-level patterns are extracted to scan and identify those functions reliably at runtime, enabling us to inject hooks safely and consistently. Finally, MinHook allows us to deploy trampoline hooks with minimal footprint, organized in clearly defined classes for maintainability.
+
+In the next chapter, we will explore how to discover and select appropriate functions to hook, particularly those related to rendering, game logic, and player state.

@@ -47,6 +47,13 @@ Manual Mapping is highly effective because:
 
 Due to its stealth and flexibility, Manual Mapping is considered the most robust and professional method in the current landscape of cheat development.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/diagram_white_background.png}
+    \caption{Abstracted flowchart of dynamic module injection.}
+    \label{fig:manual_mapping_flow}
+\end{figure}
+
 \section{Detection Techniques in Anti-Cheat Systems}
 
 Anti-cheat engines like VAC continuously scan game processes for indicators of unauthorized code. Their goal is to identify abnormal memory allocations, illegitimate execution paths, or manipulation of trusted system routines.
@@ -116,14 +123,15 @@ One method to bypass TLS-based detection is to remove or disable the TLS callbac
 To further mask execution, cheats employ \textbf{return address spoofing}, which fakes the origin of a function call. By placing a plausible return address on the stack, the cheat deceives anti-cheats into believing that execution flow originated from a legitimate module.
 
 
-
 \subsection*{Start Address Redirection via ROP Gadgets}
 
-A sophisticated method employed by cheat developers to circumvent return address validation is through the use of \textbf{ROP (Return-Oriented Programming) gadgets}. These are short instruction sequences that already reside in memory regions of trusted modules—such as the game binary or linked system libraries—and typically end in control transfer instructions like \texttt{ret}, \texttt{jmp reg}, or similar.
+One advanced technique used by cheat developers to bypass anti-cheat protections is through the use of \textbf{ROP (Return-Oriented Programming) gadgets}. To understand this, think of ROP gadgets as tiny, pre-existing snippets of code—just a few instructions long—that already live in trusted software modules, like the game executable or system libraries. These snippets typically end with an instruction that passes control to another location, such as \texttt{ret} (return from function) or \texttt{jmp reg} (jump to the address in a register).
 
-Instead of making a direct call to untrusted or injected code (which would be easily detected through stack tracing), the cheat sets up a \emph{call stub} that emulates a legitimate function call. This stub pushes a spoofed return address onto the stack—pointing to a trusted gadget—and then jumps to the target function. The result is an execution flow that appears legitimate during runtime analysis, effectively evading static return address checks commonly used by anti-cheat solutions like Valve Anti-Cheat (VAC).
+Instead of calling malicious code directly—which would be easy for an anti-cheat system to detect—cheats can build a fake function call using these gadgets. This involves creating a small code section called a \emph{call stub} that fakes a legitimate function return. This stub pushes a \emph{spoofed return address} onto the stack (pointing to one of the trusted gadgets) and then jumps to the real payload. From the outside, the resulting execution path looks normal, making it hard to detect through common anti-cheat techniques like return address validation or call stack inspection. This is particularly effective against Valve's anti-cheat engine (VAC), which performs such checks.
 
-\paragraph{Stack Alignment and Shadow Space.} To maintain runtime stability and comply with Windows x64 calling conventions, the stub must properly align the stack and allocate shadow space (32 bytes) for callees. A minimal x64 stub might resemble the following:
+\paragraph{Stack Alignment and Shadow Space.}  
+In 64-bit Windows environments, function calls must follow strict rules. One of these rules involves aligning the stack pointer and reserving 32 bytes of temporary space for the called function (called \textit{shadow space}). The cheat's call stub must respect these rules to avoid crashing or triggering red flags. Here is an example of a minimal x64 stub:
+
 \begin{lstlisting}[style=asmstyle]
 sub rsp, 0x28               ; align stack and reserve shadow space
 mov rax, 0xFFAAFFAAFFAAFFAA ; spoofed return address (ROP gadget)
@@ -132,44 +140,48 @@ mov rax, 0xFFAAFFAAFFAAFFAA ; actual target function
 jmp rax
 \end{lstlisting}
 
-\paragraph{Gadget Selection.} 
+This stub ensures that when the function is done, the processor returns to a safe-looking address (the gadget), not to suspicious or injected code.
 
-A ROP gadget is typically a short instruction sequence ending in a control-transfer instruction, like \texttt{ret} or \texttt{jmp reg}. These gadgets already exist within the code section of loaded modules (usually the \texttt{.text} section), making them ideal for stealth execution. Rather than injecting new code, the attacker reuses these sequences to craft a control flow that appears legitimate.
+\paragraph{What Makes a Good Gadget?}  
 
-Gadget discovery is usually performed via \emph{pattern scanning}, where the cheat scans memory regions of trusted modules (e.g., the game binary or system DLLs) to identify usable byte sequences. This is done by matching instruction patterns known to safely clean up the stack or transfer execution.
+A \textbf{ROP gadget} is simply a small piece of existing code that ends in a control-transfer instruction, usually found inside legitimate modules. Because these are already loaded into memory, using them avoids detection that would arise from injecting new code.
 
-The goal is to find gadgets that:
+Cheats locate these gadgets by \textbf{pattern scanning}—searching memory for specific byte patterns that represent useful instruction sequences. The goal is to find gadgets that:
 \begin{itemize}
-    \item Correct the stack pointer (\texttt{rsp} or \texttt{esp}) to undo shadow space or argument pushes.
-    \item Preserve or restore registers, avoiding clobbering values needed by the callee.
-    \item Cleanly return to the next address on the stack (spoofed or legitimate).
+    \item Adjust the stack pointer correctly, e.g., to undo the shadow space allocation.
+    \item Avoid modifying important CPU registers used by the function being called.
+    \item Provide a clean and believable return path for the processor to follow.
 \end{itemize}
 
-Below are common x64 gadget patterns that fulfill these requirements:
+Here are examples of commonly used gadget patterns and what they do:
+
 \begin{lstlisting}[style=asmstyle]
 add rsp, 0x28
 ret
 \end{lstlisting}
-This gadget restores the stack pointer by skipping over the shadow space (32 bytes), then returns. It's ideal for restoring alignment after a spoofed call.
+This gadget fixes the stack after the shadow space and performs a clean return. It's ideal for spoofing legitimate execution flow.
 
 \begin{lstlisting}[style=asmstyle]
 pop rcx
 add rsp, 0x20
 ret
 \end{lstlisting}
-This variant additionally pops a register (which might be part of a cleanup routine), followed by stack adjustment and a return.
+This one pops a value into a register (e.g., an argument), adjusts the stack, and returns. It can be useful when additional cleanup or setup is needed.
 
 \begin{lstlisting}[style=asmstyle]
 add rsp, 0x20
 pop rax
 jmp rax
 \end{lstlisting}
-Instead of returning, this gadget transfers control directly to an address stored in \texttt{rax}. It's often used as a trampoline when returning via \texttt{ret} is too risky or when control needs to flow to shellcode.
+Instead of returning, this gadget jumps directly to a target address stored in \texttt{rax}. It serves as a \emph{trampoline}—a way to continue execution without relying on a normal return, which can be risky in some setups.
 
-These gadgets are typically located by scanning for their machine code representations (byte signatures) in memory. Once identified, they are hardcoded or dynamically resolved at runtime, depending on the injection strategy.
+These gadgets are either hardcoded into the cheat (if their locations are known ahead of time) or dynamically found at runtime based on memory analysis.
 
+\paragraph{x86 Considerations.}  
+On 32-bit (x86) systems, this technique becomes trickier due to the different calling conventions in use—such as \texttt{\_cdecl}, \texttt{\_thiscall}, or \texttt{\_fastcall}. Each defines how arguments are passed and who is responsible for cleaning up the stack.
 
-\paragraph{x86 Considerations.} On x86 systems, spoofing becomes more nuanced due to the variety of calling conventions in use \texttt{\_cdecl}, \texttt{\_thiscall}, and \texttt{\_fastcall}, among others. Each convention has its own argument-passing semantics and stack cleanup behavior. Below is an example of a stub for a \texttt{\_thiscall} function:
+Below is a stub tailored for a \texttt{\_thiscall} function, which is commonly used for C++ member functions on Windows:
+
 \begin{lstlisting}[style=asmstyle]
 sub esp, 0x0C
 mov eax, 0xFFAAFFAA        ; spoofed return address
@@ -182,7 +194,7 @@ mov eax, 0xFFAAFFAA        ; actual target function
 jmp eax
 \end{lstlisting}
 
-Here, the return address is spoofed and the arguments are manually arranged on the stack to match the callee's expected layout.
+In this example, the return address is placed at the top of the stack, and the arguments are manually positioned to match what the target function expects. This careful setup ensures the cheat integrates smoothly into the normal execution flow, even under the scrutiny of stack-based detection mechanisms.
 
 \paragraph{Detection Vectors.} Although this technique can bypass static stack validation, it is not impervious to detection. Anti-cheat engines can perform \textbf{stack walking}—analyzing the call stack at runtime—to identify anomalies such as unexpected return addresses or invalid module references. To counteract this, some cheats implement post-call cleanup via chained gadgets or trampolines that restore a believable call chain before returning.
 
@@ -230,3 +242,5 @@ These techniques are essential for achieving long-term undetectability in highly
 
 
 DLL injection remains the foundation of modern cheat development in competitive games. Techniques such as Manual Mapping offer powerful stealth capabilities, enabling deep integration with the game runtime. However, anti-cheat systems like VAC employ increasingly sophisticated detection methods, including TLS callbacks, memory integrity scanning, VMT hook detection, and behavioral analysis.
+
+
