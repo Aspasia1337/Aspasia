@@ -2,48 +2,51 @@
 
 \section*{Overview}
 
-At the core of our cheat framework lies a fundamental technique: function hooking. This allows us to intercept calls to internal game functions, modify their behavior, and optionally resume execution without breaking the application flow. The most stable and undetectable method used is known as the \textbf{trampoline hook}.
+At the heart of our cheat framework lies a fundamental and widely-used technique: \textbf{function hooking}. This mechanism allows us to intercept and manipulate internal function calls within the game, modify their behavior, and seamlessly resume execution without disrupting the application’s control flow. Among the various hooking strategies available, the most stable and stealthy is the \textbf{trampoline hook}.
 
-Trampoline hooking provides a powerful and safe way to redirect execution to custom payloads while preserving the original function's behavior. In this chapter, we explain what trampoline hooks are, how they work under the hood, and how we implement them using the \texttt{MinHook} library.
+Trampoline hooking offers a reliable and elegant solution for redirecting code execution to custom payloads while preserving the original function’s logic. In this chapter, we present an in-depth explanation of trampoline hooks—how they work, why they are effective, and how they can be implemented safely using the \texttt{MinHook} library.
 
 \section{What is a Trampoline Hook?}
 
-A trampoline hook works by modifying the beginning of a target function to insert a jump to a custom handler (our hook function). Since this overwrites a few bytes of the original function, we first save these instructions into a new piece of memory—the \textit{trampoline}. After our hook executes, we call this trampoline to resume normal function execution.
+A trampoline hook works by overwriting the beginning of a target function with a jump (typically a near relative JMP or absolute indirect jump) to a custom handler—our hook payload. Since this patch modifies the first few bytes of the original function, those instructions must first be preserved to avoid corrupting the original behavior. We do this by copying them to a new, executable memory region known as the \textit{trampoline}.
 
-The full process consists of four main steps:
+Once our custom payload has executed, control is passed to the trampoline, which executes the preserved instructions and then jumps back to the original function, resuming execution as if nothing had changed.
+
+This redirection process involves the following four components:
 
 \begin{enumerate}
-  \item \textbf{Original Function (Hooked)} – We patch the first few bytes with a jump to our relay.
-  \item \textbf{Relay Function} – Transfers control to our actual hook payload.
-  \item \textbf{Hook Payload} – Performs cheat logic and calls the trampoline.
-  \item \textbf{Trampoline} – Executes the original instructions that were overwritten, then jumps back to the original function.
+  \item \textbf{Original (Hooked) Function} – The function entry point is patched to redirect execution to the relay function.
+  \item \textbf{Relay Function} – A lightweight jump stub that forwards execution to the hook payload using a 64-bit jump (on x64).
+  \item \textbf{Hook Payload} – Executes custom logic (e.g., cheat functionality), then invokes the trampoline.
+  \item \textbf{Trampoline} – Contains the original stolen instructions and ends with a jump back into the body of the original function.
 \end{enumerate}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/trampolinehook.png}
-  \caption{Flow of execution in a trampoline hook setup.}
+  \includegraphics[width=0.55\textwidth]{images/TrampolineFinal.png}
+  \caption{Control flow in a trampoline hook setup.}
 \end{figure}
 
 \section{Reverse Engineering and Function Discovery}
 
-Before hooking any functions, we must first identify which functions within the game are responsible for the behaviors we want to manipulate. To do this, we reverse engineered several of the game's dynamic link libraries (DLLs). The most useful among them was \texttt{client.dll}, as it contains the majority of the code executed on the client-side rather than the server.
+Before hooking any function, it is essential to identify the ones responsible for the behaviors we intend to alter. This process involves reverse engineering the game’s dynamic libraries—most notably \texttt{client.dll}, which houses the majority of client-side logic.
 
-Once interesting functions were identified by name and behavior—often using reverse engineering tools such as IDA Pro or Ghidra—we obtained their function signatures and analyzed how they operated.
+Using reverse engineering tools such as \textit{IDA Pro}, \textit{Ghidra}, or \textit{x64dbg}, we analyzed exported symbols, disassembled code, and examined runtime behavior to identify functions of interest. Once located, we extracted their byte-level signatures to ensure our hooks could locate the same functions across multiple game sessions.
 
-To ensure our hook could find the same function across different executions (even when Address Space Layout Randomization, or ASLR, shifts their locations), we extracted a unique byte pattern, or \textbf{signature}, from each target function. This sequence of bytes acts as a fingerprint that we can use to scan memory for that function at runtime.
-
-The injected DLL uses these patterns to locate the functions dynamically every time the game starts. Once found, our hooking mechanism is deployed.
+To account for memory layout randomization introduced by ASLR (Address Space Layout Randomization), we used these byte patterns as unique \textbf{signatures}—compact sequences of bytes that uniquely identify the beginning of a function. Our injected DLL scans process memory at runtime to locate these signatures and dynamically apply the hook in each session.
 
 \section{Why Trampoline Hooks Are Effective}
 
-Trampoline hooks have a major advantage over inline or detour hooks: they preserve the original control flow and return address. This means:
+Trampoline hooks are particularly effective for real-time game manipulation and evasion of anti-cheat mechanisms due to several key benefits:
 
 \begin{itemize}
-  \item The original function executes normally after our payload.
-  \item Return address checks performed by anti-cheat systems (like VAC) are bypassed, since the call stack and return address remain consistent with expected behavior.
-  \item We do not inject code into unfamiliar memory regions, reducing detection surface.
+  \item They preserve the original control flow, allowing the application to behave as expected after executing the custom payload.
+  \item Return address and call stack integrity is maintained, which helps evade return address validation techniques used by anti-cheat engines such as VAC.
+  \item No shellcode or foreign code is injected into unfamiliar memory regions, which significantly reduces the risk of detection by memory scanners or heuristic analysis tools.
 \end{itemize}
+
+In summary, trampoline hooking strikes a balance between flexibility, stability, and stealth—making it the preferred method in both benign instrumentation tools and game hacking frameworks.
+
 
 \section{Implementing Hooks with MinHook}
 
