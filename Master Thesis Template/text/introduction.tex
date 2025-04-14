@@ -1,79 +1,75 @@
 \chapter{Introduction}
 
-\section{Context and Motivation}
-The evolution of video games from a niche entertainment medium to a dominant digital industry has led to the rise of \textbf{competitive gaming}, where players engage in skill-based challenges to outperform their opponents. The widespread availability of high-speed internet and global connectivity has further transformed online multiplayer games into structured \textbf{competitive ecosystems}, characterized by rankings, tournaments, and financial incentives that continuously drive players to refine their strategies and skills.
+\section*{Context and Motivation}
 
-Today, video games are an integral part of millions of lives worldwide, serving not only as entertainment but also as social platforms, economic engines, and professional career paths. However, the increasing competitiveness and monetization of gaming have also fueled the prevalence of \textbf{cheating}, where players exploit unauthorized modifications to gain an unfair advantage. These methods range from memory manipulation and external assistance tools to network-based exploits and hardware modifications. The ongoing \textbf{arms race} between game developers—who continuously strengthen anti-cheat mechanisms—and cheat developers—who evolve their techniques to bypass these defenses—has made cheating one of the most pressing challenges in modern gaming.
+The transformation of video games from a niche hobby to a dominant force in the entertainment industry has fundamentally reshaped how individuals interact, compete, and even build careers. In this new era of \textbf{competitive gaming}, players engage in high-stakes environments that reward precision, strategy, and reflexes. Fueled by global connectivity and high-speed internet, online multiplayer games have evolved into structured \textbf{competitive ecosystems}—complete with rankings, seasonal events, and financial incentives—that mirror traditional sports in both scope and intensity.
 
-At the same time, the implementation of anti-cheat systems introduces significant \textbf{privacy, legal, and environmental dilemmas}. Advanced detection methods often require deep system access, raising concerns over user privacy and digital rights. Meanwhile, the large-scale commercialization of cheats results in substantial financial losses for game developers and complex regulatory challenges. Additionally, the computational cost of sophisticated anti-cheat solutions contributes to increased energy consumption, raising further environmental concerns.
+Video games now serve not only as entertainment, but also as \textbf{social platforms, economic drivers, and professional arenas}. Yet, this rapid evolution has also given rise to a persistent and multifaceted threat: \textbf{cheating}. By leveraging unauthorized software modifications, players seek unfair advantages that distort the competitive balance. These exploits range from memory manipulation and external assistance tools to hardware-based hacks and network-level abuses. The resulting \textbf{arms race} between developers—who continually enhance anti-cheat mechanisms—and cheat creators—who innovate to bypass them—has become one of the most dynamic and technically challenging conflicts in the digital age.
 
-To go beyond theoretical discussions and ethical concerns, this research will delve into the \textbf{technical intricacies of cheating} by implementing and analyzing a custom-built cheat within a large-scale multiplayer game. This approach will allow for an in-depth evaluation of modern anti-cheat systems, providing empirical insights into their strengths, weaknesses, and potential bypasses.
+Furthermore, the deployment of modern anti-cheat systems introduces complex \textbf{privacy, legal, and environmental concerns}. Effective cheat detection often requires invasive system-level access, raising red flags regarding user privacy and digital rights. Simultaneously, the commercialization of cheating software generates substantial financial losses for developers and presents regulatory challenges on a global scale. Additionally, the increased computational demand of sophisticated detection systems contributes to a growing environmental footprint.
 
-By combining historical analysis, technical research, and practical implementation, this study aims to offer a comprehensive understanding of cheating in competitive gaming. A case study in a large-scale multiplayer game will serve as the foundation for assessing the effectiveness of contemporary anti-cheat measures and their broader societal impact.
+To move beyond theoretical discourse, this thesis adopts a hands-on approach: the implementation and analysis of a custom-built cheat in a large-scale multiplayer game. This methodology enables a detailed examination of anti-cheat technologies from a practical perspective, offering empirical insights into their design, effectiveness, and limitations.
 
+By combining historical context, technical exploration, and real-world experimentation, this research aims to contribute a comprehensive understanding of cheating in competitive gaming—its motivations, its mechanisms, and its broader societal implications.
 
-\section{Objectives and Scope}
+\section*{Objectives and Scope}
 
-This study aims to analyze cheating in competitive video games from both a theoretical and practical perspective. It will explore its historical evolution, technical mechanisms, and countermeasures, while also assessing the effectiveness of modern anti-cheat systems through hands-on experimentation.
+This study seeks to investigate cheating in competitive video games through both theoretical analysis and practical experimentation. The research is structured around three main objectives:
 
-To achieve this, the research will focus on three key areas:
 \begin{enumerate}
-    \item \textbf{The evolution of cheating in competitive gaming}, examining its impact on game design, player behavior, and industry responses.
+    \item \textbf{To examine the historical evolution of cheating in gaming}, analyzing its impact on game design, player behavior, and industry responses.
     
-    \item \textbf{A technical analysis of prevalent cheating techniques}, including aimbots, wallhacks, network manipulation, and memory injection, alongside their implications for competitive integrity.
+    \item \textbf{To provide a technical breakdown of common cheating techniques}, such as aimbots, wallhacks, memory injection, and network manipulation, along with their consequences for competitive fairness.
     
-    \item \textbf{The implementation and evaluation of a custom cheat in a large-scale multiplayer game}, providing empirical insights into the strengths and weaknesses of current anti-cheat solutions.
+    \item \textbf{To implement and evaluate a custom cheat in a contemporary multiplayer game}, assessing the robustness of current anti-cheat technologies through empirical testing and reverse engineering.
 \end{enumerate}
 
+\section*{Competencies and Alignment with the Master's Program}
 
-\section{Competencies and Alignment with the Master's Program}
-
-This thesis aligns with the core competencies of the \textbf{Master’s Degree in Cybersecurity}, equipping professionals with essential skills in \textbf{reverse engineering, intrusion analysis, and digital forensic investigation}. The key competencies developed in this study are:
+This thesis is closely aligned with the core competencies of the \textbf{Master’s Degree in Cybersecurity}, particularly in areas such as \textbf{reverse engineering, intrusion analysis, and digital forensics}. Through this work, the following competencies will be developed and demonstrated:
 
 \noindent\textbf{Basic Competencies}
 \begin{itemize}
-    \item \textbf{[CB6]} Conducting original research on competitive gaming security, analyzing cheating techniques and countermeasures.
-    \item \textbf{[CB7]} Applying cybersecurity principles to game security, focusing on \textbf{cheat development, detection, and evasion}.
-    \item \textbf{[CB8]} Evaluating the ethical and legal considerations of game manipulation, with implications for software security and fair competition.
+    \item \textbf{[CB6]} Conduct original research into the security challenges of competitive gaming, with a focus on cheating and countermeasures.
+    \item \textbf{[CB7]} Apply cybersecurity methodologies to the domain of game security, including the development, detection, and evasion of cheats.
+    \item \textbf{[CB8]} Critically assess the legal and ethical implications of game manipulation and unauthorized software modifications.
 \end{itemize}
 
 \noindent\textbf{General Competencies}
 \begin{itemize}
-    \item \textbf{[CG1]} Investigating and replicating game manipulation techniques to assess vulnerabilities in competitive gaming environments.
-    \item \textbf{[CG2]} Examining the role of anti-cheat systems in detecting unauthorized modifications and analyzing their effectiveness.
-    \item \textbf{[CG3]} Producing well-documented research on offensive security methodologies, including memory hacking and system intrusion.
-\end{itemize}
-
-\noindent\textbf{Specific Competencies}
-\begin{itemize}
-    \item \textbf{[CE1]} Analyzing the psychological motivations behind cheating in competitive gaming.
-    \item \textbf{[CE2]} Investigating modern cheat evasion techniques and their ability to bypass detection.
-    \item \textbf{[CE3]} Researching trends in game security threats and drawing parallels to broader cybersecurity challenges.
-    \item \textbf{[CE4]} Conducting forensic analysis of game environments to extract digital evidence of unauthorized modifications.
-    \item \textbf{[CE6]} Assessing the architecture and performance of modern anti-cheat systems, evaluating their strengths and weaknesses.
+    \item \textbf{[CG1]} Investigate and replicate real-world intrusion techniques to understand vulnerabilities in game environments.
+    \item \textbf{[CG2]} Analyze the architecture and operation of anti-cheat systems in order to evaluate their efficacy and limitations.
+    \item \textbf{[CG3]} Produce high-quality technical documentation covering offensive security techniques and their forensic analysis.
 \end{itemize}
 
 \newpage
 
+\noindent\textbf{Specific Competencies}
+\begin{itemize}
+    \item \textbf{[CE1]} Understand the psychological and social drivers behind cheating in competitive settings.
+    \item \textbf{[CE2]} Explore advanced cheat evasion strategies and their implications for detection.
+    \item \textbf{[CE3]} Track trends in game security threats and relate them to broader challenges in cybersecurity.
+    \item \textbf{[CE4]} Perform forensic examinations of game processes and memory to detect unauthorized interventions.
+    \item \textbf{[CE6]} Assess the internal workings and performance trade-offs of modern anti-cheat technologies.
+\end{itemize}
 
-\section{Document Structure}
 
-This thesis is structured as follows:
+\section*{Document Structure}
+
+This thesis is organized as follows:
 
 \begin{itemize}
-    \item \textbf{Chapter 1: Introduction} – Provides the research context, outlining the motivation for the study, its main objectives and scope, the competencies addressed, and the alignment with the Master’s program. It also introduces the structure of the document.
-
-    \item \textbf{Chapter 2: From Primitive Survival to Digital Domination} – Explores the human drive for competition from an evolutionary and psychological perspective. It traces the historical evolution of computation, the birth of the internet, and the emergence of online environments as new competitive arenas—culminating in the rise of online gaming as a virtual battlefield.
-
-    \item \textbf{Chapter 3: The Evolution of Cheating: From Debugging Tools to an Organized Industry} – Chronicles the origins of cheating in early game development and its evolution into a global underground economy. It explores how cheat tools emerged, adapted to online play, and became increasingly commercialized, as well as how anti-cheat systems evolved in response.
-
-    \item \textbf{Chapter 4: The Prevalence and Impact of Cheating in Online Multiplayer Games} – Evaluates the real-world effects of cheating on player experience and game ecosystems. It includes a case study on Counter-Strike 2, analyzing VAC ban data, reporting limitations, psychological and economic effects, and community perception.
-
-    \item \textbf{Chapter 5: Injection and Detection Techniques} – Provides a technical overview of how cheats inject code into game processes, and the corresponding detection and evasion techniques used. It also reviews Valve's anti-cheat technologies and their limitations.
-
-    \item \textbf{Chapter 6: Internal Game Structure: Logic Behind Counter-Strike 2} – Describes the architecture of the game engine, focusing on entity list management, memory structure, and reverse engineering techniques to understand how data is stored and manipulated internally.
-
-    \item \textbf{Chapter 7: Cheat Features Implemented in Our Cheat for CS2} – Details the development of specific cheating features, including Chams for visibility, Aimbot systems, and bone rendering for player models. It includes implementation details such as function hooking, mathematical computations, and stealth mechanisms.
-
-    \item \textbf{Bibliography} – Compiles the academic literature, technical documentation, and community-based research that informed the thesis.
+    \item \textbf{Chapter 1: Introduction} – Outlines the motivation, objectives, competencies, and structure of the study.
+    
+    \item \textbf{Chapter 2: From Primitive Survival to Digital Domination} – Investigates the human instinct for competition and its evolution into virtual arenas, tracing the technological milestones that gave rise to competitive gaming.
+    
+    \item \textbf{Chapter 3: The Evolution of Cheating: From Debugging Tools to an Organized Industry} – Explores the origins of game cheating, its progression into an underground economy, and the industry’s adaptive response via anti-cheat systems.
+    
+    \item \textbf{Chapter 4: The Prevalence and Impact of Cheating in Online Multiplayer Games} – Analyzes the consequences of cheating on game balance, player trust, and industry economics, with a focus on Counter-Strike 2 as a case study.
+    
+    \item \textbf{Chapter 5: Injection and Detection Techniques} – Provides a technical overview of code injection methods, detection strategies, and the ongoing battle between cheaters and anti-cheat developers.
+    
+    \item \textbf{Chapter 6: Internal Game Structure: Logic Behind Counter-Strike 2} – Dissects the architecture of the CS2 engine, including memory layouts, entity management, and reverse engineering methods.
+    
+    \item \textbf{Chapter 7: Cheat Features Implemented in Our Cheat for CS2} – Presents the design and implementation of various cheat modules, including visibility enhancements, automated aiming, and anti-detection features.
 \end{itemize}
