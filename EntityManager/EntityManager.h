@@ -54,11 +54,11 @@ public:
 	void init()
 	{
 		clientDll = (uintptr_t)GetModuleHandle("client.dll");
-		pEntityList = (uintptr_t)GetModuleHandle("client.dll") + (uintptr_t)0x1A38800;
-		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B5F568) + (uintptr_t)0x20F0);
+		pEntityList = (uintptr_t)GetModuleHandle("client.dll") + (uintptr_t)0x1A1F730;
+		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B43F58) + (uintptr_t)0x20F0);
 		ViewMatrix = reinterpret_cast<float(*)[4][4]>(iHelper->m_Mem.ResolveRip(iHelper->m_Mem.PatternScanner("client.dll", "48 8D ?? ?? ?? ?? ?? 48 C1 E0 06 48 03 C1 C3 CC CC"), 3, 7));
 		engine2Dll = (uintptr_t)GetModuleHandle("engine2.dll");
-		viewangles = (Vec3 *)(clientDll + 0x1AAE880);
+		viewangles = (Vec3 *)(clientDll + 0x1A933C0);
 	}
 
 	std::string GetSchemaName(void *entity);
