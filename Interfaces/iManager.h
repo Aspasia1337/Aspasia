@@ -6,19 +6,24 @@
 
 #include "../helper/helper.h"
 
-
-
 class CGameInput {
 public:
 };
 
+class CPVS {
+public:
+    void SetPVS (bool bState) {
+        iHelper->m_Mem.CallVMT<void **, 7U, CPVS> (this, bState);
+    }
+};
 
 class CInterfaceManager
 {
 
 public:
 
-    CGameInput* pGameInput;
+    CGameInput *pGameInput;
+    CPVS *pPVS;
 
     CInterfaceManager ( );
 

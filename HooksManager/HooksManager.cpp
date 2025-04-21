@@ -447,6 +447,11 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 			SetViewAngles::hSetViewAngles((__int64 *)csgoInput, 0, CalculateAngles(tempMe, tempEnemy, Globals::aimbotFov));
 		}
 
+
+		if (Globals::PlayersChams) {
+				g_pInterfaces->pPVS->SetPVS (false);
+				iHelper->m_Console.printMessage (WARNING, "PVS off");
+		}
 	}
 
 }

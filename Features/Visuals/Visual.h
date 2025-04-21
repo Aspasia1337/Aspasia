@@ -2,6 +2,7 @@
 
 #include "../../globals.h"
 #include "../../Classes/Classes.h"
+#include "../../Interfaces/iManager.h"
 
 #include "Materials.h"
 
@@ -22,10 +23,7 @@ class Visual
 {
 public:
 
-
 	static std::vector<C_EnvSky *> CEnvSkyVector;
-
-
 
 	static ByteColor ToByteColor (float *floatColor);
 
@@ -112,6 +110,7 @@ public:
 
 		static CUtilsBuff *(__fastcall *BuffInit)(CUtilsBuff *, int a1, int nSize, int a3);
 		static void (__fastcall *BuffPutString)(CUtilsBuff *, const char *);
+
 	};
 	Chams m_Chams;
 
