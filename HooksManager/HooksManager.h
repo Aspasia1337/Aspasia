@@ -93,6 +93,8 @@ private:
 public:
 	Vec3 storedViewAngles;
 
+	static int mutex;
+
 	void *CGameInput = nullptr;
 
 	HooksManager()

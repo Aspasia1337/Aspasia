@@ -66,6 +66,13 @@ public:
 			return (*reinterpret_cast<VirtualFn_t *const *>(reinterpret_cast<std::uintptr_t>(thisptr)))[nIndex] (thisptr, argList...);
 		}
 
+		template <typename T, std::size_t nIndex, class CBaseClass, typename... Args_t>
+		void PrintVMT (CBaseClass *thisptr, Args_t... argList)
+		{
+			using VirtualFn_t = T (__thiscall *)(const void *, decltype(argList)...);
+			return (*reinterpret_cast<VirtualFn_t *const *>(reinterpret_cast<std::uintptr_t>(thisptr)))[nIndex] (thisptr, argList...);
+		}
+
 		void *GetVMT (void *pointer, std::uint32_t index)
 		{
 			void **vtable = *static_cast<void ***>(pointer);
@@ -79,6 +86,14 @@ public:
 			pRelativeAddress += sizeof (std::int32_t) + *reinterpret_cast<std::int32_t *>(pRelativeAddress);
 			pRelativeAddress += nPostOffset;
 			return pRelativeAddress;
+		}
+
+		std::uint8_t *ResolveRelativeAddress (std::uint8_t *nAddressBytes, std::uint32_t nRVAOffset, std::uint32_t nRIPOffset)
+		{
+			std::uint32_t nRVA = *reinterpret_cast<std::uint32_t *>(nAddressBytes + nRVAOffset);
+			std::uint64_t nRIP = reinterpret_cast<std::uint64_t>(nAddressBytes) + nRIPOffset;
+
+			return reinterpret_cast<std::uint8_t *>(nRVA + nRIP);
 		}
 
 		CInterfaceRegister *GetRegisterList (const wchar_t *wszModuleName);

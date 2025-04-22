@@ -6,19 +6,21 @@
 
 #include "../helper/helper.h"
 
-
-
 class CGameInput {
 public:
 };
 
+class CPVS {
+public:
+};
 
 class CInterfaceManager
 {
 
 public:
 
-    CGameInput* pGameInput;
+    CGameInput *pGameInput;
+    CPVS *pPVS;
 
     CInterfaceManager ( );
 
@@ -70,6 +72,9 @@ public:
 
         return resolvedAddress;
     }
+
+    static void (__fastcall *setPVS)(CPVS *, bool);
+
 };
 
 inline CInterfaceManager *g_pInterfaces = new CInterfaceManager ( );
