@@ -37,6 +37,8 @@ namespace Globals {
 	extern float fov2;
 	extern float fov3;
 
+	extern bool ManualAA;
+
 	extern float smokeColorRGB[3];
 	extern float lightModulationColor[3];
 	extern float worldModulationColor[3];

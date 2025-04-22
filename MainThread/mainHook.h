@@ -327,38 +327,38 @@ void RenderFeatureWindow ( ) {
 
 
 
-void DrawMainUI() {
+void DrawMainUI ( ) {
     static float alpha = 0.f;
-    alpha = ImLerp(alpha, Globals::showMenu ? 1.f : 0.f, 0.15f);
+    alpha = ImLerp (alpha, Globals::showMenu ? 1.f : 0.f, 0.15f);
     if (alpha < 0.05f) return;
 
-    ImGuiIO& io = ImGui::GetIO();
-    static ImVec2 winPos = ImVec2(300, 200);
-    ImVec2 winSize = ImVec2(680, 500);
+    ImGuiIO &io = ImGui::GetIO ( );
+    static ImVec2 winPos = ImVec2 (300, 200);
+    ImVec2 winSize = ImVec2 (680, 500);
 
-    extern ImFont* fontBold;
-    extern ImFont* fontSemi;
-    extern ImFont* fontSemiBig;
+    extern ImFont *fontBold;
+    extern ImFont *fontSemi;
+    extern ImFont *fontSemiBig;
 
-    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, alpha);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 10.f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.12f, 0.15f, alpha));
+    ImGui::PushStyleVar (ImGuiStyleVar_Alpha, alpha);
+    ImGui::PushStyleVar (ImGuiStyleVar_WindowRounding, 10.f);
+    ImGui::PushStyleVar (ImGuiStyleVar_WindowPadding, ImVec2 (10, 10));
+    ImGui::PushStyleColor (ImGuiCol_WindowBg, ImVec4 (0.1f, 0.12f, 0.15f, alpha));
 
-    ImGui::SetNextWindowSize(winSize, ImGuiCond_Always);
-    ImGui::SetNextWindowPos(winPos, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize (winSize, ImGuiCond_Always);
+    ImGui::SetNextWindowPos (winPos, ImGuiCond_FirstUseEver);
     static int currentTab = 0;
 
-    if (ImGui::Begin("AspasiaMainUI", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar)) {
-        if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+    if (ImGui::Begin ("AspasiaMainUI", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar)) {
+        if (ImGui::IsItemActive ( ) && ImGui::IsMouseDragging (ImGuiMouseButton_Left))
             winPos += io.MouseDelta;
 
-        ImVec2 pos = ImGui::GetWindowPos();
-        ImVec2 size = ImGui::GetWindowSize();
-        ImDrawList* draw = ImGui::GetWindowDrawList();
+        ImVec2 pos = ImGui::GetWindowPos ( );
+        ImVec2 size = ImGui::GetWindowSize ( );
+        ImDrawList *draw = ImGui::GetWindowDrawList ( );
 
-        draw->AddRectFilled(pos, pos + ImVec2(size.x, 40), ImColor(35, 39, 50, int(alpha * 255)), 10.0f, ImDrawFlags_RoundCornersTop);
-        draw->AddRectFilled(pos + ImVec2(0, 39), pos + ImVec2(size.x, 40), ImColor(90, 140, 255, int(alpha * 255)));
+        draw->AddRectFilled (pos, pos + ImVec2 (size.x, 40), ImColor (35, 39, 50, int (alpha * 255)), 10.0f, ImDrawFlags_RoundCornersTop);
+        draw->AddRectFilled (pos + ImVec2 (0, 39), pos + ImVec2 (size.x, 40), ImColor (90, 140, 255, int (alpha * 255)));
         draw->AddText (
             fontBold,
             fontBold->FontSize,
@@ -368,34 +368,35 @@ void DrawMainUI() {
         );
 
         // Tabs
-        ImGui::SetCursorPosY(50);
-        const char* tabs[] = { "Visuals", "Hooks", "Legit", "Chams", "Anti Aim"};
+        ImGui::SetCursorPosY (50);
+        const char *tabs[] = { "Visuals", "Hooks", "Legit", "Chams", "Anti Aim" };
 
-        ImGui::SetCursorPosX(20);
-        for (int i = 0; i < IM_ARRAYSIZE(tabs); ++i) {
-            if (i > 0) ImGui::SameLine();
+        ImGui::SetCursorPosX (20);
+        for (int i = 0; i < IM_ARRAYSIZE (tabs); ++i) {
+            if (i > 0) ImGui::SameLine ( );
 
-            ImGui::PushFont(fontSemi);
+            ImGui::PushFont (fontSemi);
             if (i == currentTab) {
-                ImGui::PushStyleColor(ImGuiCol_Button, ImColor(90, 140, 255).Value);
-                if (ImGui::Button(tabs[i], ImVec2(100, 30)))
+                ImGui::PushStyleColor (ImGuiCol_Button, ImColor (90, 140, 255).Value);
+                if (ImGui::Button (tabs[i], ImVec2 (100, 30)))
                     currentTab = i;
-                ImGui::PopStyleColor();
-            } else {
-                if (ImGui::Button(tabs[i], ImVec2(100, 30)))
+                ImGui::PopStyleColor ( );
+            }
+            else {
+                if (ImGui::Button (tabs[i], ImVec2 (100, 30)))
                     currentTab = i;
             }
-            ImGui::PopFont();
+            ImGui::PopFont ( );
         }
 
         // Main content
-        ImGui::SetCursorPosY(90);
-        ImGui::BeginChild("MainContent", ImVec2(-1, -1), true);
-        ImGui::PushFont(fontSemiBig);
+        ImGui::SetCursorPosY (90);
+        ImGui::BeginChild ("MainContent", ImVec2 (-1, -1), true);
+        ImGui::PushFont (fontSemiBig);
 
-        ImGui::TextColored(ImColor(255, 255, 255), "%s Settings", tabs[currentTab]);
-        ImGui::Separator();
-        ImGui::PopFont();
+        ImGui::TextColored (ImColor (255, 255, 255), "%s Settings", tabs[currentTab]);
+        ImGui::Separator ( );
+        ImGui::PopFont ( );
 
         ImGui::PushFont (fontSemi);
         switch (currentTab) {
@@ -490,30 +491,38 @@ void DrawMainUI() {
 
         case 4:
             ImGui::SeparatorText ("Anti-Aim");
-            ImGui::Checkbox ("Enable Rotational Anti-Aim", &Globals::AntiAim);
+            ImGui::Checkbox ("Rotational Anti-Aim", &Globals::AntiAim);
             if (Globals::AntiAim) {
                 ImGui::SliderFloat ("Yaw Offset", &Globals::AAJaw, -180.0f, 180.0f, "%.1f");
                 ImGui::SliderFloat ("Pitch Offset", &Globals::AAPitch, -89.0f, 89.0f, "%.1f");
             }
+
+            ImGui::Checkbox ("Manual Anti Aim", &Globals::ManualAA);
+            if (Globals::ManualAA) {
+                if (GetAsyncKeyState (VK_UP) & 0x8000) {
+                    Globals::AAJaw = 0.0f;
+                }
+                if (GetAsyncKeyState (VK_DOWN) & 0x8000) {
+                    Globals::AAJaw = 90.0f;
+                }
+                if (GetAsyncKeyState (VK_LEFT) & 0x8000) {
+                    Globals::AAJaw = -45.0f;
+                }
+                if (GetAsyncKeyState (VK_RIGHT) & 0x8000) {
+                    Globals::AAJaw = 45.0f;
+                }
+            }
             break;
+
+            ImGui::PopFont ( );
+            ImGui::EndChild ( );
         }
-
-
-        ImGui::PopFont();
-        ImGui::EndChild();
+        ImGui::End ( );
+        ImGui::PopStyleColor ( );
+        ImGui::PopStyleVar (3);
     }
-    
 
-
-
-
-    ImGui::End();
-    ImGui::PopStyleColor();
-    ImGui::PopStyleVar(3);
 }
-
-
-
 
 LRESULT __stdcall WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (ImGui_ImplWin32_WndProcHandler (hWnd, uMsg, wParam, lParam)) return true;

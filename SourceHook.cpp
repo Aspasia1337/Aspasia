@@ -45,6 +45,8 @@ namespace Globals {
     float SkyModulationColor [3] = {0, 0, 0.};
     float SkyTintColor[3] = { 0, 0, 0 };
 
+    bool ManualAA = 0;
+
 
     const char *MaterialNames[6] = { "WhiteMaterial", "Illuminate", "Latex", "Metalic" , "Glow", "Blom"};
     const char *BoneNames[7] = { "Head", "Torso", "Right Hand", "Left Hand" , "Pelvis", "Right Feet", "Left Feet"};
