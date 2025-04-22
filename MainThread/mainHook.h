@@ -469,6 +469,8 @@ void DrawMainUI() {
                 if (Globals::InvisibleChams)
                     ImGui::ColorEdit3 ("Invisible Color", Globals::InvisibleChamsColor, ImGuiColorEditFlags_NoInputs);
                 ImGui::Combo ("Material", &Globals::MaterialSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
+
+                ImGui::Checkbox ("PVS", &Globals::PVS);
             }
 
             ImGui::SeparatorText ("Weapon Chams");

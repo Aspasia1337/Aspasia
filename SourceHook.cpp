@@ -59,6 +59,7 @@ namespace Globals {
     bool WeaponChams = 0;
     bool ArmsChams = 0;
 
+    bool PVS = 0;
 
     bool HealthBar = 0;
 

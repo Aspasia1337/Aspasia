@@ -21,6 +21,8 @@
 
 #include "../EntityManager/EntityManager.h"
 
+#include "../Interfaces/iManager.h"
+
 HooksManager::CreateMove::CreateMoveFunction HooksManager::CreateMove::oCreateMove = nullptr;
 HooksManager::CreateMoveTWO::CreateMoveFunctionTWO HooksManager::CreateMoveTWO::oCreateMoveTWO = nullptr;
 
@@ -48,6 +50,10 @@ int64_t(__fastcall *Visual::Chams::CreateMaterialFunction)(void *, void *, const
 
 CUtilsBuff *(__fastcall *Visual::Chams::BuffInit)(CUtilsBuff *, int a1, int nSize, int a3) = nullptr;
 void(__fastcall *Visual::Chams::BuffPutString)(CUtilsBuff *, const char *) = nullptr;
+
+void (__fastcall *CInterfaceManager::setPVS)(CPVS *, bool);
+
+int HooksManager::mutex = 0;
 
 Vec3 AntiAim::PlayerAngles;
 
@@ -353,6 +359,14 @@ bool HooksManager::initHook()
 		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING SetFovFn! ");
 	}
 	
+	uint8_t *PVS = (iHelper->m_Mem.ResolveRelativeAddress(iHelper->m_Mem.PatternScanner("engine2.dll","48 8D 0D ? ? ? ? 33 ? FF 50"), 0x3, 0x7));
+
+	g_pInterfaces->pPVS = reinterpret_cast<decltype(g_pInterfaces->pPVS)>(PVS);
+
+
+	uint8_t *setPVS = iHelper->m_Mem.PatternScanner ("engine2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC 20 88 51 2C");
+
+	g_pInterfaces->setPVS= reinterpret_cast<decltype(g_pInterfaces->setPVS)>(setPVS);
 
 	MH_EnableHook(MH_ALL_HOOKS);
 	return hookInit;
@@ -448,9 +462,13 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 		}
 
 
-		if (Globals::PlayersChams) {
-				g_pInterfaces->pPVS->SetPVS (false);
-				iHelper->m_Console.printMessage (WARNING, "PVS off");
+		if (Globals::PlayersChams && Globals::PVS && HooksManager::mutex == 0) {
+			g_pInterfaces->setPVS (g_pInterfaces->pPVS, false);
+			HooksManager::mutex = 1;
+		}
+		else if (Globals::PlayersChams && !Globals::PVS && HooksManager::mutex == 1) {
+			g_pInterfaces->setPVS (g_pInterfaces->pPVS, true);
+			HooksManager::mutex = 0;
 		}
 	}
 

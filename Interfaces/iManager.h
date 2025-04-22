@@ -12,9 +12,6 @@ public:
 
 class CPVS {
 public:
-    void SetPVS (bool bState) {
-        iHelper->m_Mem.CallVMT<void **, 7U, CPVS> (this, bState);
-    }
 };
 
 class CInterfaceManager
@@ -75,6 +72,9 @@ public:
 
         return resolvedAddress;
     }
+
+    static void (__fastcall *setPVS)(CPVS *, bool);
+
 };
 
 inline CInterfaceManager *g_pInterfaces = new CInterfaceManager ( );
