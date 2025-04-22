@@ -369,7 +369,7 @@ void DrawMainUI() {
 
         // Tabs
         ImGui::SetCursorPosY(50);
-        const char* tabs[] = { "Visuals", "Hooks", "Legit", "Chams" };
+        const char* tabs[] = { "Visuals", "Hooks", "Legit", "Chams", "Anti Aim"};
 
         ImGui::SetCursorPosX(20);
         for (int i = 0; i < IM_ARRAYSIZE(tabs); ++i) {
@@ -487,7 +487,17 @@ void DrawMainUI() {
                 ImGui::Combo ("Arms Material", &Globals::MaterialArmSelected, Globals::MaterialNames, IM_ARRAYSIZE (Globals::MaterialNames));
             }
             break;
+
+        case 4:
+            ImGui::SeparatorText ("Anti-Aim");
+            ImGui::Checkbox ("Enable Rotational Anti-Aim", &Globals::AntiAim);
+            if (Globals::AntiAim) {
+                ImGui::SliderFloat ("Yaw Offset", &Globals::AAJaw, -180.0f, 180.0f, "%.1f");
+                ImGui::SliderFloat ("Pitch Offset", &Globals::AAPitch, -89.0f, 89.0f, "%.1f");
+            }
+            break;
         }
+
 
         ImGui::PopFont();
         ImGui::EndChild();
