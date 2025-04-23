@@ -498,30 +498,17 @@ void DrawMainUI ( ) {
             }
 
             ImGui::Checkbox ("Manual Anti Aim", &Globals::ManualAA);
-            if (Globals::ManualAA) {
-                if (GetAsyncKeyState (VK_UP) & 0x8000) {
-                    Globals::AAJaw = 0.0f;
-                }
-                if (GetAsyncKeyState (VK_DOWN) & 0x8000) {
-                    Globals::AAJaw = 90.0f;
-                }
-                if (GetAsyncKeyState (VK_LEFT) & 0x8000) {
-                    Globals::AAJaw = -45.0f;
-                }
-                if (GetAsyncKeyState (VK_RIGHT) & 0x8000) {
-                    Globals::AAJaw = 45.0f;
-                }
-            }
             break;
-
-            ImGui::PopFont ( );
-            ImGui::EndChild ( );
         }
-        ImGui::End ( );
-        ImGui::PopStyleColor ( );
-        ImGui::PopStyleVar (3);
-    }
 
+
+        ImGui::PopFont ( );
+        ImGui::EndChild ( );
+
+    }
+    ImGui::End ( );
+    ImGui::PopStyleColor ( );
+    ImGui::PopStyleVar (3);
 }
 
 LRESULT __stdcall WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -578,6 +565,22 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
         ImGui::GetIO ( ).MouseDrawCursor = !ImGui::GetIO ( ).MouseDrawCursor;
         Globals::showMenu = !Globals::showMenu;
     }
+
+    if (Globals::ManualAA) {
+        if (GetAsyncKeyState (VK_UP) & 0x8000) {
+            Globals::AAJaw = 0.0f;
+        }
+        if (GetAsyncKeyState (VK_DOWN) & 0x8000) {
+            Globals::AAJaw = 180.0f;
+        }
+        if (GetAsyncKeyState (VK_LEFT) & 0x8000) {
+            Globals::AAJaw = -90.0f;
+        }
+        if (GetAsyncKeyState (VK_RIGHT) & 0x8000) {
+            Globals::AAJaw = 90.0f;
+        }
+    }
+
 
     ImGui_ImplDX11_NewFrame ( );
     ImGui_ImplWin32_NewFrame ( );

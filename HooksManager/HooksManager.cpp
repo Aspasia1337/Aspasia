@@ -547,7 +547,7 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO(CCSGOInput *a1, __int64 nSlot, 
 	if (!a3)
 		return;
 
-	if (Globals::AntiAim)
+	if (Globals::AntiAim || Globals::ManualAA)
 	{
 		iAntiAim->OnMove(a1, a3);
 	}

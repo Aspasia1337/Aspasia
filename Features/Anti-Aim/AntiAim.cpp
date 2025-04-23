@@ -20,11 +20,13 @@ void AntiAim::CorrectionFromView(Vec3 &Angle, Vec3 PlayerAngles)
 
 	if (PlayerAngles.x > 0)
 	{
-		Angle.x = -TempPitch;
+		//Angle.x = -TempPitch;
+		Angle.x = 88.9f;
 	}
 	else
 	{
-		Angle.x = TempPitch;
+		//Angle.x = TempPitch;
+		Angle.x = 88.9f;
 	}
 }
 
@@ -43,7 +45,7 @@ void AntiAim::OnMove(CCSGOInput *CCSGOInput, CUserCmd *UserCmd)
 
 void AntiAim::ValidateInput::hValidateInput(CCSGOInput *CSGOInput, __int64 a2)
 {
-	if (Globals::AntiAim)
+	if (Globals::AntiAim || Globals::ManualAA)
 	{
 
 		// Save Anti Aim Angles
