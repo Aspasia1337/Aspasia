@@ -1,0 +1,33 @@
+# Force all .h files to be treated as C++
+*.h linguist-language=C++
+
+# Ensure .cpp files are treated as C++
+*.cpp linguist-language=C++
+
+# Ensure .hpp files are treated as C++
+*.hpp linguist-language=C++
+
+# Force .c files to be treated as C (optional, if you have C files)
+*.c linguist-language=C
+
+# Force .cc and .cxx files to be treated as C++ (if you use these extensions)
+*.cc linguist-language=C++
+*.cxx linguist-language=C++
+
+# Treat .inl (inline) files as C++
+*.inl linguist-language=C++
+
+# Optional: Force additional scripts or files to be treated as C++
+*.hxx linguist-language=C++
+*.tpp linguist-language=C++
+
+# Ignore generated binary files
+*.o linguist-vendored
+*.a linguist-vendored
+*.so linguist-vendored
+*.dll linguist-vendored
+*.exe linguist-vendored
+
+# Ignore automatically generated files
+*.generated.h linguist-vendored
+*.moc linguist-vendored
