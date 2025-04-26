@@ -1,14 +1,15 @@
 \chapter{The Prevalence and Impact of Cheating in Online Multiplayer Games}
 
-Online multiplayer games thrive on the principles of fairness, competition, and community-driven engagement. However, these foundations are increasingly threatened by the pervasive use of cheating software. Cheating not only distorts competitive balance but also erodes player trust, leading to reduced satisfaction, churn, and ultimately jeopardizing the long-term viability of game ecosystems. This chapter delves into the multifaceted impact of cheating, with a focus on the evolving landscape surrounding \textit{Counter-Strike 2} (CS2), and presents an argument for treating cheating as a systemic threat requiring both technical and socio-legal countermeasures.
+Cheating in online multiplayer games constitutes an escalating systemic threat that undermines fairness, erodes player trust, and destabilizes gaming ecosystems.  
+This chapter examines the multifaceted consequences of cheating, with particular emphasis on the evolving landscape surrounding \textit{Counter-Strike 2} (CS2), and argues that addressing this issue demands an integrated response encompassing technical, legal, and social countermeasures.
 
-As the appeal of competitive online titles grows—particularly those with ranked ladders, esports scenes, and in-game economies—the incentives to gain unfair advantages intensify. This creates a persistent cat-and-mouse game between cheat developers and game studios, necessitating not only robust anti-cheat technology but also a holistic understanding of the phenomenon’s broader consequences.
+As competitive online titles continue to thrive—especially those with ranked ladders, esports ecosystems, and in-game economies—the incentives to obtain unfair advantages intensify.  
+This dynamic perpetuates a relentless arms race between cheat developers and game studios, requiring not only robust technological defenses but also a broader understanding of the socio-economic impacts of cheating.
 
 \section{Cheating as a Critical Threat to Player Retention}
 
-Cheating in multiplayer games is not a fringe issue; it constitutes one of the primary causes of user attrition and dissatisfaction. According to a comprehensive report by Irdeto, 60% of surveyed players reported that cheating had negatively impacted their experience in online games \cite{irdeto2018global}. Even more concerning is that 77% of respondents indicated they would stop playing a game if cheating became rampant.
-
-These numbers underscore the scale of the problem, extending beyond momentary frustration to long-term economic risks. Game developers and publishers rely heavily on user engagement metrics to drive monetization strategies such as battle passes, cosmetic item sales, and advertising. A reduction in player retention due to widespread cheating thus directly threatens revenue streams.
+Cheating is far from a minor inconvenience; it is a leading driver of player attrition and dissatisfaction.  
+A global survey by Irdeto found that 60\% of players experienced a negative impact on their enjoyment due to cheating, and 77\% indicated they would abandon a game if cheating became pervasive \cite{irdeto2018global}.
 
 \begin{table}[H]
   \centering
@@ -25,23 +26,72 @@ These numbers underscore the scale of the problem, extending beyond momentary fr
   \hline
   \end{tabular}
 \end{table}
-  
-Ultimately, cheating undermines the very fabric of competitive gaming. When fair play cannot be guaranteed, trust in the ranking system, matchmaking quality, and the legitimacy of competitive outcomes begins to deteriorate—driving players away in search of more balanced experiences.
+
+These findings underscore that cheating not only generates immediate frustration but also carries long-term economic implications.  
+Since engagement drives monetization through battle passes, cosmetic sales, and advertising, a decline in player retention fueled by cheating poses a direct threat to publishers’ revenue streams.
+
+Ultimately, when players perceive ranked systems, matchmaking, or competition outcomes as compromised, they are likely to migrate toward alternative titles—thus undermining the sustainability of the gaming community.
 
 \section{Case Study: Cheating in \textit{Counter-Strike 2}}
 
-As a flagship title in the competitive first-person shooter (FPS) genre, \textit{Counter-Strike 2} (CS2) offers a useful lens through which to examine the modern cheating landscape. The game’s enormous player base and thriving esports scene make it both a high-value target for cheat developers and a crucial battleground for anti-cheat innovation.
+\textit{Counter-Strike 2} (CS2), as one of the most prominent competitive FPS titles, provides an instructive case study of modern cheating dynamics.  
+Its large player base and vibrant esports scene render it both a lucrative target for cheat developers and a crucial testing ground for anti-cheat innovations.
 
-In early 2024, CS2 experienced steady growth, culminating in March 2025 with over 1.8 million concurrent players—a record high. These statistics reflect not only growing popularity but also escalating challenges in maintaining fair competition as the audience diversifies and expands.
+To contextualize the scale of CS2’s ecosystem, Figure \ref{fig:cs2-playerbase} presents the evolution of its player base based on SteamCharts data, covering the period from January 2024 to April 2025:
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=0.95\textwidth,
+      height=7cm,
+      xlabel={Month},
+      ylabel={Average Players},
+      symbolic x coords={Jan24, Feb24, Mar24, Apr24, May24, Jun24, Jul24, Aug24, Sep24, Oct24, Nov24, Dec24, Jan25, Feb25, Mar25, Apr25},
+      xtick=data,
+      xticklabel style={rotate=45, anchor=east, font=\small},
+      yticklabel style={font=\small},
+      label style={font=\small},
+      tick style={thin},
+      grid=both,
+      minor tick num=1,
+      major grid style={line width=.3pt, draw=gray!40},
+      minor grid style={line width=.2pt, draw=gray!20},
+      ymin=700000, ymax=1100000,
+      enlargelimits=0.05,
+      smooth,
+      mark options={scale=1.2, fill=red!30},
+      line width=0.8pt,
+  ]
+  \addplot[
+      color=red,
+      mark=*,
+  ]
+  coordinates {
+      (Jan24,760859) (Feb24,786631) (Mar24,885630) (Apr24,930749)
+      (May24,958207) (Jun24,947521) (Jul24,875365) (Aug24,897338)
+      (Sep24,836307) (Oct24,829439) (Nov24,852164) (Dec24,913953)
+      (Jan25,914092) (Feb25,1003571) (Mar25,1039663) (Apr25,1054244)
+  };
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Evolution of Average CS2 Player Counts (Jan 2024 -- Apr 2025). Source: SteamCharts.}
+  \label{fig:cs2-playerbase}
+\end{figure}
 
-While Valve continues to take proactive steps—via updates to VAC and the Overwatch system—the scale and adaptability of modern cheats often outpace enforcement capabilities. Private cheats, polymorphic code, and advanced injection methods enable cheaters to bypass detection mechanisms, sometimes for weeks at a time.
+The steady growth in CS2’s player base highlights the game's enduring popularity and its pivotal role in the competitive FPS scene.  
+Yet, with expansion comes increased complexity: a larger and more heterogeneous player community makes preserving \textbf{competitive integrity} a significantly greater challenge.
+
+Despite notable improvements to the Valve Anti-Cheat (\textbf{VAC}) system and the \textit{Overwatch} platform, modern cheats—employing \textit{polymorphic code}, \textit{manual injection}, and \textit{kernel-level techniques}—enable many offenders to operate undetected for prolonged periods.  
+The result is an ongoing \textbf{arms race} between cheat developers and anti-cheat engineers, requiring constant innovation to safeguard fair play.
+
+\textbf{Data from recent enforcement activity} further underscores the scale and persistence of the issue:
 
 \begin{table}[H]
   \centering
-  \small % Reduce font size
-  \setlength{\tabcolsep}{6pt} % Optional: tighten column spacing
-  \caption{Activity of Banned Accounts Prior to Enforcement (Jan–Apr 2024)}
+  \small
+  \setlength{\tabcolsep}{6pt}
+  \caption{Activity of Banned Accounts Prior to Enforcement (Jan--Apr 2024)}
   \label{tab:cheater-impact}
   \begin{tabular}{|p{5.2cm}|c|}
   \hline
@@ -57,60 +107,91 @@ While Valve continues to take proactive steps—via updates to VAC and the Overw
   \hline
   Evidence of case farming behavior & Not significant \\
   \hline
-  Gameplay pattern analysis & Consistent with competitive play \\
-  \hline
   \end{tabular}
-\end{table}  
+\end{table}
 
+These observations reveal that cheaters are not isolated anomalies; rather, they are embedded within regular matchmaking sessions, further complicating the task of detection and enforcement.
 
-These findings illustrate that cheaters are not relegated to fringe scenarios like farming or casual abuse; rather, they are embedded within regular competitive matchmaking. The persistence of such activity signals a growing challenge for detection systems that rely primarily on reactive enforcement.
+\subsection{Trust Factor and Reporting System Limitations}
 
-\subsection{The Reporting System and Trust Factor Limitations}
+To mitigate cheating and improve matchmaking, Valve introduced the \textit{Trust Factor} system—an opaque internal score assessing player reliability.
 
-In an effort to promote healthier matchmaking, Valve introduced the \textit{Trust Factor} system—an invisible score that influences match assignments based on a player’s behavior across the Steam platform. While conceptually promising, Trust Factor remains opaque, with users frequently reporting confusion and inconsistency in its outcomes.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{Trust Factor Explained} \\
+The Trust Factor metric aggregates multiple indicators—including VAC bans, player reports, community standing, and system configurations—to invisibly adjust matchmaking quality.  
+Its secrecy aims to prevent gaming the system but inadvertently introduces confusion and exploitation.
+\end{tcolorbox}
 
-\begin{itemize} \item VAC/Overwatch bans, user reports, and commendations influence Trust Factor. \item Account history, community participation, and even friend networks are considered. \item Suspicious software or system configurations may negatively impact the score. \end{itemize}
-
-This opacity creates two issues. First, users cannot understand or control their Trust Factor in meaningful ways. Second, the system is vulnerable to manipulation—via both \textit{report bots} that mass-flag innocent players and \textit{commend bots} that artificially inflate Trust Factor with paid commendations.
-
-These exploitative services are openly marketed in underground forums, turning Trust Factor into a commodity rather than a reliable safeguard. Without greater transparency and user agency, the system may reinforce the very distrust it seeks to alleviate.
+While the Trust Factor system offers a promising foundation, its lack of transparency exposes two critical vulnerabilities:  
+(1) Players have limited avenues for understanding or improving their score;  
+(2) Third-party services offering \textit{report bots} and \textit{commend bots} manipulate trust metrics for profit.
 
 \subsection{Economic and Psychological Impact}
 
-The consequences of cheating extend beyond gameplay. In early 2025, a major VAC wave resulted in the banning of accounts with over \$2 million worth of in-game inventory value \cite{ggscore2025vacban}. While applauded by some, this event also introduced widespread anxiety about ban transparency and the risk of false positives.
+The consequences of cheating extend beyond gameplay to inflict significant economic and psychological harm.
 
-Legitimate players who invest time and money into a game—especially those who trade in digital assets—may be deterred by the lack of accountability in enforcement mechanisms. The psychological toll of repeated exposure to cheaters, false accusations, or confusing bans can result in disengagement, regardless of a player's commitment or skill level.
+In early 2025, a major VAC enforcement wave permanently banned accounts with an estimated combined inventory value exceeding \$2 million \cite{ggscore2025vacban}.  
+Although hailed as a success against cheaters, it also fueled concerns regarding transparency and false positives.
 
-For new players, these dynamics are even more damaging. Encountering blatant cheating early in the user journey creates a negative first impression that may permanently dissuade continued play. For veterans, it fosters a sense of helplessness and resentment—both potent drivers of churn.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{Definition: VAC Ban} \\
+A Valve Anti-Cheat (VAC) ban is a permanent restriction applied when cheating activity is detected.  
+It disables multiplayer functionality and trading privileges associated with the affected title.
+\end{tcolorbox}
 
-\section{Community Perception and Player Sentiment}
+For players who have invested considerable time, resources, and personal attachment into their accounts, the psychological toll of either encountering cheaters or being wrongfully penalized can be profound—leading to disengagement and a decline in community loyalty.
 
-The gaming community has not remained silent in the face of persistent cheating. Platforms such as Reddit and YouTube are filled with clips, testimonials, and discussions that document ongoing incidents of undetected cheating. These posts often go viral, compounding the perception that developers are not doing enough.
+\section{Community Perception and the Culture of Cynicism}
 
-Professional streamers and esports athletes have echoed these concerns. When high-profile personalities encounter cheaters during live broadcasts, it not only damages the entertainment value of the stream but also affects brand perception and sponsorship appeal.
+Cheating incidents are highly visible across social platforms such as Reddit, YouTube, and Twitch.  
+High-profile streamers encountering cheaters during broadcasts exacerbate perceptions of widespread dishonesty, even when empirical cheating rates remain relatively low.
 
-As this narrative builds momentum, a broader culture of cynicism begins to take hold. Phrases like “VAC is useless” or “everyone cheats at high ranks” are common refrains, reflecting a dangerous normalization of defeatism. Even when actual cheating prevalence is statistically low, the perception alone is enough to destabilize trust in ranked matchmaking systems.
+This feedback loop fosters a culture of cynicism, where player trust in matchmaking systems and anti-cheat technologies diminishes—ultimately endangering long-term community stability.
 
-\section{Legal and Ethical Implications of Cheating Software}
+\section{Legal and Ethical Responses to Cheat Development}
 
-In addition to technological countermeasures, the gaming industry has increasingly pursued legal action against cheat developers. These lawsuits serve multiple functions: deterring future offenders, punishing commercial-scale operations, and reaffirming the legal enforceability of EULAs.
+Recognizing the limitations of technical interventions, developers increasingly pursue legal remedies against cheat creators.
 
-One landmark case occurred in 2023 when Bungie secured a \$12 million judgment against AimJunkies, a cheat provider for \textit{Destiny 2}. Similar actions by Ubisoft, Activision, and Riot have further cemented a legal precedent for prosecuting intellectual property violations, unfair competition, and digital fraud related to cheat development.
+Notably, Bungie’s \$12 million victory against AimJunkies in 2023 established a strong legal precedent.  
+Subsequently, companies such as Riot, Ubisoft, and Activision have adopted similar strategies.
 
-Beyond legal ramifications, the existence of pay-to-win cheats raises ethical concerns. When access to competitive advantage is monetized, the principle of merit-based competition collapses—devaluing ranks, tournaments, and the legitimacy of esports as a discipline. This erosion of fairness threatens not just player sentiment but the long-term brand equity of the titles themselves.
+Beyond legality, cheat distribution undermines the ethical foundations of competitive gaming, corrupting merit-based progression and threatening the credibility of esports ecosystems.
 
-\section{Anti-Cheat Technologies and Their Limitations}
+\section{Anti-Cheat Technologies: Current Trends and Limitations}
 
-Despite ongoing advancements, anti-cheat systems remain inherently reactive. Valve’s VAC primarily detects known cheat signatures and does not operate at the kernel level. Although the newer VacNet 3.0 leverages machine learning for behavioral analysis, sophisticated cheats still evade detection using techniques like manual injection, virtualization, or anti-debugging.
+Despite considerable innovation, anti-cheat technologies remain primarily reactive.
 
-Other titles have adopted more aggressive solutions—Riot’s Vanguard runs at the kernel level, allowing for deeper system access but raising significant privacy concerns. This trade-off between enforcement efficacy and user rights exemplifies a broader dilemma facing the industry.
+Valve's VAC system relies heavily on signature detection, rendering it vulnerable to obfuscation and manual mapping techniques.  
+In contrast, Riot’s Vanguard leverages kernel-level access but provokes privacy concerns among users.
 
-Emerging solutions include AI-powered detection engines, real-time behavioral analysis, and encrypted client-server communication. However, these innovations require continuous investment, iterative tuning, and often introduce new vectors for controversy or false positives. The result is an ongoing arms race between cheat developers and anti-cheat engineers.
+Emerging approaches—including AI-driven behavioral models and secure enclave technology—offer promising avenues but introduce new challenges, such as avoiding false positives and preserving user privacy.
+
+Thus, the technological arms race between cheat developers and anti-cheat engineers remains a dynamic and relentless struggle.
 
 \section{Toward a More Resilient Competitive Ecosystem}
 
-Cheating represents a systemic challenge that touches on technology, economics, law, psychology, and community management. The data shows that existing systems, while indispensable, are insufficient in isolation. To rebuild trust and protect competitive legitimacy, developers must pursue a multi-pronged approach:
+Addressing the systemic threat of cheating requires a comprehensive, multi-layered strategy encompassing technical, legal, and social dimensions.
 
-\begin{itemize} \item Deploy real-time and behavior-based detection models. \item Increase transparency through periodic enforcement reports. \item Provide players with clearer Trust Factor diagnostics and appeal pathways. \item Integrate educational tools that teach players about fair play. \item Partner with legal authorities to prosecute high-level cheat distributors. \end{itemize}
+Key initiatives include:
 
-Without such reforms, even the most iconic games risk long-term erosion of their competitive value. As online multiplayer gaming continues to evolve, so too must our methods for preserving its integrity.
+\begin{itemize}
+    \item Implementing real-time, behavior-driven detection systems.
+    \item Publishing regular transparency reports on enforcement outcomes.
+    \item Enhancing user feedback and appeal mechanisms for systems like Trust Factor.
+    \item Educating players on fair play and its long-term benefits.
+    \item Pursuing aggressive legal action against cheat developers and distributors.
+\end{itemize}
+
+Without sustained reform and vigilance, even the most iconic multiplayer ecosystems risk erosion of integrity and the consequent decline of player engagement.
+
+\vspace{1em}
+
+\begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{Key Takeaways:}
+\begin{itemize}
+    \item Cheating directly threatens player retention, game reputation, and revenue.
+    \item Systems like Trust Factor must evolve with greater transparency.
+    \item Legal action constitutes an essential front against organized cheat development.
+    \item The fight against cheating is an ongoing, adaptive arms race requiring continual innovation.
+\end{itemize}
+\end{tcolorbox}
