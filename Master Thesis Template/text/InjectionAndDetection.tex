@@ -2,245 +2,227 @@
 
 \section{Why Injection Matters in Cheat Development}
 
-In the realm of professional game cheating, nearly all serious and commercially available cheats—especially those developed for competitive titles like \textit{Counter-Strike 2}—are built as \textbf{DLLs} that are injected into the game process. This design choice is not incidental; it is fundamental to how modern cheats operate and achieve their functionality.
+In professional game cheating, especially in competitive games like \textit{Counter-Strike 2}, most serious cheats are built as \textbf{DLLs} that are injected into the game's running process.
 
-Injecting a DLL into the game allows the cheat to execute in \textbf{runtime} alongside the game itself. This real-time coexistence grants the cheat direct access to the game's memory, logic, and rendering pipeline. As a result, injected cheats can:
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{What is a DLL?} \\
+A DLL (Dynamic Link Library) is like a small add-on that can be loaded into a program to extend what it can do. In the case of cheats, a DLL gives direct access to the game's memory and functions.
+\end{tcolorbox}
+
+Injecting a DLL allows the cheat to run \textbf{at the same time} as the game itself. This enables cheats to:
 
 \begin{itemize}
-    \item \textbf{Hook internal functions} to intercept or modify game behavior (e.g., aim mechanics, visibility checks).
-    \item \textbf{Modify memory values} to influence in-game parameters (e.g., recoil, ammunition, speed).
-    \item \textbf{Read game data structures} to extract critical information (e.g., player positions, health, weapons).
-    \item \textbf{Render overlays} by drawing directly on top of the game window (e.g., ESP, radar, crosshairs).
-    \item \textbf{Automate gameplay} with logic that integrates seamlessly with the game's update loop.
+    \item \textbf{Hook game functions} to change behavior (e.g., aiming or vision systems).
+    \item \textbf{Modify memory} to adjust gameplay (e.g., speed, ammo, recoil).
+    \item \textbf{Read internal data} like player positions or weapon stats.
+    \item \textbf{Draw overlays} directly on the screen (e.g., radar, ESP).
+    \item \textbf{Automate actions} to perform tasks faster or more accurately.
 \end{itemize}
 
-This deep integration is only possible through in-process code execution, which is why DLL injection is the industry standard in cheat development. Accordingly, anti-cheat systems like \textbf{Valve Anti-Cheat (VAC)} place significant emphasis on detecting and blocking injection attempts, making injection both the cornerstone of modern cheating and the primary target for detection.
-
-The following sections explore the most relevant injection techniques used in game cheating and the methods employed by anti-cheat systems to detect and prevent them. The objective is to provide a conceptual overview without delving into low-level implementation details.
+Because of this deep integration, cheat injection is the main focus of anti-cheat systems like \textbf{Valve Anti-Cheat (VAC)}.
 
 \section{Overview of Code Injection Techniques}
 
-Code injection refers to the practice of inserting arbitrary executable code into a running process. In the context of cheating, this typically involves loading a custom Dynamic Link Library (DLL) or executing shellcode within the game's memory space to gain persistent and privileged access to game internals.
+\textbf{Code injection} means inserting new code into a running program. In cheat development, this usually means adding a DLL or custom code into the game's memory.
 
 \subsection*{Traditional Methods}
 
-Early cheats commonly relied on standard Windows functions such as:
+Earlier cheats used simple Windows functions like:
 
 \begin{itemize}
-    \item \texttt{LoadLibrary}: Loads a DLL into the target process.
-    \item \texttt{CreateRemoteThread}: Spawns a new thread in another process to execute injected code.
+    \item \texttt{LoadLibrary}: Loads a DLL into another process.
+    \item \texttt{CreateRemoteThread}: Starts a new thread inside another program.
 \end{itemize}
 
-While these approaches are simple and effective in general software development, they are highly detectable. Anti-cheat systems like VAC monitor API usage, track module registrations, and flag suspicious thread creation patterns. As a result, traditional injection methods are now largely ineffective for persistent, undetected cheating.
+These methods are now easy for anti-cheats to detect because they leave obvious traces.
 
 \subsection*{Manual Mapping}
 
-\textbf{Manual Mapping} has become the preferred method for injecting cheats into modern games. Rather than relying on the Windows loader, this technique manually replicates the steps involved in loading a DLL, entirely within user space.
+Today, cheats mostly use a method called \textbf{Manual Mapping}.
 
-Manual Mapping is highly effective because:
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{What is Manual Mapping?} \\
+Manual Mapping is a way of loading a DLL manually into a program’s memory without using Windows' normal loading functions. This makes it much harder for anti-cheat systems to notice the injection.
+\end{tcolorbox}
 
-\begin{itemize}
-    \item It bypasses standard API calls like \texttt{LoadLibrary}, avoiding direct detection.
-    \item Injected modules do not appear in the target process’s module list (PEB).
-    \item Execution can be achieved through stealthy mechanisms such as thread hijacking or shellcode trampolines.
-\end{itemize}
-
-Due to its stealth and flexibility, Manual Mapping is considered the most robust and professional method in the current landscape of cheat development.
+Manual Mapping avoids showing up in the list of loaded modules and can start execution in stealthy ways, such as by hijacking existing game threads.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{images/diagram_white_background.png}
-    \caption{Abstracted flowchart of dynamic module injection.}
+    \includegraphics[width=0.60\textwidth]{images/diagram_white_background.png}
+    \caption{Simplified flowchart of dynamic module injection using Manual Mapping.}
     \label{fig:manual_mapping_flow}
 \end{figure}
 
+We have developed our own injector that follows the structure outlined in Figure~\ref{fig:manual_mapping_flow}.  
+The source code for this injector can be found in the \texttt{injector} branch of the project repository.
+
 \section{Detection Techniques in Anti-Cheat Systems}
 
-Anti-cheat engines like VAC continuously scan game processes for indicators of unauthorized code. Their goal is to identify abnormal memory allocations, illegitimate execution paths, or manipulation of trusted system routines.
+The detection techniques described in this section are \textbf{not merely theoretical}; they are the result of \textbf{practical reverse engineering} carried out on modules \textit{extracted (dumped)} directly from the game's memory during runtime.  
+Through detailed analysis of the internal workings of \textbf{Valve Anti-Cheat (VAC)}, we have gathered \textbf{concrete evidence} supporting the mechanisms and strategies presented below.
+
+Modern anti-cheat systems, such as VAC, deploy a wide range of methods to detect the presence of unauthorized code within game processes.  
+These methods are specifically designed to identify \textit{abnormal memory modifications}, \textit{injected modules}, or \textit{manipulation of trusted system structures}.
+
+In the following sections, we outline and explain the principal detection techniques observed during our research.
 
 \subsection*{Thread Local Storage (TLS) Callbacks}
 
-A key detection mechanism involves the use of \textbf{Thread Local Storage (TLS) callbacks}, a feature in the Windows PE (Portable Executable) format that allows developers to specify functions to be executed automatically by the system when threads are created or destroyed, or when the module is loaded or unloaded.
+One early opportunity for anti-cheats to detect injected code occurs during program startup.  
+When a program or DLL starts running, Windows can automatically execute special functions known as \textbf{TLS callbacks}.
 
-In the context of anti-cheat systems, TLS callbacks are strategically valuable because they are executed \textbf{before the application’s main entry point is reached}, and even \textbf{before asynchronous procedure calls (APCs)} are processed. This early execution allows anti-cheat software to inspect and validate the runtime environment at an extremely privileged stage of process initialization.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{What is a TLS Callback?} \\
+A TLS (Thread Local Storage) callback is a special function that Windows automatically calls when a thread starts, before the main application code runs. Developers can use it for initialization tasks — but it can also be leveraged by anti-cheats for early memory inspections.
+\end{tcolorbox}
 
+Anti-cheats leverage this early execution stage to scan memory and inspect the runtime environment, often before the main game code even begins.
+
+\begin{comment}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{images/tls_callback.png}
-    \caption{Windows thread initialization flow with TLS Callback highlighted.}
-    \label{fig:tls-callback-diagram}
+        \includegraphics[width=0.45\textwidth]{images/tls_callback.png}
+        \caption{Windows thread initialization with TLS Callback execution highlighted.}
+        \label{fig:tls-callback-diagram}
 \end{figure}
+\end{comment}
 
-\begin{itemize}
-    \item On thread creation, the Windows loader invokes TLS callbacks \textit{within} the routine \texttt{ntdll!LdrpInitializeProcess}, giving anti-cheat DLLs a head start to perform memory integrity checks or verify thread origins.
-    \item If an injected DLL includes its own TLS callback, it may be triggered at load time—potentially revealing its presence to the anti-cheat if not properly concealed or removed.
-\end{itemize}
-
-Figure~\ref{fig:tls-callback-diagram} illustrates the initialization sequence of a thread in Windows. The TLS callback is highlighted to show its execution point \textbf{before APC dispatch} and \textbf{long before reaching the game’s code}. This makes it a powerful mechanism for early detection of injected modules or tampered execution states.
-
-\vspace{1em}
-For cheat developers, understanding the timing of TLS execution is critical. If not disabled or manually stripped from injected DLLs, a TLS callback can inadvertently betray the presence of the cheat before it even begins executing its logic. Consequently, many modern cheats using manual mapping techniques explicitly remove the TLS directory from the PE header to avoid this detection vector.
-
+If an injected DLL includes TLS callbacks and they are not properly removed or disabled, the cheat risks being detected immediately during process initialization.
 
 \subsection*{Start Address Integrity Checks}
 
-Another powerful detection primitive involves analyzing the \textbf{start address} of threads. Threads that begin execution in anonymous memory or outside known game modules are flagged as suspicious. This method is particularly effective against simple shellcode execution or poorly concealed DLL injections.
+Beyond startup checks, anti-cheats like VAC continuously monitor thread creation during gameplay.  
+A common detection method involves checking the \textbf{start address} of each thread.
 
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+    \textbf{What is a Start Address?} \\
+    The start address is the location in memory where a thread begins its execution. Legitimate threads typically start inside official game modules, such as \texttt{client.dll} or other trusted libraries.
+\end{tcolorbox}    
+
+If a thread is found starting at an address like \texttt{0x5F3A0000}, which falls outside any known game module (e.g., not within \texttt{client.dll}), it is highly suspicious and often indicates injected code or shellcode execution.
+
+This method is particularly effective at catching poorly concealed code injections or shellcode execution.
 
 \subsection*{VMT Hook Detection}
 
-Valve Anti-Cheat (VAC) is capable of detecting manipulations to \textbf{virtual method tables (VMTs)}—a powerful technique commonly used by cheats to hijack the behavior of in-game objects. In object-oriented game engines, many entities expose functionality through virtual methods. By modifying the VMT of such an object, a cheat can effectively redirect calls to its own code, gaining precise control over rendering, physics, and logic routines.
+Another detection strategy focuses on the integrity of in-game objects.
 
-However, VMT hooking leaves detectable traces in memory. Since VMTs are stored in writable memory regions and follow well-defined structural patterns, VAC can perform \textbf{pattern recognition} and \textbf{integrity verification} to identify tampering. This includes checking whether VMT pointers still reference legitimate memory ranges, or if the functions they point to fall outside of expected modules.
+In object-oriented engines, game entities typically use \textbf{Virtual Method Tables (VMTs)} to organize their functions.
+
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{What is a Virtual Method Table (VMT)?} \\
+A VMT is a table used in object-oriented programming to map object methods to their actual function addresses. By modifying a VMT, an attacker can hijack how a game object behaves.
+\end{tcolorbox}
+
+Cheats often modify these tables to hijack behaviors, such as altering rendering or player input.
+
+Anti-cheats like VAC can identify tampered VMTs by verifying:
+
+\begin{itemize}
+    \item Whether the VMT points to unexpected memory regions.
+    \item Whether the methods referenced fall outside legitimate game or system modules.
+\end{itemize}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.65\textwidth]{images/vmthooking.png}
-    \caption{Illustration of Virtual Method Table (VMT) Hooking. Function A is redirected to a custom implementation by modifying the object's VMT.}
+    \caption{Example of VMT Hooking.}
     \label{fig:vmt-hooking-diagram}
 \end{figure}
 
-To evade detection, some cheats attempt to clone the original VMT, apply hooks to the clone, and then swap the object’s VMT pointer. Others periodically restore and reapply the hook depending on the scan timing. In more recent developments, some developers have abandoned VMT hooking altogether in favor of inline detours or Return-Oriented Programming (ROP) chains, which are harder to attribute to specific objects.
-
+Due to their clear memory footprint, traditional VMT hooks are now considered relatively high-risk in modern cheat development.
 
 \section{Evasion Techniques Used by Cheats}
 
-To remain undetected, cheat developers employ advanced evasion strategies. These techniques are specifically designed to circumvent TLS callbacks, start address validation, and memory integrity checks.
+As anti-cheat systems like VAC become more sophisticated in their detection capabilities, cheat developers continuously adapt by designing increasingly advanced evasion techniques.  
+These strategies aim to minimize the attack surface, avoid triggering heuristic scans, and maintain stealth even under active monitoring.
+
+In this section, we present and explain some of the most common methods used to evade detection.
+
 
 \subsection*{Suppressing TLS Callbacks}
 
-One method to bypass TLS-based detection is to remove or disable the TLS callback table in the injected DLL. This can be achieved by:
-
-\begin{itemize}
-    \item Manually modifying the PE header to erase TLS structures.
-    \item Avoiding the use of new threads, thus preventing callback invocation.
-\end{itemize}
+To avoid early-stage detection, cheats often remove or disable the TLS callback directory from their injected DLLs.  
+By doing so, they prevent anti-cheats from executing inspection routines before the cheat is fully concealed.
 
 \subsection*{Thread Hijacking and Return Address Spoofing}
 
-\textbf{Thread hijacking} avoids the creation of new threads by taking control of an existing game thread. The cheat suspends a legitimate thread, modifies its instruction pointer, and redirects it to execute the injected payload.
+Instead of creating new threads—an action easily spotted—some cheats \textbf{hijack existing game threads}.
 
-To further mask execution, cheats employ \textbf{return address spoofing}, which fakes the origin of a function call. By placing a plausible return address on the stack, the cheat deceives anti-cheats into believing that execution flow originated from a legitimate module.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{What is Thread Hijacking?} \\
+Thread hijacking involves pausing an existing, legitimate thread, changing its instruction pointer to execute custom code, and then resuming it—making it harder for anti-cheats to notice any new activity.
+\end{tcolorbox}
 
+To further hide execution, cheats use \textbf{return address spoofing}—manipulating the call stack to make it appear that their code was naturally invoked from within the game’s legitimate modules.
 
 \subsection*{Start Address Redirection via ROP Gadgets}
 
-One advanced technique used by cheat developers to bypass anti-cheat protections is through the use of \textbf{ROP (Return-Oriented Programming) gadgets}. To understand this, think of ROP gadgets as tiny, pre-existing snippets of code—just a few instructions long—that already live in trusted software modules, like the game executable or system libraries. These snippets typically end with an instruction that passes control to another location, such as \texttt{ret} (return from function) or \texttt{jmp reg} (jump to the address in a register).
+A more advanced and stealthy method used by cheats involves \textbf{Return-Oriented Programming (ROP)}.
 
-Instead of calling malicious code directly—which would be easy for an anti-cheat system to detect—cheats can build a fake function call using these gadgets. This involves creating a small code section called a \emph{call stub} that fakes a legitimate function return. This stub pushes a \emph{spoofed return address} onto the stack (pointing to one of the trusted gadgets) and then jumps to the real payload. From the outside, the resulting execution path looks normal, making it hard to detect through common anti-cheat techniques like return address validation or call stack inspection. This is particularly effective against Valve's anti-cheat engine (VAC), which performs such checks.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\textbf{What is a ROP Gadget?} \\
+A ROP gadget is a small snippet of code already present in trusted modules, such as the game executable or Windows libraries. These snippets typically end with control transfer instructions like \texttt{ret} (return) or \texttt{jmp reg}.
+\end{tcolorbox}
 
-\paragraph{Stack Alignment and Shadow Space.}  
-In 64-bit Windows environments, function calls must follow strict rules. One of these rules involves aligning the stack pointer and reserving 32 bytes of temporary space for the called function (called \textit{shadow space}). The cheat's call stub must respect these rules to avoid crashing or triggering red flags. Here is an example of a minimal x64 stub:
+Instead of directly calling malicious code (which could be easily detected), cheats use ROP gadgets to build fake call chains.  
+This way, their execution path appears legitimate, making detection much harder.
 
-\begin{lstlisting}[style=asmstyle]
-sub rsp, 0x28               ; align stack and reserve shadow space
-mov rax, 0xFFAAFFAAFFAAFFAA ; spoofed return address (ROP gadget)
-push rax
-mov rax, 0xFFAAFFAAFFAAFFAA ; actual target function
-jmp rax
-\end{lstlisting}
+\paragraph{Stack Alignment and Shadow Space.}
 
-This stub ensures that when the function is done, the processor returns to a safe-looking address (the gadget), not to suspicious or injected code.
+In 64-bit Windows environments, the calling convention (\texttt{Microsoft x64}) imposes strict rules on how functions must be called, particularly regarding the stack layout:
 
-\paragraph{What Makes a Good Gadget?}  
-
-A \textbf{ROP gadget} is simply a small piece of existing code that ends in a control-transfer instruction, usually found inside legitimate modules. Because these are already loaded into memory, using them avoids detection that would arise from injecting new code.
-
-Cheats locate these gadgets by \textbf{pattern scanning}—searching memory for specific byte patterns that represent useful instruction sequences. The goal is to find gadgets that:
 \begin{itemize}
-    \item Adjust the stack pointer correctly, e.g., to undo the shadow space allocation.
-    \item Avoid modifying important CPU registers used by the function being called.
-    \item Provide a clean and believable return path for the processor to follow.
+    \item \textbf{Stack Alignment}: Before calling any function, the stack pointer (\texttt{rsp}) must be 16-byte aligned. This ensures that SIMD instructions (like \texttt{movaps}) and internal ABI requirements function correctly.
+    \item \textbf{Shadow Space}: Additionally, 32 bytes must be reserved on the stack for the called function to use freely. This space is used to store register parameters or local variables.
 \end{itemize}
 
-Here are examples of commonly used gadget patterns and what they do:
+Failure to meet these requirements can cause functions to crash, corrupt data, or behave unpredictably.  
+Moreover, violating calling conventions can raise suspicion in anti-cheat systems performing runtime integrity checks.
+
+To correctly prepare the stack for a spoofed or redirected call during ROP, cheats must adjust the stack before jumping to the target function.
+
+Here is an example of a minimal x64 call stub that correctly aligns the stack and reserves the required shadow space:
 
 \begin{lstlisting}[style=asmstyle]
-add rsp, 0x28
-ret
-\end{lstlisting}
-This gadget fixes the stack after the shadow space and performs a clean return. It's ideal for spoofing legitimate execution flow.
-
-\begin{lstlisting}[style=asmstyle]
-pop rcx
-add rsp, 0x20
-ret
-\end{lstlisting}
-This one pops a value into a register (e.g., an argument), adjusts the stack, and returns. It can be useful when additional cleanup or setup is needed.
-
-\begin{lstlisting}[style=asmstyle]
-add rsp, 0x20
-pop rax
-jmp rax
-\end{lstlisting}
-Instead of returning, this gadget jumps directly to a target address stored in \texttt{rax}. It serves as a \emph{trampoline}—a way to continue execution without relying on a normal return, which can be risky in some setups.
-
-These gadgets are either hardcoded into the cheat (if their locations are known ahead of time) or dynamically found at runtime based on memory analysis.
-
-\paragraph{x86 Considerations.}  
-On 32-bit (x86) systems, this technique becomes trickier due to the different calling conventions in use—such as \texttt{\_cdecl}, \texttt{\_thiscall}, or \texttt{\_fastcall}. Each defines how arguments are passed and who is responsible for cleaning up the stack.
-
-Below is a stub tailored for a \texttt{\_thiscall} function, which is commonly used for C++ member functions on Windows:
-
-\begin{lstlisting}[style=asmstyle]
-sub esp, 0x0C
-mov eax, 0xFFAAFFAA        ; spoofed return address
-mov [esp], eax
-mov eax, [esp+0x10]
-mov [esp+4], eax
-mov eax, [esp+0x14]
-mov [esp+8], eax
-mov eax, 0xFFAAFFAA        ; actual target function
-jmp eax
+sub rsp, 0x28               ; reserve 32 bytes shadow space + align stack (16-byte alignment)
+mov rax, 0xFFAAFFAAFFAAFFAA ; address of the ROP gadget to act as a fake return address
+push rax                    ; push the fake return address onto the stack
+mov rax, 0xFFAAFFAAFFAAFFAA ; address of the actual target function to execute
+jmp rax                     ; jump to the real function
 \end{lstlisting}
 
-In this example, the return address is placed at the top of the stack, and the arguments are manually positioned to match what the target function expects. This careful setup ensures the cheat integrates smoothly into the normal execution flow, even under the scrutiny of stack-based detection mechanisms.
+This setup ensures that:
 
-\paragraph{Detection Vectors.} Although this technique can bypass static stack validation, it is not impervious to detection. Anti-cheat engines can perform \textbf{stack walking}—analyzing the call stack at runtime—to identify anomalies such as unexpected return addresses or invalid module references. To counteract this, some cheats implement post-call cleanup via chained gadgets or trampolines that restore a believable call chain before returning.
+\begin{itemize}
+    \item The stack is properly aligned (after \texttt{sub rsp, 0x28}).
+    \item A valid-looking return address (pointing to a trusted ROP gadget) is pushed.
+    \item The function call structure looks legitimate, reducing the risk of detection.
+\end{itemize}
 
-\paragraph{Practical Implementations.} Open-source projects like \texttt{x86RetSpoof} by danielkrupinski encapsulate these techniques in reusable tooling for x86-based games. However, bespoke implementations remain common in private cheat circles, especially in paid cheats (\textit{P2C}) for titles like CS:GO and CS2.
+Thus, when the called function finishes and executes a \texttt{ret} instruction, it returns to a safe, believable address instead of crashing or exposing the cheat.
 
+\paragraph{Detection Vectors.}
 
+While ROP techniques are highly stealthy, anti-cheats can still perform \textbf{stack walking}—analyzing the call stack at runtime to detect inconsistencies, fake return addresses, or suspicious memory regions.
 
+\paragraph{Practical Implementations.}
 
-
-
+Open-source projects like \texttt{x86RetSpoof} by danielkrupinski offer practical examples of return address spoofing.  
+However, professional cheats often use customized ROP implementations tailored to specific games like CS2 for maximum stealth.
 
 \section{Extended VAC Capabilities and Developer Countermeasures}
 
-Beyond memory inspection and thread analysis, VAC includes a broader set of capabilities that significantly increase its detection surface.
+Beyond basic memory and thread inspections, \textbf{Valve Anti-Cheat (VAC)} extends its detection efforts through broader system monitoring.  
+It actively scans the file system looking for known cheat artifacts, inspects running processes for suspicious memory regions or injected modules, monitors the Windows registry for abnormal entries, and tracks inter-process activity to detect unauthorized access to the game.
 
-\subsection*{Observed Detection Capabilities}
+This expanded approach allows VAC to move beyond simple memory analysis, building a more complete picture of system behavior and making traditional static cheats easier to detect.
 
-Community research and reverse engineering have revealed that VAC likely performs:
+In response, cheat developers have introduced a range of countermeasures aimed at staying hidden.  
+String encryption is commonly used to obfuscate identifiable patterns in memory. Name randomization changes module and window identifiers dynamically to avoid blacklists.  
+More advanced techniques include polymorphic code, which mutates the cheat at runtime to evade pattern detection, and fileless execution, where the cheat operates entirely from memory without touching the disk.  
+Memory cleansing after injection further minimizes visible traces that could expose the cheat during active scanning.
 
-\begin{itemize}
-    \item \textbf{File System Scanning}: Searches for known cheat artifacts and patterns.
-    \item \textbf{Process and Memory Scanning}: Inspects all running processes for injection, shellcode, and suspicious modules.
-    \item \textbf{Registry Inspection}: Identifies unusual startup entries or configuration keys.
-    \item \textbf{Handle Enumeration}: Flags abnormal access to game-related objects.
-    \item \textbf{Hook and Signature Scanning}: Detects common hook patterns and byte signatures from known cheat loaders.
-\end{itemize}
-
-These mechanisms work in concert with behavioral monitoring and cloud-based analysis, making VAC highly resilient to static evasion alone.
-
-\subsection*{Common Countermeasures Used by Cheat Developers}
-
-In response, professional cheat developers implement an array of countermeasures designed to reduce their attack surface and mislead detection heuristics:
-
-\begin{itemize}
-    \item \textbf{String Encryption}: Prevents signature-based scanning of identifiable strings.
-    \item \textbf{Window and Module Name Randomization}: Avoids static blacklisting and manual heuristics.
-    \item \textbf{Polymorphic Code}: Constantly mutates the cheat’s binary structure to evade pattern recognition.
-    \item \textbf{Fileless Execution}: Prevents disk-based detection by streaming the cheat entirely into memory.
-    \item \textbf{Memory Cleansing}: Removes metadata and headers after injection to eliminate identifiable traces.
-    \item \textbf{Registry Hygiene}: Ensures no persistent keys or logs remain after execution.
-    \item \textbf{Scan Spoofing}: Hooks or replaces VAC scanning routines with fake responses to conceal activity.
-\end{itemize}
-
-These techniques are essential for achieving long-term undetectability in highly monitored environments such as Valve’s matchmaking infrastructure.
-
-
-DLL injection remains the foundation of modern cheat development in competitive games. Techniques such as Manual Mapping offer powerful stealth capabilities, enabling deep integration with the game runtime. However, anti-cheat systems like VAC employ increasingly sophisticated detection methods, including TLS callbacks, memory integrity scanning, VMT hook detection, and behavioral analysis.
-
-
+Ultimately, the ongoing battle between anti-cheat technologies and cheat developers drives constant innovation on both sides.  
+As VAC strengthens its methods to detect unauthorized activity, cheats evolve to become more stealthy, adaptive, and resilient — ensuring that the arms race in competitive gaming security remains in constant motion.
