@@ -1,7 +1,6 @@
 \chapter{Cheat Features Implemented in Our Cheat for CS2}
 
-This chapter provides a comprehensive analysis of the \textbf{cheat features} we have successfully implemented within our \textit{cheat}. We will explore their objectives, the underlying logic governing their operation, and the technical implementation that enables them to function correctly. Each section will present \textbf{code snippets} that illustrate key parts of our implementation, allowing for a deeper understanding of how we interfaced with the CS2 engine. Furthermore, we will outline the specific \textbf{functions we have hooked}, demonstrating how we gain control over critical game processes to manipulate rendering, aiming, and other essential aspects of gameplay.
-
+This chapter presents a comprehensive analysis of the \textbf{cheat features} developed and integrated into our CS2 cheat. We examine the purpose and logic behind each feature, as well as the technical mechanisms that enable their functionality. Code snippets and architectural insights are provided throughout to illustrate how we interface with the game engine and modify its behavior.
 
 \begin{table}[h]
     \centering
@@ -12,10 +11,10 @@ This chapter provides a comprehensive analysis of the \textbf{cheat features} we
         \toprule
         \textbf{Functionality} & \textbf{Description} \\
         \midrule
-        \textbf{Chams} & Modifies the rendering pipeline to apply custom materials to in-game models, enhancing visibility. \\
-        \textbf{ESP (Extra Sensory Perception)} & Extracts and displays real-time enemy information, providing a tactical advantage. \\
-        \textbf{Aimbot} & Automates aiming mechanisms to improve accuracy and precision. \\
-        \textbf{Anti-Aim} & Manipulates player model orientation to mislead enemy aimbots and disrupt targeting. \\
+        \textbf{Chams} & Enhances player visibility by applying custom materials to models directly within the rendering pipeline. \\
+        \textbf{ESP (Extra Sensory Perception)} & Displays real-time information about enemy players, providing positional awareness. \\
+        \textbf{Aimbot} & Assists or automates targeting by manipulating aim mechanics based on enemy location and visibility. \\
+        \textbf{Anti-Aim} & Alters player orientation data to deceive enemy aimbots and make targeting less predictable. \\
         \bottomrule
     \end{tabular}
     }
@@ -23,36 +22,44 @@ This chapter provides a comprehensive analysis of the \textbf{cheat features} we
     \label{tab:core_functionalities}
 \end{table}
 
+While there are multiple ways to implement cheats—ranging from external overlays to deep internal memory manipulation—we chose a fully \textbf{internal approach} for all features. This includes elements traditionally associated with external overlays, such as ESP and GUI components. In our case, all rendering is performed through \textbf{DirectX 11 hooks} inside the game’s own rendering pipeline, without ever creating a separate overlay window. This internal model ensures minimal performance overhead, seamless integration, and greatly reduces the risk of detection by anti-cheat systems.
 
-There exist multiple approaches to implementing each of these cheat features, ranging from simple external overlays to deep internal hooks that modify game memory and execution flow. Given the time constraints of this work and the limited publicly available documentation on cheat development, we have opted for an approach that provides the best balance between effectiveness and stealth. 
+Due to the absence of official documentation and the inherently clandestine nature of cheat development, our implementation relied heavily on reverse engineering and iterative experimentation. Instead of injecting disruptive memory modifications or drawing on top of the game window, we opted for subtle and controlled integration directly within CS2’s rendering and logic layers.
 
-The lack of official documentation and the inherently secretive nature of cheat development meant that much of our implementation had to be based on reverse engineering and extensive experimentation. Instead of relying on external overlays, which are more susceptible to detection and performance limitations, or resorting to aggressive memory manipulation, which significantly increases the risk of being flagged by anti-cheat systems, we chose to integrate directly with the game’s internal systems. 
-
-
-We begin by exploring \textbf{Chams}, one of the most visually impactful modifications. This technique alters the appearance of in-game models by replacing their default materials with custom ones, effectively enhancing player visibility. Unlike traditional \textit{ESP} methods, which rely on external overlays that merely draw information on the player’s screen, Chams modify the rendering process within the engine itself. This allows for an entirely integrated solution that operates without any \textbf{performance impact}, making it one of the most effective and undetectable visual enhancements available. 
-
-In the following sections, we will dissect the logic behind our Chams implementation, detailing how we intercept key rendering functions, modify material properties, and dynamically apply custom textures to selected in-game entities. Each aspect of the implementation will be supported by relevant code snippets, providing an in-depth look at how we have programmed this feature.
-
+We begin our exploration with \textbf{Chams}, one of the most impactful visual modifications in any cheat. Beyond its immediate utility for visibility, it lays the groundwork for more advanced features by exposing exact model data, animation states, and occlusion flags.
 
 \section{Chams: Enhancing Visibility Through Engine-Based Rendering}
-Chams (\textit{chameleon skins}) is a rendering manipulation technique that enables the replacement of standard in-game materials with custom-designed ones, significantly enhancing model visibility and allowing players to track enemy movements with greater ease regardless of lighting conditions, distance, or obstacles that would typically obscure their position. 
 
-Unlike external overlays, which function independently from the game and merely display additional information on the screen, Chams operate directly within the game engine, modifying the rendering logic at its core to ensure seamless integration and optimal performance without introducing additional processing overhead. 
+Chams is among the most widely adopted visual enhancements in competitive cheating due to its ability to highlight enemy models with striking clarity. Regardless of lighting conditions, distance, or obstacles, it provides players with uninterrupted visual feedback, offering a significant tactical edge.
 
-By leveraging hooking techniques within CS2’s material system, it becomes possible to dynamically inject new textures and visual effects that are not present in the base game, allowing for a level of customization that surpasses conventional graphical modifications while maintaining the efficiency and fluidity of the rendering pipeline.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!10, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+    \textbf{What are Chams?} \\
+    Chams (short for \textit{chameleon skins}) is a rendering technique that replaces standard in-game materials with custom ones to make entities, such as enemy players, more visible. It allows users to highlight models through walls, in the dark, or at long distances by applying distinctive colors, textures, or shaders during the rendering phase.
+\end{tcolorbox}
 
-To achieve this level of modification, we implemented a multi-step process that ensures full integration with the game's rendering system. This process consists of the following key components:
+Unlike ESP implementations that operate externally by drawing simplistic representations (boxes, skeletons) on top of the game window, Chams works by injecting directly into the game’s rendering subsystem. By hooking into model drawing and material assignment functions, we gain access to the same 3D models, bones, and render contexts the game engine uses. This internal access enables not only the application of custom materials but also precise visibility checks, hitbox-aware targeting, and pose-based filtering—capabilities fundamentally out of reach for external overlays.
+
+As such, Chams becomes more than a visual gimmick: it acts as a foundational layer for other cheat systems, such as Aimbot targeting, backtracking, and anti-occlusion logic.
+
+Our implementation is built atop CS2’s material system and the DirectX 11 rendering backend. We leverage engine-level hooks to create, override, and apply materials dynamically at runtime, ensuring that our modifications persist across map loads and round transitions without disrupting the engine’s native rendering pipeline.
+
+To implement Chams, we follow a structured process composed of four main steps:
 
 \begin{itemize}
-    \item \textbf{Extracting Default Materials from the Game Engine} – Understanding and retrieving the default materials used by the game.
-    \item \textbf{Generating Custom Materials} – Creating and defining new textures and visual effects that will replace the existing materials.
-    \item \textbf{Hooking CreateMaterial and Injecting Custom Materials} – Intercepting the game's material creation functions to replace default materials with our customized versions dynamically.
-    \item \textbf{Hooking OnDrawModelExecute and Overriding Materials} – Modifying the rendering function responsible for drawing models to enforce the application of custom materials in real-time.
+    \item \textbf{Extracting Default Materials from the Game Engine} – Identifying and retrieving the material templates used for player models and props.
+    \item \textbf{Generating Custom Materials} – Creating new materials with configurable properties (e.g., flat shading, glow effects, depth ignoring).
+    \item \textbf{Hooking CreateMaterial and Injecting Custom Materials} – Replacing or extending engine material creation routines with our custom shaders.
+    \item \textbf{Hooking OnDrawModelExecute and Overriding Materials} – Intercepting the draw call pipeline to apply our custom materials in real time.
 \end{itemize}
 
-In the following sections, we will provide a detailed explanation of each of these steps, outlining how they contribute to the seamless integration of Chams into the CS2 rendering pipeline. We will delve into the technical specifics of how default materials are extracted, how custom materials are generated, and how we hook into the rendering functions to ensure that these modifications persist across all game instances.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/chams/chams_diagram.png}
+    \caption{Chams Workflow.}
+    \label{fig:chams_workflow}
+\end{figure}
 
-
+In the next sections, we delve into each of these steps in detail, outlining the technical structures, hooks, and engine functions involved in building a robust and undetectable Chams system within CS2.
 
 \subsection{Extracting Default Materials from the Game Engine}
 
