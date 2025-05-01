@@ -22,11 +22,11 @@ This chapter presents a comprehensive analysis of the \textbf{cheat features} de
     \label{tab:core_functionalities}
 \end{table}
 
-While there are multiple ways to implement cheats—ranging from external overlays to deep internal memory manipulation—we chose a fully \textbf{internal approach} for all features. This includes elements traditionally associated with external overlays, such as ESP and GUI components. In our case, all rendering is performed through \textbf{DirectX 11 hooks} inside the game’s own rendering pipeline, without ever creating a separate overlay window. This internal model ensures minimal performance overhead, seamless integration, and greatly reduces the risk of detection by anti-cheat systems.
+While there are various methods for implementing cheats—ranging from external overlays to deep internal memory manipulation—we adopted a strictly \textbf{internal approach} for all features. This includes components typically associated with external overlays, such as ESP and GUI elements. In our implementation, all rendering is executed through \textbf{DirectX 11 hooks} within the game’s native rendering pipeline, eliminating the need for any separate overlay windows. This design ensures low performance overhead, seamless visual integration, and significantly lowers the risk of detection by anti-cheat systems.
 
-Due to the absence of official documentation and the inherently clandestine nature of cheat development, our implementation relied heavily on reverse engineering and iterative experimentation. Instead of injecting disruptive memory modifications or drawing on top of the game window, we opted for subtle and controlled integration directly within CS2’s rendering and logic layers.
+Given the lack of official documentation and the inherently covert nature of cheat development, our approach relied extensively on reverse engineering and iterative testing. Rather than injecting disruptive memory patches or layering visuals atop the game window, we focused on subtle, controlled integration within CS2’s rendering and logic layers.
 
-We begin our exploration with \textbf{Chams}, one of the most impactful visual modifications in any cheat. Beyond its immediate utility for visibility, it lays the groundwork for more advanced features by exposing exact model data, animation states, and occlusion flags.
+Our exploration begins with \textbf{Chams}, one of the most impactful visual modifications in any cheat. 
 
 \section{Chams: Enhancing Visibility Through Engine-Based Rendering}
 
@@ -51,13 +51,6 @@ To implement Chams, we follow a structured process composed of four main steps:
     \item \textbf{Hooking CreateMaterial and Injecting Custom Materials} – Replacing or extending engine material creation routines with our custom shaders.
     \item \textbf{Hooking OnDrawModelExecute and Overriding Materials} – Intercepting the draw call pipeline to apply our custom materials in real time.
 \end{itemize}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/chams/chams_diagram.png}
-    \caption{Chams Workflow.}
-    \label{fig:chams_workflow}
-\end{figure}
 
 In the next sections, we delve into each of these steps in detail, outlining the technical structures, hooks, and engine functions involved in building a robust and undetectable Chams system within CS2.
 
