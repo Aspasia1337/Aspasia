@@ -56,9 +56,9 @@ In the next sections, we delve into each of these steps in detail, outlining the
 
 \subsection{Extracting Default Materials from the Game Engine}
 
-To fully understand how materials are structured and applied in CS2, we conducted extensive \textbf{debugging of the rendering engine}. By hooking into the \textbf{OnDraw} function, we intercepted the material creation process and successfully extracted the data of a default in-game material.
+To gain a comprehensive understanding of how materials are structured and applied in \textit{Counter-Strike 2} (CS2), we performed an in-depth analysis of the rendering pipeline through targeted \textbf{debugging techniques}. By hooking into the \textbf{OnDraw} function, we intercepted the material instantiation routine and successfully extracted data corresponding to a default in-game material.
 
-The following is an example of a material retrieved directly from the CS2 engine:
+Below is an example of a material retrieved directly from the CS2 engine:
 
 \begin{lstlisting}[style=cppstyle, caption={Extracted Default Material from CS2}]
 <!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
@@ -73,19 +73,22 @@ The following is an example of a material retrieved directly from the CS2 engine
     }
 \end{lstlisting}
 
-The extracted material follows the KV3 format, a modernized data structure introduced in Source 2 to replace the older KeyValues system used in Source 1. 
+This material follows the KV3 format, a modern and extensible data representation introduced in the Source 2 engine as a successor to the legacy KeyValues system used in Source 1. KV3 facilitates efficient serialization of structured content, supporting nested hierarchies and a wide range of data types—making it ideal for describing complex game assets such as materials, models, and particle systems.
 
-KV3 allows for efficient serialization of structured data, supporting hierarchical organization and multiple data types, making it ideal for defining game assets such as materials, models, and particle effects. The Source 2 engine interprets these material definitions at runtime, applying the specified shader, texture maps, and rendering properties dynamically. By understanding this format, we gain full control over how materials are created and manipulated in CS2, enabling us to inject entirely new visual elements into the game without modifying pre-existing assets.
+The Source 2 engine parses these material definitions at runtime, dynamically applying shaders, texture maps, and rendering parameters based on the KV3 schema. Mastery of this format enables complete control over material creation and manipulation in CS2, empowering developers to inject entirely new visual effects without altering existing game assets.
 
-Further exploration of this format, along with an in-depth analysis of its structure and applications, was possible by studying the official Source 2 Developer Wiki, which provides extensive documentation on how Source 2 processes materials, shaders, and other graphical assets. This resource offered crucial insights into how KV3 interacts with the rendering engine, particularly in the way materials are compiled and utilized in real time.
+To deepen our understanding, we consulted the official \textit{Source 2 Developer Wiki}, which provides detailed documentation on the internal structure and runtime behavior of materials and shaders within the engine \cite{valve2021source2wiki}. This resource proved invaluable in dissecting the way KV3 files are compiled and interpreted during the rendering process.
 
-By modifying this format, we successfully generated a variety of new materials, each possessing unique properties suited for different visual effects, allowing us to experiment with different rendering techniques and further refine our implementation of Chams in CS2.
+By modifying KV3 material definitions, we were able to generate a wide range of custom materials—each exhibiting distinct visual properties. This capability allowed us to prototype and fine-tune advanced rendering techniques, laying the foundation for our custom \textit{Chams} implementation in CS2.
+
 
 \subsection{Generating Custom Materials}
 
-After extracting and analyzing a default material from the game, we proceeded to experiment with different configurations to generate a collection of materials optimized for various Chams effects.
+Building upon the analysis of the default material extracted from the game engine, we proceeded to design and implement a collection of custom materials optimized for various \textit{Chams} effects. The primary objective was to enhance player visibility under different rendering conditions, while ensuring full compatibility with CS2’s rendering pipeline.
 
-The goal of this process was to develop materials capable of altering in-game visibility while maintaining the integrity of CS2’s rendering engine. By modifying specific attributes such as \texttt{g\_flFresnelExponent} for light reflection, \texttt{g\_flOpacityScale} for transparency, and the blending mode flags, we achieved a variety of effects including glow effects, metallic reflections, and enhanced visibility through obstacles.
+This customization was achieved by adjusting attributes such as \texttt{g\_flFresnelExponent} (to modulate surface light reflection), \texttt{g\_flOpacityScale} (to control transparency), and various blending mode flags. These modifications allowed us to produce a range of visual effects, including glowing contours, metallic sheens, and improved silhouette visibility through environmental obstacles.
+
+All custom materials we developed were consolidated into a single list for easier management and inspection. This list, named \texttt{MaterialInfo}, is defined in our \texttt{materials.h} header and serves as a centralized reference for the materials included in our repository. Each entry corresponds to a statically defined material buffer representing a specific visual style:
 
 \begin{lstlisting}[style=cppstyle, caption={List of Custom Materials}]
 std::vector <const char *> MaterialInfo = { 
@@ -97,13 +100,9 @@ std::vector <const char *> MaterialInfo = {
 };
 \end{lstlisting}
 
-Each of these materials was assigned a name that reflects its primary visual characteristic to facilitate its integration into our cheat system. By storing these materials in a \textbf{hashmap}, we enable efficient retrieval and reuse whenever new materials need to be applied. 
+Each material is named according to its visual properties, facilitating both programmatic integration and visual debugging. These definitions are stored as raw KV3 strings and injected at runtime via the \texttt{CreateMaterial} hook. Since CS2 materials follow a strict KV3 structure, our definitions adhere to the expected schema, ensuring smooth integration into the rendering pipeline without requiring file system modifications.
 
-Since materials in CS2 are defined as structured strings that determine their rendering properties, we ensure that our injected materials adhere to this format. This allows us to seamlessly integrate custom materials into the game's rendering pipeline by hooking into the \texttt{CreateMaterial} function and dynamically replacing standard materials with our own.
-
-
-
-One of the most visually distinctive materials we developed was the \textbf{Glow Illuminated} effect. This material was designed to create a glowing outline around player models by leveraging CS2’s built-in material masks and fine-tuning fresnel-based lighting parameters. The final definition of this material is shown below:
+Among the collection, one of the most visually distinct materials is the \textbf{Glow Illuminated} effect. Designed to outline player models with a dynamic glow, this material leverages fresnel lighting principles and CS2’s built-in masking system. The complete definition is provided below:
 
 \begin{lstlisting}[style=cppstyle, caption={Glow Illuminated Material Definition}] 
 static static constexpr char szVMatBufferGlow2Visible[] =
@@ -111,18 +110,9 @@ R(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}format:gen
     {
         shader = "csgo_effects.vfx"
         g_tColor = resource:"materials/dev/primary_white_color_tga_21186c76.vtex"
-        g_tNormal = resource:"materials/default/default_normal_tga_7652cb.vtex"
-        g_tMask1 = resource:"materials/default/default_mask_tga_344101f8.vtex"
-        g_tMask2 = resource:"materials/default/default_mask_tga_344101f8.vtex"
-        g_tMask3 = resource:"materials/default/default_mask_tga_344101f8.vtex"
-        g_flOpacityScale = 0.45
         g_flFresnelExponent = 0.75
         g_flFresnelFalloff = 1
-        g_flFresnelMax = 0.0
-        g_flFresnelMin = 1
-        F_ADDITIVE_BLEND = 1
-        F_BLEND_MODE = 1	
-        F_TRANSLUCENT = 1
+        . . .
         F_IGNOREZ = 0
         F_DISABLE_Z_WRITE = 0
         F_DISABLE_Z_BUFFERING = 0
@@ -131,23 +121,24 @@ R(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}format:gen
 });
 \end{lstlisting}
 
+This configuration exploits Source 2’s flexible rendering capabilities to produce a clean and dynamic glow. The fresnel parameters control how the glow intensity varies depending on the player’s viewing angle, while the use of multiple texture masks ensures the glow integrates naturally into the environment, rather than appearing as an artificial overlay.
 
-This configuration takes advantage of Source 2’s built-in rendering properties to produce a highly effective glow effect. The fresnel parameters control how light interacts with the surface, ensuring that the glow intensity changes dynamically based on the player's viewing angle. Additionally, the use of multiple texture masks helps the glow blend naturally into the surrounding environment, making it appear as a seamless part of the game's visual style rather than an artificial overlay.
+By iteratively testing different parameter combinations in real time, we refined these materials to achieve optimal visual performance. The resulting system not only enhances visibility but also showcases the extensibility of Source 2’s material engine. The ability to dynamically inject new material definitions at runtime allows for fast experimentation and on-the-fly adjustments without modifying precompiled assets.
 
-By refining these materials through iterative testing and real-time observation, we successfully developed a collection of custom visual effects that seamlessly integrate into CS2’s rendering engine. This process not only allowed us to enhance player visibility but also provided deeper insights into the flexibility of Source 2’s material system. The ability to dynamically inject and apply new materials in real time offers significant advantages, as it enables rapid adjustments to the cheat’s visual effects without requiring modifications to game files or precompiled assets.
-
-Through the careful selection of material properties and the precise manipulation of CS2’s rendering functions, we have created a system that allows for highly customizable visual enhancements. These materials serve as the foundation for our Chams implementation, which will be further detailed in the following sections.
+In summary, through precise manipulation of rendering properties and direct control over material injection, we established a robust system for visual enhancement. These materials constitute the foundation of our \textit{Chams} implementation, which will be expanded in subsequent sections.
 
 
-\subsection{Hooking CreateMaterial and Injecting Custom Materials}
+\subsection{Hooking \texttt{CreateMaterial} and Injecting Custom Materials}
 
-To dynamically create and register materials in CS2, we hooked into the \textbf{CreateMaterialFunction}, allowing us to manipulate how the game initializes and stores materials.
+To dynamically create and register materials in CS2, we hooked into the \texttt{CreateMaterialFunction}, a core internal function responsible for initializing material objects within the engine.
 
 \begin{lstlisting}[style=cppstyle, caption={Hooking CreateMaterial Function}]
 static int64_t (__fastcall *CreateMaterialFunction)(void *, void *, const char *, void *, unsigned int, unsigned int);
 \end{lstlisting}
 
-With this function, we dynamically generated and injected new materials into the game:
+By intercepting this function, we gained the ability to inject arbitrary materials at runtime, bypassing the need for asset compilation or manual file injection.
+
+To invoke the hook, we implemented a wrapper around the material creation logic:
 
 \begin{lstlisting}[style=cppstyle, caption={Creating a Custom Material in Memory}]
 CMaterial2 *CreateCustomMaterial(const char *materialName, const char *materialData) {
@@ -161,28 +152,40 @@ CMaterial2 *CreateCustomMaterial(const char *materialName, const char *materialD
 }
 \end{lstlisting}
 
-\subsection{Loading KV3 Materials into the Game}  
+In this function, the parameter \texttt{materialData} refers to the raw material definition string in KV3 format. These strings correspond to the materials we previously defined and stored in an array in \texttt{materials.h}—as described in the previous section. Each entry in that array represents a fully structured material ready for parsing.
 
-After defining the custom materials, they must be properly loaded into the game engine so that they can be recognized and applied during rendering. This process involves parsing the KV3 data and ensuring that the Source 2 engine interprets it correctly. Without this step, the materials would remain as raw data in memory and would not be accessible for rendering operations. The following function is responsible for handling this process:  
+When passed to \texttt{LoadKeyValues}, the text-based definition is parsed and converted into a valid \texttt{CKeyValues3} resource object. This parsed structure is then passed to the internal \texttt{CreateMaterialFunction}, which registers the material within the engine’s rendering subsystem, making it immediately usable by any rendering logic or override.
+
+\subsection{Loading KV3 Materials into the Game}
+
+As outlined in the \textit{previous section}, once a material is passed as a raw \textit{KV3-formatted string} to the \texttt{CreateCustomMaterial} function, it must be properly parsed and loaded into the \textit{Source 2 engine} in order to become a usable resource. 
+This stage is \textbf{crucial}: \textbf{while the material string resides in memory, it cannot be rendered until the engine recognizes it as a valid, structured object.} To handle this, we implemented a dedicated wrapper around the internal \texttt{LoadKeyValues} function.
 
 \begin{lstlisting}[style=cppstyle, caption={Loading a KV3 Material into the Game}]
-bool Visual::Chams::LoadKV3 (CUtilsBuff *buff, CKeyValues3 *CkeyVal) 
+bool Visual::Chams::LoadKV3(CUtilsBuff *buff, CKeyValues3 *CkeyVal) 
 {
-    KV3ID_t kv3ID = KV3ID_t ("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
-    return LoadKeyValues (CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr, "");
+    KV3ID_t kv3ID = KV3ID_t("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
+    return LoadKeyValues(CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr, "");
 }
-\end{lstlisting}  
+\end{lstlisting}
 
-This function plays a critical role in ensuring that the Source 2 engine correctly processes and integrates the KV3 material data. The most notable aspect of this function is the initialization of the \texttt{KV3ID\_t} object, which serves as a unique identifier for the KV3 data format. The string \texttt{"generic"} suggests that the format follows a standard KV3 structure. However, the most crucial part of this initialization lies in the two hexadecimal values: \texttt{0x41B818518343427E} and \texttt{0xB5F447C23C0CDF8C}.  
+This function takes as input the \textit{material buffer} (\texttt{buff})—which contains the raw string previously defined and stored in the array located in \texttt{materials.h}—and a pointer to an uninitialized \texttt{CKeyValues3} structure. The \texttt{LoadKeyValues} function will parse the \textit{KV3 text}, transforming it into a structured object that can be consumed by the \textit{Source 2 engine}.
 
-These identifiers are likely used by the Source 2 engine as a reference signature for processing specific types of KV3 data. The first hexadecimal value, \texttt{0x41B818518343427E}, may act as a format validation key that the engine checks to ensure that the data being loaded conforms to the expected KV3 structure. The second identifier, \texttt{0xB5F447C23C0CDF8C}, could correspond to a particular category of KV3 files, distinguishing different types of resource files such as materials, models, or particle effects. This mechanism prevents malformed or incompatible KV3 data from being processed, ensuring that only correctly structured material definitions are registered in the engine.  
+\begin{tcolorbox}[colback=gray!05, colframe=gray!50, sharp corners, boxrule=0pt]
+    \textbf{KV3 Identifier:}  
+        A key aspect of this process is the initialization of a \texttt{KV3ID\_t} object, which informs the engine how to interpret the data. The identifier consists of a \textit{format name} (\texttt{"generic"}) and two 64-bit hexadecimal values:
+    
+    \begin{itemize}
+      \item \texttt{0x41B818518343427E} — serves as a \textit{format integrity checksum}.
+      \item \texttt{0xB5F447C23C0CDF8C} — indicates the \textit{type or category} of the resource, such as a material definition.
+    \end{itemize}
+    
+    These identifiers are \textbf{essential}: they act as \textit{versioning} and \textit{validation signatures}, ensuring that only properly structured and supported KV3 data is loaded. This prevents malformed materials from being parsed or injected into the engine.
+\end{tcolorbox}
 
-Once the KV3 identifier is established, the function calls \texttt{LoadKeyValues}, which processes the KV3 data stored in memory. This function takes the parsed key-value pairs, ensures that the format aligns with the engine's expectations, and then integrates the material into the game’s resource management system. The function parameters include a reference to the parsed data, a pointer to the KV3 identifier, and several \texttt{nullptr} arguments, which indicate that no additional optional parameters are required in this context.  
+Once this identifier is constructed, the \texttt{LoadKeyValues} function parses the contents of the buffer and fills the \texttt{CKeyValues3} object with the corresponding \textit{data tree}. This structure can then be passed to the internal \texttt{CreateMaterialFunction}, which registers the material within the engine's \textit{resource system}, making it immediately available for use in \textit{rendering pipelines}.
 
-By executing this function, the Source 2 engine successfully processes and registers the material, making it available for rendering in real-time. The use of predefined hexadecimal identifiers ensures that the KV3 data is correctly formatted and compatible with the rendering system. This approach enables the dynamic application of custom materials, allowing for real-time modifications without requiring precompiled assets or modifications to the game’s existing files. The ability to inject materials dynamically provides a powerful method for implementing features such as Chams, enhanced weapon skins, and other visual modifications while maintaining full compatibility with the game engine.
-
-
-
+This \textit{modular parsing approach} not only enables \textit{dynamic injection} of new materials at runtime, but also provides a reliable mechanism for \textit{validating} and \textit{managing} visual resources. The separation between \textit{definition} (as a raw string), \textit{parsing} (via \texttt{LoadKV3}), and \textit{registration} (via \texttt{CreateMaterialFunction}) ensures a \textbf{clear} and \textbf{flexible pipeline} for material creation within our \textit{Chams system}.
 
 \subsection{Hooking \texttt{OnDrawModelExecute} and Overriding Materials}
 
@@ -256,15 +259,28 @@ This reduces the risk of suspicious-looking shots (such as pre-firing through wa
 
 \begin{figure}[H]
     \centering
-    % Primera fila de 3 imágenes
-    \includegraphics[width=0.33 \textwidth,height=0.16\textheight]{images/chams/Screenshot 2025-04-28 at 03.03.27.png}\hspace{1pt}%
-    \includegraphics[width=0.33 \textwidth,height=0.16\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.21.png}\hspace{1pt}%
-    \includegraphics[width=0.33 \textwidth,height=0.16\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.58.png}\\[1pt]
-    % Segunda fila de 3 imágen 
-    \includegraphics[width=0.33 \textwidth,height=0.16\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.36.png}\hspace{1pt}%
-    \includegraphics[width=0.33 \textwidth,height=0.16\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.50.png}\hspace{1pt}%
-    \includegraphics[width=0.33 \textwidth,height=0.16\textheight]{images/chams/Screenshot 2025-04-28 at 03.06.35.png}
+
+    \makebox[\textwidth][c]{%
+        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.03.27.png}%
+        \hfill
+        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.21.png}%
+        \hfill
+        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.58.png}%
+    }
+
+    \vspace{1.5pt} 
+
+    \makebox[\textwidth][c]{%
+        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.36.png}%
+        \hfill
+        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.50.png}%
+        \hfill
+        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.06.35.png}%
+    }
+
+    \caption{Examples of different custom Chams materials applied in CS2.}
 \end{figure}
+
 
 
 
@@ -287,55 +303,7 @@ An aimbot is one of the most fundamental and widely recognized cheat functionali
 However, before implementing the aiming mechanism, it was crucial to first analyze how CS2 internally manages game entities. This understanding was essential since retrieving a player's position and calculating the required angles for the aimbot depend on accessing valid entity data. Without proper entity management, attempting to access a non-existent player could lead to dereferencing null pointers, resulting in critical errors or crashes.
 
 
-
-\subsection{Entity Management: Hooking the Game's Entity System}
-
-CS2 maintains an internal \textbf{entity system} that is responsible for handling all game objects, including players. Each entity is uniquely identified and assigned a memory address, allowing the game to track its state efficiently. Unlike other dynamic game objects that are continuously updated, player entities in CS2 follow a more static lifecycle: they are loaded into memory once a player connects to a server and remain persistent unless a player disconnects or a new player joins the match. This means that, unlike projectiles or temporary objects, player entities are only modified under specific conditions, reducing unnecessary updates and improving performance.
-
-To reliably access player data and maintain an up-to-date reference to all active players, we identified and hooked into two critical functions within the game's entity management system:
-
-\begin{itemize}
-    \item \textbf{OnAddEntity} – Responsible for adding new entities to the game. When a player joins a match, the game dynamically allocates memory for a new entity, assigns it a unique identifier, and registers it in the entity system.
-    \item \textbf{OnRemoveEntity} – Handles the cleanup and removal of entities when they leave the match. When a player disconnects or is kicked, the entity system marks their associated entity for deletion and releases the allocated memory.
-\end{itemize}
-
-By intercepting these functions, we effectively track player entities and store their references in a \textbf{hashmap}. This hashmap allows us to maintain real-time access to entity data while preventing invalid memory access. Since player entities are only modified when a new player joins or an existing player disconnects, the hashmap remains stable and does not require frequent updates, unlike entity lists that need to be re-queried every frame.
-
-We implemented hooks for \texttt{OnAddEntity} and \texttt{OnRemoveEntity} to ensure our entity tracking remains consistent throughout a match. By leveraging \textbf{hashmaps}, we can efficiently store and retrieve player-related entities, reducing overhead and ensuring a seamless interaction with the game's entity system. Furthermore, this approach minimizes reliance on manually finding offsets, as entity references remain valid until explicitly removed by the engine.
-
-
-
-\begin{lstlisting}[style=cppstyle, caption={OnAddEntity Hook}]
-void HooksManager::OnAddEntity::hOnAddEntity(__int64 CGameEntitySystem, void *entityPointer, int entityHandle) {
-    oOnAddEntity(CGameEntitySystem, entityPointer, entityHandle);
-
-    if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "C_CSPlayerPawnBase") == 0) {
-        iGameEntitySystem->PawnMap.insert(std::make_pair(entityHandle, (C_PlayerPawn *)entityPointer));
-    }
-    if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "CBasePlayerController") == 0) {
-        iGameEntitySystem->ControllerMap.insert(std::make_pair(entityHandle, (C_PlayerController *)entityPointer));
-    }
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style=cppstyle, caption={OnRemoveEntity Hook}]
-void HooksManager::OnRemoveEntity::hOnRemoveEntity(__int64 CGameEntitySystem, void *entityPointer, int entityHandle) {
-    oOnRemoveEntity(CGameEntitySystem, entityPointer, entityHandle);
-
-    if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "C_CSPlayerPawnBase") == 0) {
-        iGameEntitySystem->PawnMap.erase(entityHandle);
-    }
-    if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "CBasePlayerController") == 0) {
-        iGameEntitySystem->ControllerMap.erase(entityHandle);
-    }
-}
-\end{lstlisting}
-
-
-By correctly associating players with their respective controller and pawn structures, we ensure that all entity references remain valid.
-
-
-\subsubsection{Computing Aiming Angles}
+\subsection{Computing Aiming Angles}
 
 Achieving precise aiming in a three-dimensional environment like \textit{Counter-Strike 2} requires the aimbot to compute angular adjustments that align the player's crosshair with a target. Player orientation in CS2 is defined by three rotational angles:
 
@@ -347,7 +315,7 @@ Achieving precise aiming in a three-dimensional environment like \textit{Counter
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.4\linewidth]{images/image.png}
+    \includegraphics[width=0.78\linewidth]{images/image.png}
     \caption{Representation of Pitch, Yaw, and Roll in a 3D Space.}
     \label{fig:pitch_yaw_roll}
 \end{figure}
@@ -377,6 +345,14 @@ Where:
     \item \( P_{\text{camera}} \) is the camera offset (view position).
 \end{itemize}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.78\linewidth]{images/Aimbot/Untitled Diagram.png}
+    \caption{Representation of the player and enemy positions on the map.}
+    \label{fig:player_enemy_positions}
+\end{figure}
+
+
 Expressed in vector form:
 
 \[
@@ -394,12 +370,6 @@ Expressed in vector form:
 \end{bmatrix}
 \]
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.75\linewidth]{images/Aimbot/Untitled Diagram.png}
-    \caption{Representation of the player and enemy positions on the map.}
-    \label{fig:player_enemy_positions}
-\end{figure}
 
 \subsubsection{Centering Coordinates on the Enemy}
 
@@ -408,6 +378,15 @@ To center the coordinate system on the enemy, we compute the relative position o
 \[
 D = P_{\text{enemy}} - P_{\text{player}}
 \]
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.78\linewidth]{images/Aimbot/Two.png}
+    \caption{Original view with coordinate axes.}
+    \label{fig:original_view}
+\end{figure}
+
 
 Expressed in vector form:
 
@@ -420,24 +399,7 @@ Expressed in vector form:
 \end{bmatrix}
 \]
 
-\begin{figure}[h!]
-    \centering
-    \begin{minipage}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{images/Aimbot/Two.png}
-        \caption{Vista original con los ejes coordenados.}
-        \label{fig:original_view}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{images/Aimbot/perspective.png}
-        \caption{Cálculo del vector de desplazamiento \( D \).}
-        \label{fig:displacement_vector}
-    \end{minipage}
-\end{figure}
-
-\subsubsection{Local Coordinate System and Angle Calculation}
+\subsection{Local Coordinate System and Angle Calculation}
 
 As illustrated in Figure~\ref{fig:direction_vector}, all calculations take place in a local coordinate system where the player’s eye position serves as the \textbf{origin}. The computed direction vector \( D \), depicted by the blue line, serves as the foundation for determining the required pitch and yaw adjustments.
 
@@ -522,7 +484,6 @@ where \( S \) is the smoothing factor controlling transition speed. A larger smo
 
 By implementing smooth interpolation rather than instantaneously snapping to a target, the aimbot mimics natural aiming behaviors, thereby remaining undetected by VAC while maintaining effectiveness.
 
-\newpage
 
 \section{Bone Calculation: Extracting and Rendering Player Skeletons}
 
@@ -558,7 +519,6 @@ namespace terroristBones {
         neck_0 = 5,
         head_0 = 6,
         // ... continued through to:
-        leg_upper_r_twist1 = 103
     };
 }
 \end{lstlisting}
@@ -571,7 +531,7 @@ After accessing the bone data, we developed a visualization tool to display each
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\linewidth]{images/Bones/730_22.jpg}
+    \includegraphics[width=0.95\linewidth]{images/Bones/730_22.jpg}
     \caption{Visualizing all bone indices rendered over the player model.}
     \label{fig:bone_debug}
 \end{figure}
