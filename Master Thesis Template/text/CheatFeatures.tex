@@ -235,19 +235,21 @@ By leveraging this hooking technique, we achieve a stealthy and efficient modifi
     \includegraphics[width=0.3\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 02.24.15.png}\hspace{1pt}%
     \includegraphics[width=0.3\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 02.23.53.png}\hspace{1pt}%
     \includegraphics[width=0.3\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 02.24.33.png}        
+    \caption{Different Chams materials rendered with blue tones.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.25.09.png}\hspace{1pt}%
+    \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.25.31.png}\hspace{1pt}%
+    \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.25.47.png}\\[0.2pt]
+    \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.26.01.png}\hspace{1pt}%
+    \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.26.14.png}\hspace{1pt}%
+    \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.26.29.png}
+    \caption{Different Chams materials rendered with purple tones.}
 \end{figure}
 
 
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.25.09.png}\hspace{1pt}%
-        \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.25.31.png}\hspace{1pt}%
-        \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.25.47.png}\\[0.2pt]
-        \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.26.01.png}\hspace{1pt}%
-        \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.26.14.png}\hspace{1pt}%
-        \includegraphics[width=0.3\textwidth,height=0.20\textheight]{images/chams/Screenshot 2025-04-28 at 02.26.29.png}
-\end{figure}
-    
 
 \subsubsection{Visible vs Non-Visible Chams Logic}
 
@@ -261,28 +263,27 @@ This reduces the risk of suspicious-looking shots (such as pre-firing through wa
     \centering
 
     \makebox[\textwidth][c]{%
-        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.03.27.png}%
+        \includegraphics[width=0.33\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 03.03.27.png}%
         \hfill
-        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.21.png}%
+        \includegraphics[width=0.33\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.21.png}%
         \hfill
-        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.58.png}%
+        \includegraphics[width=0.33\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 03.04.58.png}%
     }
 
     \vspace{1.5pt} 
 
     \makebox[\textwidth][c]{%
-        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.36.png}%
+        \includegraphics[width=0.33\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.36.png}%
         \hfill
-        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.50.png}%
+        \includegraphics[width=0.33\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 03.05.50.png}%
         \hfill
-        \includegraphics[width=0.33\textwidth,height=0.19\textheight]{images/chams/Screenshot 2025-04-28 at 03.06.35.png}%
+        \includegraphics[width=0.33\textwidth,height=0.2\textheight]{images/chams/Screenshot 2025-04-28 at 03.06.35.png}%
     }
 
-    \caption{Examples of different custom Chams materials applied in CS2.}
+    \caption{Examples of custom Chams materials with visibility check enabled.}
 \end{figure}
 
-
-
+Before applying material overrides, it is possible to filter which game entities they affect. This allows for advanced customization where different materials can be applied not only to enemy player models, but also to the local player's model (arms and gloves) as well as their weapon. The following figure illustrates an example of this selective application:
 
 \begin{figure}
     \centering
