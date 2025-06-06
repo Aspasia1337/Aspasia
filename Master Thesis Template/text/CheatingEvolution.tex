@@ -98,20 +98,26 @@ The continuous development of anti-cheat solutions over the past two decades can
 
 Among the systems depicted in the timeline, several stand out for their unique approach and impact.
 
-\textbf{nProtect GameGuard}, launched in 2001, was one of the first anti-cheats to adopt rootkit-like behavior. Widely used in Asian MMORPGs, it embedded itself deeply in the operating system to prevent cheats from interacting with game processes, although this also raised concerns about privacy and system stability.
+\textbf{nProtect GameGuard}, launched in 2001, was among the first anti-cheat solutions to employ rootkit-like behavior. Widely used in Asian MMORPGs, it integrates deeply into the operating system, operating at the kernel level (ring 0), to prevent cheats from interacting with game processes. This deep integration has raised concerns about privacy and system stability \parencite{nprotect_wikipedia}.
 
-\textbf{FairFight}, introduced in 2012, departed from traditional detection mechanisms by using server-side statistical analysis to flag abnormal player behavior. Rather than inspecting memory or processes, it relied on gameplay metrics such as accuracy, reaction time, and movement patterns—making it less intrusive, but also vulnerable to both false positives and high-skill players.
+\textbf{FairFight}, introduced in 2012, departed from traditional detection mechanisms by using server-side statistical analysis to flag abnormal player behavior. Rather than inspecting memory or processes, it relied on gameplay metrics such as accuracy, reaction time, and movement patterns, making it less intrusive, but also vulnerable to both false positives and high-skill players \parencite{fairfight_website}.
 
-\textbf{Easy Anti-Cheat (EAC)}, which gained traction in 2018, became a popular choice for fast-paced competitive games. It combines kernel-level access with performance-friendly design and supports real-time detection of unauthorized drivers, injected DLLs, and tampering attempts—balancing robustness and user transparency.
+\textbf{Easy Anti-Cheat (EAC)}, which gained traction in 2018, became a popular choice for fast-paced competitive games. It combines kernel-level access with performance-friendly design and supports real-time detection of unauthorized drivers, injected DLLs, and tampering attempts, balancing robustness and user transparency \parencite{eac_website}.
 
-Finally, \textbf{VAC Live}, unveiled in 2023, represents Valve's shift toward real-time, data-driven cheat prevention. Unlike the original VAC system, which relied on delayed bans, VAC Live aims to detect and react to cheats during gameplay, making it a critical component in safeguarding the integrity of high-stakes esports matches.
+Finally, \textbf{VAC Live}, unveiled in 2023, represents Valve's shift toward real-time, data-driven cheat prevention. Unlike the original VAC system, which relied on delayed bans, VAC Live aims to detect and react to cheats during gameplay, making it a critical component in safeguarding the integrity of high-stakes esports matches \parencite{vac_live_announcement}.
 
 
 \section{The Commercialization of Cheating}
 
-The rapid commercialization of cheating has transformed it from a niche activity into a highly organized industry, offering both software-based and hardware-level exploits. Specialized forums such as \textbf{UnKnoWnCheaTs}, \textbf{MPGH}, and \textbf{ElitePVPers} have become central hubs for distributing cheats, providing resources for reverse engineering, memory manipulation, and anti-cheat evasion. These platforms, along with encrypted messaging services like \textbf{Discord} and \textbf{Telegram}, have facilitated the sale and distribution of sophisticated cheats through subscription models and private communities.
+The commercialization of video game cheating has evolved into a multifaceted ecosystem encompassing knowledge-sharing communities, grey-market resellers, and professionalized cheat providers. This transformation reflects a shift from informal exchanges to structured operations with varying degrees of legality and ethical considerations.
 
-Table~\ref{tab:cs2_cheat_providers} summarizes some of the most prominent cheat providers currently active in the CS2 ecosystem.
+Platforms such as \textbf{UnKnoWnCheaTs} serve as non-commercial forums dedicated to the dissemination of information related to game hacking. These communities focus on educational content, including reverse engineering tutorials, memory manipulation techniques, and the release of free cheats contributed by community members. Notably, UnKnoWnCheaTs maintains a strict policy against the sale of cheats, emphasizing its commitment to a non-profit model centered on knowledge exchange \parencite{unknowncheats_forum}.
+
+In contrast, forums like \textbf{ElitePVPers} and \textbf{MPGH} operate as marketplaces where individuals can buy and sell cheats. These platforms facilitate the distribution of paid cheats through various models, including reselling arrangements and subscription-based access. Users often engage in discussions about becoming resellers, highlighting the existence of structured networks for cheat distribution \parencite{elitepvpers_reseller}.
+
+Beyond community forums, a segment of the cheating industry comprises professionalized providers offering sophisticated cheat solutions. These entities develop and sell advanced cheating tools, often featuring capabilities such as kernel-level access, hardware ID spoofing, and real-time updates to circumvent anti-cheat measures. The following table summarizes prominent cheat providers active in the CS2 ecosystem:
+
+\newpage
 
 \begin{table}[h!]
     \centering
@@ -120,19 +126,19 @@ Table~\ref{tab:cs2_cheat_providers} summarizes some of the most prominent cheat 
         \hline
         \textbf{Provider} & \textbf{Released} & \textbf{Subscription Price} & \textbf{Access Model} \\
         \hline
-        \textbf{Neverlose} \parencite{neverlose2020} & 2020 & €17.10/month, €44.10/3 months, €134.10/year & Invite-only \\
+        \textbf{Neverlose} \parencite{neverlose2020} & 2020 & €29/month, €69/3 months, €129/year & Invite-only \\
         \hline
         \textbf{Memesense} \parencite{memesense2023} & 2023 & \$4/14 days, \$8/month, \$12/3 months & Public access \\
         \hline
-        \textbf{Fatality.win} \parencite{fatality2022} & 2022 & Premium pricing (variable) & Invite-only \\
+        \textbf{Fatality.win} \parencite{fatality2022} & 2022 & \$33/month & Invite-only \\
         \hline
         \textbf{Project Infinity} \parencite{projectinfinity2017} & 2017 & €14.99/month, €29.99/3 months, €99.99 lifetime & Public access \\
         \hline
-        \textbf{Midnight} \parencite{midnight2019} & 2019 & £5.42/month & Public access \\
+        \textbf{Midnight} \parencite{midnight2019} & 2019 & £5.15/month & Public access \\
         \hline
-        \textbf{Onetap} \parencite{onetap2024} & 2024 & Pricing not publicly disclosed & Public access \\
+        \textbf{Onetap} \parencite{onetap2024} & 2024 & \$20/month & Public access \\
         \hline
-        \textbf{Skeet (Gamesense)} \parencite{skeet2016} & 2016 & \$16/month (via tokens, fluctuating) & Invite-only + HWID locked \\
+        \textbf{Skeet (Gamesense)} \parencite{skeet2016} & 2016 & \$20/month & Invite-only + HWID locked \\
         \hline
     \end{tabular}
     \caption{Overview of major CS2 cheat providers, including release year, pricing models, and access restrictions.}
@@ -140,22 +146,13 @@ Table~\ref{tab:cs2_cheat_providers} summarizes some of the most prominent cheat 
 \end{table}
 
 
+\section*{From Historical Context to Market Impact}
 
+Having explored the historical and sociotechnical evolution of video game cheating from its inception with debugging tools to its current status as a sophisticated, commercialized industry we now shift our focus to the contemporary market dynamics and their ramifications on gaming communities.
 
+The subsequent chapters will delve into the economic structures underpinning the cheating industry, examining how monetized cheating services influence player behavior, community trust, and the overall integrity of online gaming environments. By analyzing these market forces, we aim to elucidate the broader social and economic impacts of cheating within the gaming ecosystem.
 
-
-As cheat developers adopt increasingly advanced techniques, such as kernel-level drivers and DMA-based exploits, anti-cheat systems are forced into a continuous state of adaptation. The emergence of software-based cheats, particularly those using DLL injection, code hooking, and API interception, has proven to be one of the most adaptable and challenging threats. These methods allow cheat developers to modify game functions dynamically, bypassing traditional detection systems.
-
-
-\section*{From History to Implementation: A Technical Transition}
-
-Having traced the historical and sociotechnical evolution of cheating—from its roots in debugging tools to its current status as a commercialized, clandestine industry—we now shift focus toward the technical foundations that sustain it today. 
-
-The next chapters will abandon the literary and historical perspective in favor of a rigorous, low-level examination of how modern software-based cheats are constructed and deployed. We will explore the inner mechanics of code injection, memory manipulation, and anti-cheat evasion techniques, providing a detailed view of the technological arms race from a reverse engineering and systems programming standpoint.
-
-With the historical context established, it is time to dissect the machinery.
-
-
+With the historical framework established, we proceed to assess the market-driven aspects that perpetuate and shape the landscape of video game cheating.
 \newpage
 
 
