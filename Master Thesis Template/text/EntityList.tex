@@ -1,11 +1,20 @@
 \chapter{Internal Game Structure: Logic Behind Counter-Strike 2}
 
+\section*{From Hooking to Context: Understanding Game Logic Internals}
+
+Following the development of our hooking infrastructure and the application of reverse engineering techniques, it becomes essential to explore the internal structures that underpin gameplay in \textit{Counter-Strike 2}.  
+While function interception provides a powerful interface for altering behavior at runtime, a deep understanding of the game’s internal architecture is required to apply these modifications meaningfully and with precision.
+
+This chapter introduces the logical foundation of the game engine, beginning with the entity system.  
+By dissecting how entities are created, managed, and manipulated within memory, we establish the context needed to target specific gameplay mechanics—ranging from player visibility and health to movement, projectiles, and animations.  
+Such knowledge is indispensable for implementing cheats that are not only effective, but stable and adaptable across game versions.
+
 \section{Understanding Entity Lists in Video Games}
 
-In modern game engines—particularly those designed for real-time, multiplayer environments—an \textbf{entity list} is a fundamental data structure responsible for managing all interactive objects within the game world. These entities include players, non-player characters (NPCs), projectiles, grenades, environmental props, and more.
+In modern game engine, particularly those designed for real-time, multiplayer environments, an \textbf{entity list} is a fundamental data structure responsible for managing all interactive objects within the game world. These entities include players, non-player characters (NPCs), projectiles, grenades, environmental props, and more.
 
 \begin{tcolorbox}[colback=gray!10, colframe=gray!50, sharp corners, boxrule=0pt]
-\textbf{What is an Entity?} \\
+\makebox[\linewidth][c]{\textbf{Definition: Entity}} \\
 An \textit{entity} is any dynamic object in the game world, such as a player, NPC, projectile, or interactive prop, managed and updated by the engine each frame.
 \end{tcolorbox}
 
@@ -15,27 +24,23 @@ At the core, each entity is an instance of a class containing essential data suc
 
 Entity lists are implemented using various structures, depending on the performance needs and memory model of the engine:
 
-\begin{itemize}
-    \item \textbf{\texttt{Array of Entity Objects}}: \\
-    A flat, contiguous layout offering fast access, but limited flexibility.
-    
-    \item \textbf{\texttt{Array of Pointers}}: \\
-    A static array referencing dynamically allocated entities. Frequently used in older engine architectures.
-    
-    \item \textbf{\texttt{std::vector}}: \\
-    A dynamic container ideal for runtime creation and destruction of entities.
-    
-    \item \textbf{\texttt{Linked List}}: \\
-    A flexible memory structure where each node points to the next entity, at the cost of linear traversal time.
-    
-    \item \textbf{\texttt{HashMap / Tree}}: \\
-    Enables fast lookup and categorization of entities based on IDs or class types.
+\begin{itemize}[leftmargin=2em, itemsep=0em]
+    \item \textbf{\texttt{Array of Entity Objects}}: A flat, contiguous layout offering fast access, but limited flexibility.
+
+    \item \textbf{\texttt{Array of Pointers}}: A static array referencing dynamically allocated entities. Frequently used in older engine architectures.
+
+    \item \textbf{\texttt{std::vector}}: A dynamic container ideal for runtime creation and destruction of entities.
+
+    \item \textbf{\texttt{Linked List}}: A flexible memory structure where each node points to the next entity, at the cost of linear traversal time.
+
+    \item \textbf{\texttt{HashMap / Tree}}: Enables fast lookup and categorization of entities based on IDs or class types.
 \end{itemize}
 
-\begin{tcolorbox}[colback=gray!10, colframe=gray!50, sharp corners, boxrule=0pt]
-    \textbf{What is the Paged Entity System?} \\
-    A memory management technique where entities are grouped into fixed-size pages, improving scalability, memory safety, and preventing invalid accesses when entities are destroyed or recreated.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\makebox[\linewidth][c]{\textbf{Definition: Paged Entity System}} \\
+A \textit{paged entity system} is a memory management technique in which entities are grouped into fixed-size memory pages. This approach enhances scalability and performance, improves memory safety, and prevents access violations when entities are dynamically destroyed or reallocated.
 \end{tcolorbox}
+
     
 While earlier iterations of the Source engine (such as CS:GO) utilized a simple flat array of entity pointers for entity management, the modern Source 2 engine in Counter-Strike 2 introduces a \textbf{paged entity system}. This design organizes entities into memory pages and utilizes safe handle-based referencing, offering greater scalability, safety, and efficiency across dynamically allocated objects.    
 
@@ -43,10 +48,11 @@ While earlier iterations of the Source engine (such as CS:GO) utilized a simple 
 
 In \textit{Counter-Strike 2}, every interactive object—whether a player, weapon, projectile, or environmental element—is internally represented as a dynamic \textbf{entity}. These entities are managed using unique \textit{handles}, lightweight references that combine an entity index and a generation counter to ensure safe access and lifecycle management.
 
-\begin{tcolorbox}[colback=gray!10, colframe=gray!50, sharp corners, boxrule=0pt]
-\textbf{What is a Handle?} \\
-A \textit{handle} is a compact reference to an entity, typically composed of an index and a generation counter. It allows efficient and safe resolution of entities, preventing issues such as dangling pointers when entities are destroyed and recreated.
+\begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
+\makebox[\linewidth][c]{\textbf{Definition: Handle}} \\
+A \textit{handle} is a compact reference to an entity, typically composed of an index and a generation counter. It enables efficient and safe resolution of entities, ensuring that references remain valid even as entities are destroyed and recreated, thus preventing access to stale or invalid memory.
 \end{tcolorbox}
+
 
 This handle-based system enables robust referencing, safeguarding against invalid memory access even in highly dynamic environments where entities frequently appear and disappear during gameplay.
 
@@ -85,6 +91,7 @@ public:
 };
 \end{lstlisting}
 
+\newpage
 
 \noindent\textbf{2. Player Controller – \texttt{CBasePlayerController}}
 
@@ -106,7 +113,7 @@ public:
 };
 \end{lstlisting}
 
-\newpage
+
 
 
 \noindent\textbf{3. Player Pawn – \texttt{C\_CSPlayerPawn}}
@@ -131,8 +138,6 @@ public:
 
 This class hierarchy enables a clear separation of concerns between the \textit{logical control} of the player (controller) and their \textit{physical simulation} within the game world (pawn). This design also accommodates edge cases such as spectator modes, bot logic, and replay systems, where a controller may exist without an active pawn.
 
-Moreover, the architecture follows a variant of the \textbf{Entity-Component-System (ECS) paradigm}, promoting modularity and flexibility. This pattern is especially beneficial for external tools such as mods, analytics systems, and cheat frameworks.
-
 \section{Entity List Traversal}
 
 Having established the structural foundations of player entities, the next step involves accessing and enumerating these entities during runtime. This process—known as \textbf{entity list traversal}—is essential for real-time game modification, data extraction, and the development of external tools.
@@ -140,10 +145,6 @@ Having established the structural foundations of player entities, the next step 
 \subsection{Locating and Identifying the Entity List in Memory}
 
 In the absence of \textbf{debugging symbols} or \textbf{SDK access}—a common scenario in protected or closed-source games—discovering the location and structure of the \textbf{entity list} becomes a crucial part of the reverse engineering process. Two primary approaches are typically employed: \textit{\textbf{dynamic memory inspection}} and \textit{\textbf{static binary analysis}}.
-
-
-These complementary methods allow external programs to interact systematically with the game’s internal structures.
-
 
 \begin{tcolorbox}[colback=gray!03, colframe=black!15, sharp corners, boxrule=0.3mm, width=\textwidth]
 
@@ -184,22 +185,6 @@ These complementary methods allow external programs to interact systematically w
     
 \end{tcolorbox}
     
-    
-
-\subsubsection*{Types of Entity Lists Encountered}
-
-During memory analysis, it is typical to encounter two distinct categories of entity lists:
-
-\begin{itemize}
-    \item \textbf{Render-Only Lists:}  
-    Contain data purely used for graphical interpolation or rendering, but lack gameplay-critical attributes.
-
-    \item \textbf{Gameplay-Relevant Lists:}  
-    Include full gameplay state data such as health, team identifiers, ammunition counts, and behavioral flags.
-\end{itemize}
-
-Locating a render-only list is relatively quick, but isolating a gameplay-relevant entity list demands deeper inspection and runtime validation.
-
 \begin{tcolorbox}[colback=gray!03, colframe=black!15, sharp corners, boxrule=0.3mm, width=\textwidth]
 
     \subsubsection*{Static Approach: Reverse Engineering the Binary}
@@ -251,14 +236,16 @@ Locating a render-only list is relatively quick, but isolating a gameplay-releva
     \noindent\textbf{In the next section, we will explain how we extracted the internal logic behind entity list resolution through careful static analysis of the game’s binary.}
     
 \end{tcolorbox}
-    
+
+\newpage
 \subsection{Reverse Engineering the Engine's Entity Resolution Logic}
 
-By analyzing the \texttt{client.dll} binary of CS2 using static reverse engineering techniques, we can uncover the specific function responsible for resolving entity handles into entity pointers.
+Understanding how the game engine resolves \textit{entity handles} into actual pointers is essential for interfacing with its internal logic.  
+By statically analyzing the \texttt{client.dll} binary using tools such as \textit{Ghidra}, we reverse engineered the function responsible for transforming abstract handles into concrete entity references—a key step in tracking, accessing, and manipulating in-game actors.
 
-The following pseudocode extracted from Ghidra outlines the resolution logic:
+The pseudocode extracted below outlines the internal lookup mechanism:
 
-\begin{lstlisting}[style=cppstyle, caption={Accessing an Entity in the Entity List}]
+\begin{lstlisting}[style=cppstyle, caption={Entity Handle Resolution Logic}]
 Entity_t *EntityList(longlong EntityListPointer, uint EntityListIndex)
 {
     Entity_t *Entity;
@@ -275,66 +262,182 @@ Entity_t *EntityList(longlong EntityListPointer, uint EntityListIndex)
 }   
 \end{lstlisting}
 
-\noindent
-The process of resolving an entity from its handle follows a clear, sequential logic:
+\noindent The resolution algorithm performs the following steps:
 
 \begin{enumerate}
-    \item \textbf{Validate the Index:}  
-    Ensure that the provided \texttt{EntityListIndex} is valid:
+    \item \textbf{Index Validation:}
     \begin{itemize}
-        \item \texttt{EntityListIndex < 32767} — The index must be within the allowable entity range.
-        \item \texttt{EntityListIndex >> 9 < 64} — The index must map to one of 64 available pages.
+        \item Ensure \texttt{EntityListIndex < 32767} — i.e., within the valid entity range.
+        \item Ensure \texttt{EntityListIndex >> 9 < 64} — i.e., it maps to one of 64 pages (paged entity storage).
     \end{itemize}
 
-    \item \textbf{Find the Correct Page:}  
-    Calculate the address of the memory page (sublist) containing the entity:
+    \item \textbf{Page Lookup:}
     \begin{itemize}
-        \item \texttt{EntitySublist = *(EntityListPointer + 16 + (EntityListIndex >> 9) * 8)}
-    \end{itemize}
-    If the page is invalid (\texttt{EntitySublist == 0}), the search stops here.
-
-    \item \textbf{Locate the Entity Within the Page:}  
-    Find the exact entity inside the page:
-    \begin{itemize}
-        \item \texttt{Entity = EntitySublist + (EntityListIndex \& 511) * 120}
-    \end{itemize}
-    This isolates the local index inside the page (modulo 512) and multiplies by the entity size (120 bytes).
-
-    \item \textbf{Verify the Entity:}  
-    Before trusting the result, two conditions must be satisfied:
-    \begin{itemize}
-        \item \texttt{Entity != NULL} — The pointer must be valid.
-        \item \texttt{(*(Entity + 2) \& 32767) == EntityListIndex} — The stored index must match the requested one.
+        \item Compute \texttt{EntitySublist} as the base pointer of the corresponding page.
+        \item Abort if the sublist pointer is null.
     \end{itemize}
 
-    \item \textbf{Return the Result:}  
-    If all checks pass, return the pointer to the entity.  
-    Otherwise, return \texttt{0}.
+    \item \textbf{Entity Pointer Derivation:}
+    \begin{itemize}
+        \item Calculate the pointer to the target entity using \texttt{EntitySublist + (EntityListIndex \& 511) * 120}, where 120 is the size in bytes of each entity slot.
+    \end{itemize}
+
+    \item \textbf{Integrity Check:}
+    \begin{itemize}
+        \item Confirm the pointer is non-null and that the embedded index matches \texttt{EntityListIndex}, using bitwise validation.
+    \end{itemize}
+
+    \item \textbf{Return Value:}
+    \begin{itemize}
+        \item If all checks succeed, return the resolved entity pointer; otherwise, return null.
+    \end{itemize}
 \end{enumerate}
 
-\vspace{0.5cm}
-
-\begin{tcolorbox}[colback=gray!05, colframe=gray!50, sharp corners, boxrule=0pt]
+\vspace{0.5em}
+\begin{tcolorbox}[colback=gray!05, colframe=black!15, sharp corners, boxrule=0pt]
 \textbf{Summary:}  
-The handle resolution process ensures safety by validating the index, finding the correct memory page, isolating the entity within it, and double-checking its integrity before returning a valid pointer.
+This logic ensures safe and consistent resolution of handles, using a paged storage model and index validation to prevent stale or invalid pointer access.
 \end{tcolorbox}
-
 \subsubsection{Efficient Entity Tracking: Hooking \texttt{OnAddEntity} and \texttt{OnRemoveEntity}}
 
-While it is theoretically possible to retrieve all active entities by continuously iterating through the entire entity list each frame (or each game tick), this approach carries significant performance drawbacks.  
-Given that the entity list can accommodate up to \textbf{32,766 entities} simultaneously, a full traversal on every tick would introduce substantial overhead—especially when injecting an external cheat into the game process.
+Iterating through the entire entity list on each frame is a naive but technically valid method for state discovery. However, it is profoundly inefficient at scale.  
+Given that the entity list may store up to \textbf{32,766 entities}, a full traversal on every frame introduces a considerable performance burden—particularly detrimental for an injected cheat operating in real time within the game’s address space.
 
-During our research, we successfully \textbf{identified and reconstructed} the internal entity list traversal logic used by the engine. We have integrated this traversal into our cheat, allowing us to programmatically enumerate all active entities when needed.
-
-However, rather than calling this loop every frame—which would severely impact performance—we apply the following strategy:
+To overcome this constraint, we reverse-engineered the engine’s internal entity lifecycle management.  
+By integrating static analysis, runtime behavior tracing, and low-level hooking, we constructed a lightweight yet effective dynamic entity tracking system based on the following hybrid approach:
 
 \begin{itemize}
-    \item Upon joining a match, we execute our custom traversal \textbf{once} to perform an initial discovery and caching of all existing entities.
-    \item After this one-time initialization, we \textbf{hook} two critical engine callbacks:
+    \item On match start or map load, a \textbf{one-time traversal} is executed to cache all currently active entities.
+    \item From that point forward, two key engine functions are \textbf{hooked}:
     \begin{itemize}
-        \item \texttt{OnAddEntity} — Triggered whenever a new entity is created or spawned.
-        \item \texttt{OnRemoveEntity} — Triggered whenever an entity is deleted or removed.
+        \item \texttt{OnAddEntity} — Invoked when a new entity is instantiated.
+        \item \texttt{OnRemoveEntity} — Invoked when an entity is removed from memory.
     \end{itemize}
 \end{itemize}
 
-This hybrid approach allows us to dynamically maintain an accurate and up-to-date internal list of game entities without imposing unnecessary overhead on each frame.
+In the following section, we describe how these hooks are installed and how the game’s internal function calls are dynamically redirected to custom implementations.  
+This design allows the cheat to maintain a synchronized and real-time internal representation of all gameplay-relevant entities, without incurring a per-frame computational penalty.
+
+
+\newpage
+
+
+\noindent\textbf{Hook Installation with MinHook.}
+
+To implement these redirections, we relied on \textbf{MinHook} in conjunction with custom pattern scanning.  
+The function entry points were identified via static reverse engineering of \texttt{client.dll} using IDA Pro. Once located, their byte signatures were extracted and integrated into our runtime \texttt{PatternScanner} routine—enabling resilient hook installation regardless of address space layout randomization (ASLR), rebasing, or version-specific code shifts.
+
+\begin{lstlisting}[style=cppstyle, caption={Installing the OnAddEntity Hook}]
+uint8_t *onAddEntity = iHelper->m_Mem.PatternScanner(
+    "client.dll", 
+    "48 89 74 24 10 57 48 83 EC ? 48 8B F9 41 8B C0 B9 ? ? ? ?"
+);
+
+hookInit = MH_CreateHook(
+    onAddEntity,
+    reinterpret_cast<LPVOID *>(iHooksManager->m_OnAddEntity.hOnAddEntity),
+    reinterpret_cast<LPVOID *>(&iHooksManager->m_OnAddEntity.oOnAddEntity)
+);
+\end{lstlisting}
+
+\begin{lstlisting}[style=cppstyle, caption={Installing the OnRemoveEntity Hook}]
+uint8_t *onRemoveEntity = iHelper->m_Mem.PatternScanner(
+    "client.dll", 
+    "48 89 74 24 10 57 48 83 EC ? 48 8B F9 41 8B C0 25 ? ? ? ?"
+);
+
+hookInit = MH_CreateHook(
+    onRemoveEntity,
+    reinterpret_cast<LPVOID *>(iHooksManager->m_OnRemoveEntity.hOnRemoveEntity),
+    reinterpret_cast<LPVOID *>(&iHooksManager->m_OnRemoveEntity.oOnRemoveEntity)
+);
+\end{lstlisting}
+
+\newpage
+
+\noindent\textbf{Entity Insertion via \texttt{OnAddEntity}.}
+
+Once hooked, calls to \texttt{OnAddEntity} are redirected to our custom function, which determines the entity’s type and updates the corresponding internal map.
+
+\begin{lstlisting}[style=cppstyle, caption={Hook Implementation: Tracking Entity Creation}]
+void HooksManager::OnAddEntity::hOnAddEntity(
+    __int64 CGameEntitySystem, 
+    void *entityPointer, 
+    int entityHandle)
+{
+    oOnAddEntity(CGameEntitySystem, entityPointer, entityHandle);
+
+    std::string entityName = iGameEntitySystem->GetSchemaName(entityPointer);
+
+    if (entityName == "C_CSPlayerPawnBase") {
+        iGameEntitySystem->PawnMap[entityHandle] = (C_PlayerPawn *)entityPointer;
+        iHelper->m_Console.printMessage(DEBUG, "PAWN ADDED, size ", iGameEntitySystem->PawnMap.size());
+    }
+    else if (entityName == "c_cs_observer_for_precache") {
+        iGameEntitySystem->ObserverMap[entityHandle] = (C_PlayerPawn *)entityPointer;
+        iHelper->m_Console.printMessage(DEBUG, "OBSERVER ADDED, size ", iGameEntitySystem->ObserverMap.size(), " ", entityHandle);
+    }
+    else if (entityName == "CBasePlayerController") {
+        iGameEntitySystem->ControllerMap[entityHandle] = (C_PlayerController *)entityPointer;
+        iHelper->m_Console.printMessage(DEBUG, "CONTROLLER ADDED, size ", iGameEntitySystem->ControllerMap.size(), " ", entityHandle);
+    }
+}
+\end{lstlisting}
+
+\newpage
+
+\paragraph{Entity Removal via \texttt{OnRemoveEntity}.}
+
+Similarly, when an entity is destroyed, the engine calls \texttt{OnRemoveEntity}, which we also intercept to maintain consistency in our cached maps.
+
+\begin{lstlisting}[style=cppstyle, caption={Hook Implementation: Tracking Entity Destruction}]
+void HooksManager::OnRemoveEntity::hOnRemoveEntity(
+    __int64 CGameEntitySystem, 
+    void *entityPointer, 
+    int entityHandle)
+{
+    oOnRemoveEntity(CGameEntitySystem, entityPointer, entityHandle);
+
+    std::string entityName = iGameEntitySystem->GetSchemaName(entityPointer);
+
+    if (entityName == "C_CSPlayerPawnBase") {
+        iGameEntitySystem->PawnMap.erase(entityHandle);
+        iHelper->m_Console.printMessage(DEBUG, "PAWN REMOVED, size ", iGameEntitySystem->PawnMap.size());
+    }
+    else if (entityName == "c_cs_observer_for_precache") {
+        iGameEntitySystem->ObserverMap.erase(entityHandle);
+        iHelper->m_Console.printMessage(DEBUG, "OBSERVER REMOVED, size ", iGameEntitySystem->ObserverMap.size(), " ", entityHandle);
+    }
+    else if (entityName == "CBasePlayerController") {
+        iGameEntitySystem->ControllerMap.erase(entityHandle);
+        iHelper->m_Console.printMessage(DEBUG, "CONTROLLER REMOVED, size ", iGameEntitySystem->ControllerMap.size(), " ", entityHandle);
+    }
+}
+\end{lstlisting}
+
+
+\newpage
+
+\subsubsection*{Recap: Entity Hook Redirection Flow}
+
+To consolidate the logic described in the previous section, Figure~\ref{fig:onaddentity_hook_flow} visually summarizes the flow of execution when the game engine calls \texttt{OnAddEntity}.  
+Through function redirection, our custom hook intercepts the call, processes the entity internally, and seamlessly returns execution back to the original function, ensuring compatibility and transparency.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.44\linewidth]{images/OnAddEntity.png}
+    \caption{Entity Hooking Flow: Interception and Redirection of \texttt{OnAddEntity} Function}
+    \label{fig:onaddentity_hook_flow}
+\end{figure}
+
+\noindent
+\textbf{Diagram Summary:}
+\begin{itemize}
+    \item The game engine invokes the native \texttt{OnAddEntity} function upon entity creation.
+    \item This call is intercepted and redirected to our custom hook (\texttt{OnAddEntityHooked}), implemented using MinHook.
+    \item Within the hook, we identify the entity type (e.g., \texttt{C\_CSPlayerPawnBase}, \texttt{CBasePlayerController}) and store it in our internal data structures.
+    \item After custom processing, the original \texttt{OnAddEntity} function is invoked to preserve default engine behavior.
+    \item Execution resumes transparently within the game as if uninterrupted.
+\end{itemize}
+
+This mechanism ensures real-time tracking of relevant entities while maintaining engine stability and operational stealth.
