@@ -26,9 +26,9 @@ void Misc::Spectators::ShowSpectatorList(std::unordered_map<uint32_t, C_PlayerPa
 	Globals::Spectators = TempSpectators;
 }
 
-void Misc::ScopeRemoval::hRemoveScope (void *a1, void *a2)
+void Misc::ScopeRemoval::hRemoveScope(void *a1, void *a2)
 {
-	if(Globals::RemoveScope)
-	return;
-	oRemoveScopeFn (a1, a2);
+	if (Globals::RemoveScope)
+		return;
+	oRemoveScopeFn(a1, a2);
 }

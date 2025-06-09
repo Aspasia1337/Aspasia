@@ -23,7 +23,8 @@ public:
 	};
 	ClantagChanger m_Clantag;
 
-	class ScopeRemoval {
+	class ScopeRemoval
+	{
 	public:
 		typedef void *(__fastcall *RemoveScopeFN)(void *a1, void *a2);
 		static RemoveScopeFN oRemoveScopeFn;

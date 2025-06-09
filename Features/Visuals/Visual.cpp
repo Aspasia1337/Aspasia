@@ -76,12 +76,11 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 		{
 			return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 		}
-		
+
 		auto schemaName = iGameEntitySystem->GetSchemaName(pEntity);
 
-
 		// Menu MODEL
-		if (std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawn").c_str())==0)
+		if (std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawn").c_str()) == 0)
 		{
 			ByteColor Color = ToByteColor(Globals::ChamsColor);
 
@@ -92,51 +91,47 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 
-			Color = ToByteColor (Globals::ChamsColorGun);
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
+			Color = ToByteColor(Globals::ChamsColorGun);
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
-
 		}
 
-		 //In Game Player Model
+		// In Game Player Model
 
-		if ((std::strcmp (schemaName.c_str ( ), std::string ("C_CSPlayerPawnBase").c_str ( )) == 0 || 
-			std::strcmp (schemaName.c_str ( ), std::string ("c_cs_player_for_precache").c_str ( )) == 0 ||
-			std::strcmp (schemaName.c_str ( ), std::string ("CBasePlayerController").c_str ( )) == 0) 
-			&& Globals::PlayersChams)
+		if ((std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawnBase").c_str()) == 0 ||
+			 std::strcmp(schemaName.c_str(), std::string("c_cs_player_for_precache").c_str()) == 0 ||
+			 std::strcmp(schemaName.c_str(), std::string("CBasePlayerController").c_str()) == 0) &&
+			Globals::PlayersChams)
 		{
 			ByteColor Color;
 
-			if (Globals::InvisibleChams) {
-				Color = ToByteColor (Globals::InvisibleChamsColor);
+			if (Globals::InvisibleChams)
+			{
+				Color = ToByteColor(Globals::InvisibleChamsColor);
 
-				arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterialVisible;
+				arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterialVisible;
 
 				*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 				*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 				*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 				*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 
-				oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
-			
+				oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 			}
 
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialSelected]).pMaterial;
-
-			Color = ToByteColor (Globals::ChamsColor);
+			Color = ToByteColor(Globals::ChamsColor);
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
-
 		}
-
 
 		// Player Gun
 		if (std::strcmp(schemaName.c_str(), std::string("C_PredictedViewModel").c_str()) == 0 && Globals::WeaponChams)
@@ -151,38 +146,35 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 
+			oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 
-			oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialGunSelected]).pMaterial;
-
-			Color = ToByteColor (Globals::ChamsColorGun);
+			Color = ToByteColor(Globals::ChamsColorGun);
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 		}
-
 
 		//// Arms and Gloves
-		if (std::strcmp (schemaName.c_str ( ), std::string ("CBaseAnimGraph").c_str ( )) == 0 && Globals::ArmsChams)
+		if (std::strcmp(schemaName.c_str(), std::string("CBaseAnimGraph").c_str()) == 0 && Globals::ArmsChams)
 		{
-			ByteColor Color = ToByteColor (Globals::ArmsColor);
+			ByteColor Color = ToByteColor(Globals::ArmsColor);
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialArmSelected]).pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialArmSelected]).pMaterial;
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 
-			oDrawObject (pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
+			oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 
-			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at (Globals::MaterialNames[Globals::MaterialArmSelected]).pMaterial;
+			arrMeshDraw->CMaterial = *(CMaterial2 **)iVisual->m_Chams.CustomMaterialMap.at(Globals::MaterialNames[Globals::MaterialArmSelected]).pMaterial;
 
-
-			Color = ToByteColor (Globals::ArmsColor);
+			Color = ToByteColor(Globals::ArmsColor);
 
 			*(byte *)((uintptr_t)arrMeshDraw + 0x50) = Color.r;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x51) = Color.g;
@@ -190,9 +182,8 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 		}
 
-		//iHelper->m_Console.printMessage (WARNING, schemaName);
+		// iHelper->m_Console.printMessage (WARNING, schemaName);
 	}
-
 
 	return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }
@@ -310,32 +301,31 @@ void CUtilsBuff::PutString(const char *szString)
 	iVisual->m_Chams.BuffPutString(this, szString);
 }
 
-
-void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
+void Visual::OverlayRender::RenderAllPlayerVisuals(C_PlayerPawn *Player)
 {
-	if (!Player || Player == iGameEntitySystem->GetPlayerPawn ( ) || Player->pawnHealth <= 0 || Player->isAlive || Player->m_pGameSceneNode->m_bDormant)
+	if (!Player || Player == iGameEntitySystem->GetPlayerPawn() || Player->pawnHealth <= 0 || Player->isAlive || Player->m_pGameSceneNode->m_bDormant)
 		return;
 
-	ImDrawList *drawList = ImGui::GetForegroundDrawList ( );
+	ImDrawList *drawList = ImGui::GetForegroundDrawList();
 	if (!drawList)
 		return;
 
 	Vec3 worldPos = Player->vOldOrigin;
 	Vec2 screenPos;
 
-	if (!worldPos.WorldToScreen (screenPos, iGameEntitySystem->ViewMatrix))
+	if (!worldPos.WorldToScreen(screenPos, iGameEntitySystem->ViewMatrix))
 		return;
 
 	// 1. Render Health Bar
 	if (Globals::HealthBar)
 	{
-		Vec3 localPlayerPos = iGameEntitySystem->GetPlayerPawn ( )->vOldOrigin;
-		double distance = CalculateDistance (localPlayerPos, worldPos);
+		Vec3 localPlayerPos = iGameEntitySystem->GetPlayerPawn()->vOldOrigin;
+		double distance = CalculateDistance(localPlayerPos, worldPos);
 
 		float minDistance = 100.0f;
 		float maxDistance = 1000.0f;
 		float scale = 1.0f - (distance - minDistance) / (maxDistance - minDistance);
-		scale = std::clamp (scale, 0.3f, 1.0f);
+		scale = std::clamp(scale, 0.3f, 1.0f);
 
 		float width = 60.0f * scale;
 		float height = 3.0f * scale;
@@ -344,21 +334,21 @@ void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
 		int health = Player->pawnHealth;
 		float healthPerc = static_cast<float>(health) / 100.0f;
 
-		ImU32 healthColor = IM_COL32 (
+		ImU32 healthColor = IM_COL32(
 			(1.0f - healthPerc) * 200,
 			healthPerc * 230,
 			50, 255);
 
-		ImVec2 pos (screenPos.x - width / 2, screenPos.y + offsetY);
+		ImVec2 pos(screenPos.x - width / 2, screenPos.y + offsetY);
 
-		drawList->AddRectFilled (
-			ImVec2 (pos.x - 0.5f, pos.y - 0.5f),
-			ImVec2 (pos.x + width + 0.5f, pos.y + height + 0.5f),
-			IM_COL32 (30, 30, 30, 180));
+		drawList->AddRectFilled(
+			ImVec2(pos.x - 0.5f, pos.y - 0.5f),
+			ImVec2(pos.x + width + 0.5f, pos.y + height + 0.5f),
+			IM_COL32(30, 30, 30, 180));
 
-		drawList->AddRectFilled (
-			ImVec2 (pos.x, pos.y),
-			ImVec2 (pos.x + (width * healthPerc), pos.y + height),
+		drawList->AddRectFilled(
+			ImVec2(pos.x, pos.y),
+			ImVec2(pos.x + (width * healthPerc), pos.y + height),
 			healthColor);
 	}
 
@@ -367,20 +357,21 @@ void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
 	{
 		const char *weaponName = "??";
 
-		if (Player && Player->m_pClippingWeapon && Player->m_pClippingWeapon->m_pEntity) {
+		if (Player && Player->m_pClippingWeapon && Player->m_pClippingWeapon->m_pEntity)
+		{
 			weaponName = Player->m_pClippingWeapon->m_pEntity->weapon_name;
 		}
 
-			float fontSize = 12.0f;
+		float fontSize = 12.0f;
 
-			ImFont *font = ImGui::GetFont ( );
-			ImVec2 textSize = font->CalcTextSizeA (fontSize, FLT_MAX, 0.0f, weaponName);
+		ImFont *font = ImGui::GetFont();
+		ImVec2 textSize = font->CalcTextSizeA(fontSize, FLT_MAX, 0.0f, weaponName);
 
-			ImVec2 textPos = ImVec2 (screenPos.x - textSize.x / 2.0f, screenPos.y);
+		ImVec2 textPos = ImVec2(screenPos.x - textSize.x / 2.0f, screenPos.y);
 
-			ImU32 softColor = IM_COL32 (100, 200, 180, 160);
+		ImU32 softColor = IM_COL32(100, 200, 180, 160);
 
-			drawList->AddText (font, fontSize, textPos, softColor, weaponName);
+		drawList->AddText(font, fontSize, textPos, softColor, weaponName);
 	}
 
 	// 3. Render Bone IDs (colorful text at bone positions)
@@ -389,19 +380,19 @@ void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
 		for (int bone = terroristBones::pelvis; bone <= terroristBones::leg_upper_r_twist1; ++bone)
 		{
 			Vec2 boneScreen;
-			if (!Player->GetBone (bone)->vecPosition.WorldToScreen (boneScreen, iGameEntitySystem->ViewMatrix))
+			if (!Player->GetBone(bone)->vecPosition.WorldToScreen(boneScreen, iGameEntitySystem->ViewMatrix))
 				continue;
 
 			char buffer[20];
-			snprintf (buffer, sizeof (buffer), "%d", bone);
+			snprintf(buffer, sizeof(buffer), "%d", bone);
 
-			ImU32 boneColor = IM_COL32 (
+			ImU32 boneColor = IM_COL32(
 				(bone * 15) % 255,
 				(bone * 35) % 255,
 				(bone * 55) % 255,
 				255);
 
-			drawList->AddText (ImVec2 (boneScreen.x, boneScreen.y), boneColor, buffer);
+			drawList->AddText(ImVec2(boneScreen.x, boneScreen.y), boneColor, buffer);
 		}
 	}
 
@@ -414,39 +405,34 @@ void Visual::OverlayRender::RenderAllPlayerVisuals (C_PlayerPawn *Player)
 		for (const auto &bone : boneMap)
 		{
 			Vec2 bonePos;
-			if (Player->GetBone (bone.second) &&
-				Player->GetBone (bone.second)->vecPosition.WorldToScreen (bonePos, iGameEntitySystem->ViewMatrix))
+			if (Player->GetBone(bone.second) &&
+				Player->GetBone(bone.second)->vecPosition.WorldToScreen(bonePos, iGameEntitySystem->ViewMatrix))
 			{
-				boneScreenPositions[bone.first] = ImVec2 (bonePos.x, bonePos.y);
+				boneScreenPositions[bone.first] = ImVec2(bonePos.x, bonePos.y);
 			}
 		}
 
 		std::vector<std::pair<const char *, const char *>> boneConnections = {
-			{"Head", "Neck"}, {"Neck", "Torso"}, {"Torso", "Pelvis"}, {"Torso", "Left Clavicle"},
-			{"Left Clavicle", "Left Upper Arm"}, {"Left Upper Arm", "Left Lower Arm"}, {"Left Lower Arm", "Left Hand"},
-			{"Torso", "Right Clavicle"}, {"Right Clavicle", "Right Upper Arm"}, {"Right Upper Arm", "Right Lower Arm"},
-			{"Right Lower Arm", "Right Hand"}, {"Pelvis", "Left Upper Leg"}, {"Left Upper Leg", "Left Lower Leg"},
-			{"Left Lower Leg", "Left Feet"}, {"Pelvis", "Right Upper Leg"}, {"Right Upper Leg", "Right Lower Leg"},
-			{"Right Lower Leg", "Right Feet"} };
+			{"Head", "Neck"}, {"Neck", "Torso"}, {"Torso", "Pelvis"}, {"Torso", "Left Clavicle"}, {"Left Clavicle", "Left Upper Arm"}, {"Left Upper Arm", "Left Lower Arm"}, {"Left Lower Arm", "Left Hand"}, {"Torso", "Right Clavicle"}, {"Right Clavicle", "Right Upper Arm"}, {"Right Upper Arm", "Right Lower Arm"}, {"Right Lower Arm", "Right Hand"}, {"Pelvis", "Left Upper Leg"}, {"Left Upper Leg", "Left Lower Leg"}, {"Left Lower Leg", "Left Feet"}, {"Pelvis", "Right Upper Leg"}, {"Right Upper Leg", "Right Lower Leg"}, {"Right Lower Leg", "Right Feet"}};
 
 		std::vector<ImU32> boneColors = {
-			IM_COL32 (255, 255, 255, 255), IM_COL32 (255, 200, 0, 255), IM_COL32 (255, 0, 0, 255), IM_COL32 (255, 0, 0, 255),
-			IM_COL32 (255, 0, 0, 255), IM_COL32 (255, 0, 0, 255), IM_COL32 (255, 0, 0, 255), IM_COL32 (0, 255, 0, 255),
-			IM_COL32 (0, 255, 0, 255), IM_COL32 (0, 255, 0, 255), IM_COL32 (0, 255, 0, 255), IM_COL32 (0, 0, 255, 255),
-			IM_COL32 (0, 0, 255, 255), IM_COL32 (0, 0, 255, 255), IM_COL32 (255, 0, 255, 255), IM_COL32 (255, 0, 255, 255),
-			IM_COL32 (255, 0, 255, 255) };
+			IM_COL32(255, 255, 255, 255), IM_COL32(255, 200, 0, 255), IM_COL32(255, 0, 0, 255), IM_COL32(255, 0, 0, 255),
+			IM_COL32(255, 0, 0, 255), IM_COL32(255, 0, 0, 255), IM_COL32(255, 0, 0, 255), IM_COL32(0, 255, 0, 255),
+			IM_COL32(0, 255, 0, 255), IM_COL32(0, 255, 0, 255), IM_COL32(0, 255, 0, 255), IM_COL32(0, 0, 255, 255),
+			IM_COL32(0, 0, 255, 255), IM_COL32(0, 0, 255, 255), IM_COL32(255, 0, 255, 255), IM_COL32(255, 0, 255, 255),
+			IM_COL32(255, 0, 255, 255)};
 
-		if (boneConnections.size ( ) == boneColors.size ( ))
+		if (boneConnections.size() == boneColors.size())
 		{
-			for (size_t i = 0; i < boneConnections.size ( ); ++i)
+			for (size_t i = 0; i < boneConnections.size(); ++i)
 			{
-				auto it1 = boneScreenPositions.find (boneConnections[i].first);
-				auto it2 = boneScreenPositions.find (boneConnections[i].second);
+				auto it1 = boneScreenPositions.find(boneConnections[i].first);
+				auto it2 = boneScreenPositions.find(boneConnections[i].second);
 
-				if (it1 == boneScreenPositions.end ( ) || it2 == boneScreenPositions.end ( ))
+				if (it1 == boneScreenPositions.end() || it2 == boneScreenPositions.end())
 					continue;
 
-				drawList->AddLine (it1->second, it2->second, boneColors[i], 2.5f);
+				drawList->AddLine(it1->second, it2->second, boneColors[i], 2.5f);
 			}
 		}
 	}
