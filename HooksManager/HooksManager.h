@@ -12,7 +12,7 @@
 #include "../math/vector.h"
 #include "../Classes/Classes.h"
 
-// https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html  checkkkkk bopnes
+// https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html 
 enum class BoneIDs
 {
 	Head = 6,
@@ -150,7 +150,7 @@ public:
 	{
 	public:
 		typedef void(__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
-		static OverrideViewFunction oCameraServices; // static because shared among all the instances of the class
+		static OverrideViewFunction oCameraServices; // shared among all instances
 		static void __fastcall hCameraServices(__int64 a1, CViewSetupTRY *a2);
 	};
 

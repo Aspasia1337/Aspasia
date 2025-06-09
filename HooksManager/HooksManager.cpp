@@ -64,300 +64,270 @@ Vec3 antiAimAngles;
 bool HooksManager::initHook()
 {
 
-	iHelper->m_Console.printMessage(INFO, "Hoosk Manager Init");
+	iHelper->m_Console.printMessage(INFO, "[HookManager] Init");
 
 	MH_STATUS hookInit;
 
 	MH_Initialize();
 
 	uint8_t *smokeEffectAddress = iHelper->m_Mem.PatternScanner("client.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B 9C 24 ? ? ? ? 4D 8B F8 ");
-
 	if (smokeEffectAddress == nullptr)
 		return false;
-
 	hookInit = MH_CreateHook(
 		smokeEffectAddress,
 		reinterpret_cast<LPVOID *>(iVisual->m_SmokeEffect.hRenderSmoke),
 		reinterpret_cast<LPVOID *>(&iVisual->m_SmokeEffect.oRenderSmokeParticles));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Smoke Effect HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] SmokeEffect hooked (client.dll) @ 0x%p", smokeEffectAddress);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING SmokeEffect! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook SmokeEffect (client.dll) @ 0x%p: MH_CreateHook => %d", smokeEffectAddress, hookInit);
+#endif
 
 	uint8_t *flashEffect = iHelper->m_Mem.PatternScanner("client.dll", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 40 0F 29 74 24 ? 33 FF 0F");
-
 	hookInit = MH_CreateHook(
 		flashEffect,
 		reinterpret_cast<LPVOID *>(iVisual->m_FlashEffect.hFlashEffect),
 		reinterpret_cast<LPVOID *>(&iVisual->m_FlashEffect.oFlashEffect));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Flash Effect HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] FlashEffect hooked (client.dll) @ 0x%p", flashEffect);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Flash Effect! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook FlashEffect (client.dll) @ 0x%p: MH_CreateHook => %d", flashEffect, hookInit);
+#endif
 
 	uint8_t *createMove = iHelper->m_Mem.PatternScanner("client.dll", "85 D2 0F 85 ? ? ? ? 48 8B C4 44 88 40 18");
-
 	hookInit = MH_CreateHook(
 		createMove,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_CreateMove.hCreateMove),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_CreateMove.oCreateMove));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Create Move HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] CreateMove hooked (client.dll) @ 0x%p", createMove);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Create Move! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook CreateMove (client.dll) @ 0x%p: MH_CreateHook => %d", createMove, hookInit);
+#endif
 
 	uint8_t *createMoveTWO = iHelper->m_Mem.PatternScanner("client.dll", "48 8B C4 4C 89 40 18 48 89 48 08 55 53 57");
-
 	hookInit = MH_CreateHook(
 		createMoveTWO,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_CreateMoveTWO.hCreateMoveTWO),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_CreateMoveTWO.oCreateMoveTWO));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Create MoveTWO HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] CreateMoveTWO hooked (client.dll) @ 0x%p", createMoveTWO);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Create MoveTWO! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook CreateMoveTWO (client.dll) @ 0x%p: MH_CreateHook => %d", createMoveTWO, hookInit);
+#endif
 
 	uint8_t *setViewAngles = iHelper->m_Mem.PatternScanner("client.dll", "85 D2 75 3F 48");
-
 	hookInit = MH_CreateHook(
 		setViewAngles,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_SetViewAngles.hSetViewAngles),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_SetViewAngles.oSetViewAngles));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Set View Angles HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] SetViewAngles hooked (client.dll) @ 0x%p", setViewAngles);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Set View Angles! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook SetViewAngles (client.dll) @ 0x%p: MH_CreateHook => %d", setViewAngles, hookInit);
+#endif
 
 	uint8_t *drawObjectaddrr = iHelper->m_Mem.PatternScanner("scenesystem.dll", "48 83 EC 48 48 8B 84 24 ? ? ? ? 48 8D 0D ? ? ? ?");
-
 	hookInit = MH_CreateHook(
 		drawObjectaddrr,
 		reinterpret_cast<LPVOID *>(iVisual->m_DrawObject.hDrawObject),
 		reinterpret_cast<LPVOID *>(&iVisual->m_DrawObject.oDrawObject));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Draw Object HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] DrawObject hooked (scenesystem.dll) @ 0x%p", drawObjectaddrr);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Draw Object! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook DrawObject (scenesystem.dll) @ 0x%p: MH_CreateHook => %d", drawObjectaddrr, hookInit);
+#endif
 
 	uint8_t *LightningOverrideAddress = iHelper->m_Mem.PatternScanner("scenesystem.dll", "48 89 54 24 ? 53 41 56 41 57");
-
 	hookInit = MH_CreateHook(
 		LightningOverrideAddress,
 		reinterpret_cast<LPVOID *>(iVisual->mLightningModulation.hLightningModulation),
 		reinterpret_cast<LPVOID *>(&iVisual->mLightningModulation.oLightningModulation));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t Lightning HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] LightningModulation hooked (scenesystem.dll) @ 0x%p", LightningOverrideAddress);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Lightning! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook LightningModulation (scenesystem.dll) @ 0x%p: MH_CreateHook => %d", LightningOverrideAddress, hookInit);
+#endif
 
 	uint8_t *WorldOverrideAddress = iHelper->m_Mem.PatternScanner("scenesystem.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 4C 8B F9");
-
 	hookInit = MH_CreateHook(
 		WorldOverrideAddress,
 		reinterpret_cast<LPVOID *>(iVisual->m_WorldModulation.hModulateWorldColor),
 		reinterpret_cast<LPVOID *>(&iVisual->m_WorldModulation.oModulateWorldColor));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t World Modulation HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] WorldModulation hooked (scenesystem.dll) @ 0x%p", WorldOverrideAddress);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING World Modulation! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook WorldModulation (scenesystem.dll) @ 0x%p: MH_CreateHook => %d", WorldOverrideAddress, hookInit);
+#endif
 
 	uint8_t *CalculateBones = iHelper->m_Mem.PatternScanner("client.dll", "40 55 56 57 41 54 41 55 41 56 41 57 48 81 EC D0");
-
 	calcBonesFunction calcBones = reinterpret_cast<calcBonesFunction>(CalculateBones);
-
+#ifdef DEBUG_MODE
 	if (calcBones)
-	{
-		iHelper->m_Console.printMessage(DEBUG, "\t Calc Bones HOOKED! ");
-	}
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] CalcBones resolved (client.dll) @ 0x%p", CalculateBones);
 	else
-	{
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING Calc Bones! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve CalcBones (client.dll)");
+#endif
 
 	uint8_t *isRelativeMouse = (uint8_t *)iHelper->m_Mem.GetVMT(g_pInterfaces->pGameInput, 77);
-
 	hookInit = MH_CreateHook(
 		isRelativeMouse,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_IsRelativeMouseMode.hIsRelativeMouseFunction),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_IsRelativeMouseMode.oIsRelativeMouseMode));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t IsRelativeMouseMode HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] IsRelativeMouseMode hooked (VMT idx 77) @ 0x%p", isRelativeMouse);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING IsRelativeMouseMode! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook IsRelativeMouseMode (VMT idx 77) @ 0x%p: MH_CreateHook => %d", isRelativeMouse, hookInit);
+#endif
 
 	uint8_t *mouseInput = (uint8_t *)iHelper->m_Mem.GetVMT(g_pInterfaces->pGameInput, 17);
-
 	hookInit = MH_CreateHook(
 		mouseInput,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_IsRelativeMouseMode.hMouseInput),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_IsRelativeMouseMode.oMouseInput));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-		iHelper->m_Console.printMessage(DEBUG, "\t MouseInput HOOKED! ");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] MouseInput hooked (VMT idx 17) @ 0x%p", mouseInput);
 	else
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING MouseInput! ");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook MouseInput (VMT idx 17) @ 0x%p: MH_CreateHook => %d", mouseInput, hookInit);
+#endif
 
 	// uint8_t * validateInput = (uint8_t*)iHelper->m_Mem.GetVMT (g_pInterfaces->pGameInput, 7);
 
 	uint8_t *valiodateInput = iHelper->m_Mem.PatternScanner("client.dll", "85 D2 0F 85 00");
-
 	hookInit = MH_CreateHook(
 		valiodateInput,
 		reinterpret_cast<LPVOID *>(iAntiAim->mValidateInput.hValidateInput),
 		reinterpret_cast<LPVOID *>(&iAntiAim->mValidateInput.oValidateInput));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-	{
-		iHelper->m_Console.printMessage(DEBUG, "\t VALIDATE INPUT HOOKED! ");
-	}
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] ValidateInput hooked (client.dll) @ 0x%p", valiodateInput);
 	else
-	{
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING VALIDATE INPUT! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook ValidateInput (client.dll) @ 0x%p: MH_CreateHook => %d", valiodateInput, hookInit);
+#endif
 
 	iVisual->m_UpdateSkybox.UpdateSkyboxFunction = reinterpret_cast<decltype(iVisual->m_UpdateSkybox.UpdateSkyboxFunction)>(iHelper->m_Mem.PatternScanner("client.dll", "48 89 5C 24 08 57 48 83 EC 30 48 8B F9 E8 ?? ?? ?? ?? 48 8B 47"));
-
-	if (hookInit == MH_OK)
-	{
-		iHelper->m_Console.printMessage(DEBUG, "\t UpdateSkybox HOOKED! ");
-	}
+#ifdef DEBUG_MODE
+	if (iVisual->m_UpdateSkybox.UpdateSkyboxFunction)
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] UpdateSkybox resolved (client.dll) @ 0x%p", iVisual->m_UpdateSkybox.UpdateSkyboxFunction);
 	else
-	{
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING UpdateSkybox! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve UpdateSkybox (client.dll)");
+#endif
 
 	uint8_t *frameStageNotify = iHelper->m_Mem.PatternScanner("client.dll", "48 89 5C 24 ? 56 48 83 EC 30 8B 05 ? ? ? ? ");
-
 	hookInit = MH_CreateHook(
 		frameStageNotify,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_FrameStageNotify.hFrameStageNotify),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_FrameStageNotify.oFrameStageNotify));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-	{
-		iHelper->m_Console.printMessage(DEBUG, "\t FRAME STAGE NOTIFY HOOKED! ");
-	}
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] FrameStageNotify hooked (client.dll) @ 0x%p", frameStageNotify);
 	else
-	{
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING FRAME STAGE NOTIFY! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook FrameStageNotify (client.dll) @ 0x%p: MH_CreateHook => %d", frameStageNotify, hookInit);
+#endif
 
 	uint8_t *onAddEntity = iHelper->m_Mem.PatternScanner("client.dll", "48 89 74 24 10 57 48 83 EC ? 48 8B F9 41 8B C0 B9 ? ? ? ?");
-
 	hookInit = MH_CreateHook(
 		onAddEntity,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_OnAddEntity.hOnAddEntity),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_OnAddEntity.oOnAddEntity));
-
+#ifdef DEBUG_MODE
+	if (hookInit == MH_OK)
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] OnAddEntity hooked (client.dll) @ 0x%p", onAddEntity);
+	else
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook OnAddEntity (client.dll) @ 0x%p: MH_CreateHook => %d", onAddEntity, hookInit);
+#endif
 	uint8_t *onRemoveEntity = iHelper->m_Mem.PatternScanner("client.dll", "48 89 74 24 10 57 48 83 EC ? 48 8B F9 41 8B C0 25 ? ? ? ?");
-
 	hookInit = MH_CreateHook(
 		onRemoveEntity,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_OnRemoveEntity.hOnRemoveEntity),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_OnRemoveEntity.oOnRemoveEntity));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-	{
-		iHelper->m_Console.printMessage(DEBUG, "\t OnRemoveEntity HOOKED! ");
-	}
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] OnRemoveEntity hooked (client.dll) @ 0x%p", onRemoveEntity);
 	else
-	{
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING OnRemoveEntity! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook OnRemoveEntity (client.dll) @ 0x%p: MH_CreateHook => %d", onRemoveEntity, hookInit);
+#endif
 
 	uint8_t *CameraServices = iHelper->m_Mem.PatternScanner("client.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 40 48 8B FA");
-
 	hookInit = MH_CreateHook(
 		CameraServices,
 		reinterpret_cast<LPVOID *>(iHooksManager->m_OverrideViewFunction.hCameraServices),
 		reinterpret_cast<LPVOID *>(&iHooksManager->m_OverrideViewFunction.oCameraServices));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-	{
-		iHelper->m_Console.printMessage(DEBUG, "\t OnAddEntity HOOKED! ");
-	}
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] OverrideView hooked (CameraServices) @ 0x%p", CameraServices);
 	else
-	{
-		iHelper->m_Console.printMessage(WARNING, "\t ERROR HOOCKING OnAddEntity! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook OverrideView (CameraServices) @ 0x%p: MH_CreateHook => %d", CameraServices, hookInit);
+#endif
 
 	uint8_t *GetBonePosition = iHelper->m_Mem.PatternScanner("client.dll", "48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 4D 8B F1");
-
 	iLegitBot->m_BonePosition.GetBonePositionFunction = reinterpret_cast<decltype(iLegitBot->m_BonePosition.GetBonePositionFunction)>(GetBonePosition);
-
 	uint8_t *SetKV3 = iHelper->m_Mem.PatternScanner("client.dll", "40 53 48 83 EC 30 48 8B D9 49");
-
 	iVisual->m_Chams.SetTypeKV3 = reinterpret_cast<decltype(iVisual->m_Chams.SetTypeKV3)>(SetKV3);
-
+#ifdef DEBUG_MODE
 	if (iVisual->m_Chams.SetTypeKV3)
-		iHelper->m_Console.printMessage(DEBUG, "SetTypeKV3 HOOKED!");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] SetTypeKV3 resolved (client.dll) @ 0x%p", SetKV3);
 	else
-		iHelper->m_Console.printMessage(WARNING, "Error HOOKING SetTypeKV3!");
-
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve SetTypeKV3 (client.dll)");
+#endif
 	uint8_t *LoadKeyValues = iHelper->m_Mem.GetAbsoluteAddress(iHelper->m_Mem.PatternScanner("tier0.dll", "E8 ? ? ? ? EB 36 8B 43 10"), 0x1, 0x0);
-
 	iVisual->m_Chams.LoadKeyValues = reinterpret_cast<decltype(iVisual->m_Chams.LoadKeyValues)>(LoadKeyValues);
-
+#ifdef DEBUG_MODE
 	if (iVisual->m_Chams.LoadKeyValues)
-		iHelper->m_Console.printMessage(DEBUG, "LoadKeyValues HOOKED!");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] LoadKeyValues resolved (tier0.dll) @ 0x%p", LoadKeyValues);
 	else
-		iHelper->m_Console.printMessage(WARNING, "Error HOOKING LoadKeyValues!");
-
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve LoadKeyValues (tier0.dll)");
+#endif
 	uint8_t *CreateMaterialFunction = iHelper->m_Mem.PatternScanner("materialsystem2.dll", "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05");
-
 	iVisual->m_Chams.CreateMaterialFunction = reinterpret_cast<decltype(iVisual->m_Chams.CreateMaterialFunction)>(CreateMaterialFunction);
-
+#ifdef DEBUG_MODE
 	if (iVisual->m_Chams.CreateMaterialFunction)
-		iHelper->m_Console.printMessage(DEBUG, "CreateMaterial HOOKED!");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] CreateMaterialFunction resolved (materialsystem2.dll) @ 0x%p", CreateMaterialFunction);
 	else
-		iHelper->m_Console.printMessage(WARNING, "Error HOOKING CreateMaterial!");
-
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve CreateMaterialFunction (materialsystem2.dll)");
+#endif
 	uint8_t *BufInit = iHelper->m_Mem.PatternScanner("tier0.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC 20 33 DB 44 89 41 08");
-
 	iVisual->m_Chams.BuffInit = reinterpret_cast<decltype(iVisual->m_Chams.BuffInit)>(BufInit);
-
+#ifdef DEBUG_MODE
 	if (iVisual->m_Chams.BuffInit)
-		iHelper->m_Console.printMessage(DEBUG, "BuffInit HOOKED!");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] BuffInit resolved (tier0.dll) @ 0x%p", BufInit);
 	else
-		iHelper->m_Console.printMessage(WARNING, "Error HOOKING BuffInit!");
-
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve BuffInit (tier0.dll)");
+#endif
 	uint8_t *BuffCopy = iHelper->m_Mem.PatternScanner("tier0.dll", "48 89 5C 24 ? 57 48 83 EC 20 0F B6 41 19");
-
 	iVisual->m_Chams.BuffPutString = reinterpret_cast<decltype(iVisual->m_Chams.BuffPutString)>(BuffCopy);
-
+#ifdef DEBUG_MODE
 	if (iVisual->m_Chams.BuffPutString)
-		iHelper->m_Console.printMessage(DEBUG, "BuffPutString HOOKED!");
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] BuffPutString resolved (tier0.dll) @ 0x%p", BuffCopy);
 	else
-		iHelper->m_Console.printMessage(WARNING, "Error HOOKING BuffPutString!");
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to resolve BuffPutString (tier0.dll)");
+#endif
 
 	iVisual->m_Chams.InitChams();
-	iHelper->m_Console.printMessage(WARNING, "MATERIAL CREATED!");
+	iHelper->m_Console.printMessage(WARNING, "[HookManager] Materials initialized");
 
 
 	uint8_t *ViewModelFov = iHelper->m_Mem.PatternScanner ("client.dll", "4C 8B DC 53 56 57 48 83 EC");
-
 	hookInit = MH_CreateHook (
 		ViewModelFov,
 		reinterpret_cast<LPVOID *>(iMisc->m_ScopeRemoval.hRemoveScope),
 		reinterpret_cast<LPVOID *>(&iMisc->m_ScopeRemoval.oRemoveScopeFn));
-
+#ifdef DEBUG_MODE
 	if (hookInit == MH_OK)
-	{
-		iHelper->m_Console.printMessage (DEBUG, "\t SetFovFn HOOKED! ");
-	}
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] RemoveScope hooked (SetFovFn) @ 0x%p", ViewModelFov);
 	else
-	{
-		iHelper->m_Console.printMessage (WARNING, "\t ERROR HOOCKING SetFovFn! ");
-	}
+		iHelper->m_Console.printMessage(WARNING, "[HookManager] Failed to hook RemoveScope (SetFovFn) @ 0x%p: MH_CreateHook => %d", ViewModelFov, hookInit);
+#endif
 	
 	uint8_t *PVS = (iHelper->m_Mem.ResolveRelativeAddress(iHelper->m_Mem.PatternScanner("engine2.dll","48 8D 0D ? ? ? ? 33 ? FF 50"), 0x3, 0x7));
 
@@ -496,7 +466,7 @@ void HooksManager::IsRelativeMouseMode::hMouseInput(void *pThisptr)
 	}
 	oMouseInput(pThisptr);
 	return;
-}
+}	
 
 void HooksManager::OnAddEntity::hOnAddEntity(__int64 CGameEntitySystem, void *entityPointer, int entityHandle)
 {
@@ -506,17 +476,23 @@ void HooksManager::OnAddEntity::hOnAddEntity(__int64 CGameEntitySystem, void *en
 	if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "C_CSPlayerPawnBase") == 0)
 	{
 		iGameEntitySystem->PawnMap.insert(std::make_pair(entityHandle, (C_PlayerPawn *)entityPointer));
-		iHelper->m_Console.printMessage(DEBUG, "PAWN ADDED, Pawn size ", iGameEntitySystem->PawnMap.size());
+#ifdef DEBUG_MODE
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] Pawn added: handle=", entityHandle, ", total=", iGameEntitySystem->PawnMap.size());
+#endif
 	}
 	if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "c_cs_observer_for_precache") == 0)
 	{
 		iGameEntitySystem->ObserverMap.insert(std::make_pair(entityHandle, (C_PlayerPawn *)entityPointer));
-		iHelper->m_Console.printMessage(DEBUG, "OBSERVER ADDED, Pawn size ", iGameEntitySystem->ObserverMap.size(), " ", entityHandle);
+#ifdef DEBUG_MODE
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] Observer added: handle=", entityHandle, ", total=", iGameEntitySystem->ObserverMap.size());
+#endif
 	}
 	if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "CBasePlayerController") == 0)
 	{
 		iGameEntitySystem->ControllerMap.insert(std::make_pair(entityHandle, (C_PlayerController *)entityPointer));
-		iHelper->m_Console.printMessage(DEBUG, "CONTROLLER ADDED, Pawn size ", iGameEntitySystem->ControllerMap.size(), " ", entityHandle);
+#ifdef DEBUG_MODE
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] Controller added: handle=", entityHandle, ", total=", iGameEntitySystem->ControllerMap.size());
+#endif
 	}
 }
 void HooksManager::OnRemoveEntity::hOnRemoveEntity(__int64 CGameEntitySystem, void *entityPointer, int entityHandle)
@@ -526,17 +502,23 @@ void HooksManager::OnRemoveEntity::hOnRemoveEntity(__int64 CGameEntitySystem, vo
 	if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "C_CSPlayerPawnBase") == 0)
 	{
 		iGameEntitySystem->PawnMap.erase(entityHandle);
-		iHelper->m_Console.printMessage(DEBUG, "PAWN REMOVED, Pawn size ", iGameEntitySystem->PawnMap.size());
+#ifdef DEBUG_MODE
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] Pawn removed: handle=", entityHandle, ", total=", iGameEntitySystem->PawnMap.size());
+#endif
 	}
 	if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "c_cs_observer_for_precache") == 0)
 	{
 		iGameEntitySystem->ObserverMap.erase(entityHandle);
-		iHelper->m_Console.printMessage(DEBUG, "OBSERVER REMOVED, Pawn size ", iGameEntitySystem->ObserverMap.size());
+#ifdef DEBUG_MODE
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] Observer removed: handle=", entityHandle, ", total=", iGameEntitySystem->ObserverMap.size());
+#endif
 	}
 	if (strcmp(iGameEntitySystem->GetSchemaName(entityPointer).c_str(), "CBasePlayerController") == 0)
 	{
 		iGameEntitySystem->ControllerMap.erase(entityHandle);
-		iHelper->m_Console.printMessage(DEBUG, "CONTROLLER REMOVED, Pawn size ", iGameEntitySystem->ControllerMap.size());
+#ifdef DEBUG_MODE
+		iHelper->m_Console.printMessage(DEBUG, "[HookManager] Controller removed: handle=", entityHandle, ", total=", iGameEntitySystem->ControllerMap.size());
+#endif
 	}
 }
 
