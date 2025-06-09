@@ -499,6 +499,5 @@ void HooksManager::CreateMoveTWO::hCreateMoveTWO(CCSGOInput *a1, __int64 nSlot, 
 
 void HooksManager::SetViewAngles::hSetViewAngles(__int64 *a1, __int64 a2, Vec3 a3)
 {
-
-		return oSetViewAngles(a1, a2, a3);
+	return oSetViewAngles(a1, a2, a3);
 }
