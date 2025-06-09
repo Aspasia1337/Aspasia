@@ -151,7 +151,7 @@ void GameEntitySystem::getAllPlayers()
 	getGameEntities();
 	PlayersMap.clear();
 
-	C_PlayerController *localPlayerController = *(C_PlayerController **)(clientDll + 0x1A6E900);
+	C_PlayerController *localPlayerController = *(C_PlayerController **)(clientDll + 0x1A4E870);
 
 	for (unsigned int i = 0; i < PawnVector.size(); i++)
 	{
