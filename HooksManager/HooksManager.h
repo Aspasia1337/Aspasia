@@ -12,7 +12,7 @@
 #include "../math/vector.h"
 #include "../Classes/Classes.h"
 
-// https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html 
+// https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html
 enum class BoneIDs
 {
 	Head = 6,
