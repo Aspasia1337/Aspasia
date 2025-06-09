@@ -6,6 +6,8 @@
 
 #include "Classes/Classes.h"
 
+#define DEBUG_MODE 1
+
 namespace Globals {
 	extern float chamsColor[4];
 	extern int tab;
