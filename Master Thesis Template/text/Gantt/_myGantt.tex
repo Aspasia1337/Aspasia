@@ -1,72 +1,65 @@
-\chapter*{Project Timeline (Gantt Chart)}
+\chapter{Project Timeline (Gantt Chart)}
 \addcontentsline{toc}{chapter}{Project Timeline (Gantt Chart)}
 \markboth{Project Timeline (Gantt Chart)}{}
 
 % ---------- GANTT CHART ----------
 \begin{landscape}
-  \scriptsize
+  \tiny
   \vspace*{-3.3cm}
   \hspace*{-2.35cm}
   \begin{ganttchart}[
-    x unit=0.135cm,
-    y unit title=0.83cm,
-    y unit chart=0.83cm,
+    x unit=0.12cm,
+    y unit title=0.7cm,
+    y unit chart=0.7cm,
     time slot format=isodate-yearmonth,
     vgrid,
     title/.append style={draw=none, fill=titlepurple},
     title label font=\sffamily\bfseries\color{white},
     title label node/.append style={below=-1.6ex},
-    title height=1,
+    title height=0.8,
     bar/.append style={draw=none, fill=barpurple},
-    bar height=0.55,
-    bar label font=\scriptsize\color{black!85},
+    bar height=0.45,
+    bar label font=\tiny\color{black!85},
     bar incomplete/.append style={fill=barprogress},
     group/.append style={fill=groupviolet!80},
     group incomplete/.append style={fill=groupviolet!50},
     group right shift=0,
     group top shift=.5,
-    group height=.25,
-    group peaks height=.15,
-  ]{2025-01}{2025-06-30}  
+    group height=.2,
+    group peaks height=.1,
+  ]{2024-12}{2025-06-30}  
   
 \gantttitlecalendar{month=shortname} \\
 
-% --- Investigación --- (5 commits)
-\ganttgroup{Initial Research (5 commits)}{2025-01-01}{2025-01-31} \\
-\ganttbar{Cheat ecosystem overview}{2025-01-01}{2025-01-20} \\
-\ganttbar{Forum analysis (UC, GH)}{2025-01-10}{2025-01-30} \\
-\ganttbar{Injection methods \& loaders}{2025-01-15}{2025-01-31} \\
+\ganttgroup{Initial Research}{2024-12-01}{2024-12-31} \\
+\ganttbar{Cheat ecosystem overview}{2024-12-01}{2024-12-15} \\
+\ganttbar{Forum analysis (UC, GH)}{2024-12-10}{2024-12-20} \\
+\ganttbar{Injection methods \& loaders}{2024-12-15}{2024-12-31} \\
 
-% --- Infraestructura y estructura inicial --- (12 commits)
-\ganttgroup{Setup \& Base Code (12 commits)}{2025-01-26}{2025-02-15} \\
-\ganttbar{Initial commit \& debugging helpers}{2025-01-26}{2025-01-30} \\
-\ganttbar{Pattern scanning, interfaces}{2025-01-28}{2025-02-05} \\
-\ganttbar{Entity manager \& player classes}{2025-01-29}{2025-02-12} \\
+\ganttgroup{Setup \& Base Code}{2025-01-01}{2025-01-31} \\
+\ganttbar{Initial commit \& debugging helpers}{2025-01-01}{2025-01-07} \\
+\ganttbar{Pattern scanning, interfaces}{2025-01-08}{2025-01-15} \\
+\ganttbar{Entity manager \& player classes}{2025-01-16}{2025-01-31} \\
 
-% --- Desarrollo: Visuales y Aimbot --- (26 commits)
-\ganttgroup{Cheat Core Development (26 commits)}{2025-02-13}{2025-04-15} \\
-\ganttbar{Aimbot (simple to refined)}{2025-02-14}{2025-03-22} \\
-\ganttbar{Player \& weapon chams}{2025-03-12}{2025-03-29} \\
-\ganttbar{Anti-aim \& visuals logic}{2025-03-31}{2025-04-23} \\
-\ganttbar{Pattern scanning \& VMT hooks}{2025-03-22}{2025-04-10} \\
+\ganttgroup{Cheat Core Development}{2025-02-01}{2025-04-15} \\
+\ganttbar{Aimbot (simple to refined)}{2025-02-01}{2025-03-01} \\
+\ganttbar{Player \& weapon chams}{2025-03-02}{2025-03-15} \\
+\ganttbar{Anti-aim \& visuals logic}{2025-03-16}{2025-04-01} \\
+\ganttbar{Pattern scanning \& VMT hooks}{2025-04-02}{2025-04-15} \\
 
-% --- Menú y configuración --- (7 commits)
-\ganttgroup{UI \& UX Polish (7 commits)}{2025-03-24}{2025-04-15} \\
-\ganttbar{Menu system \& ImGui}{2025-03-24}{2025-03-30} \\
+\ganttgroup{UI \& UX Polish}{2025-03-15}{2025-04-01} \\
+\ganttbar{Menu system \& ImGui}{2025-03-15}{2025-03-25} \\
 
-% --- Integración de funcionalidades avanzadas --- (5 commits)
-\ganttgroup{Advanced Features (5 commits)}{2025-04-21}{2025-05-03} \\
-\ganttbar{Chams invisibles + walls}{2025-04-21}{2025-05-03} \\
-\ganttbar{Aimbot smoothing \& humanizer}{2025-04-15}{2025-05-02} \\
+\ganttgroup{Advanced Features}{2025-04-15}{2025-05-15} \\
+\ganttbar{Chams invisibles + walls}{2025-04-15}{2025-05-01} \\
+\ganttbar{Aimbot smoothing \& humanizer}{2025-05-02}{2025-05-15} \\
 
-% --- Evaluación & VAC Testing --- (3 commits)
-\ganttgroup{Evasion \& Testing (3 commits)}{2025-05-01}{2025-06-15} \\
+\ganttgroup{Evasion \& Testing}{2025-05-01}{2025-06-15} \\
 \ganttbar{VAC behavior analysis}{2025-05-01}{2025-06-15} \\
 
-% --- Tesis --- (10 commits)
-\ganttgroup{Thesis Writing \& Diagrams (10 commits)}{2025-04-10}{2025-06-30} \\
-\ganttbar{Figures \& TikZ diagrams}{2025-04-10}{2025-06-10} \\
+\ganttgroup{Thesis Writing \& Diagrams}{2025-04-15}{2025-06-15} \\
+\ganttbar{Figures \& TikZ diagrams}{2025-04-15}{2025-06-15} \\
+
 
 \end{ganttchart}
 \end{landscape}
-
