@@ -1,0 +1,49 @@
+\chapter{Synthesis and Closing Thoughts}
+
+\section*{Synthesis}
+
+This thesis has presented a comprehensive and technically rigorous investigation into cheating within online multiplayer games, using Counter-Strike 2 as a central case study to illustrate both system vulnerabilities and defensive strategies. Beginning with the anthropological foundations of human competition and tracing the evolution of computing and digital interaction, we have demonstrated how cheating practices have co-evolved with the complexity of the platforms they target.
+
+Our analysis addressed not only the broader social and economic impacts of cheating, but also its technical foundations. We examined core mechanisms such as code injection, memory traversal, function hooking, and internal rendering manipulation. These elements collectively reveal how cheats can persist within protected environments and evade conventional detection.
+
+\section*{Practical Contributions}
+
+A primary contribution of this work is the design and implementation of a complete cheat for Counter-Strike 2, developed as a modular and extensible framework. The cheat includes several advanced features:
+
+\begin{itemize}
+  \item Engine-level chams and material injection
+  \item Entity list traversal and skeletal rendering (bone ESP)
+  \item Automated targeting (aimbot) with smoothing and stealth logic
+  \item Anti-aim systems including LBY breaking and view desynchronization
+  \item Hooking of rendering and input functions using trampolines and MinHook
+\end{itemize}
+
+The full source code is publicly available through the accompanying GitHub repository, supported by technical documentation and maintainable implementation practices. It serves as a practical reference for understanding memory manipulation, data tracing, and engine interfacing techniques used in modern game exploitation.
+
+\section*{Final Reflections}
+
+The objective of this research is not to promote cheating, but to expose and analyze its technical underpinnings and broader implications. By making our methodology and tooling accessible, we seek to foster a clearer understanding of how cheats function, how anti-cheat mechanisms respond, and where current approaches fall short. This thesis has shown that cheating reflects systemic design flaws, economic motivations, and a lack of transparency in the gaming ecosystem.
+
+Relying on secrecy for security is no longer effective. Instead, we advocate for open, adversarially-informed development practices where vulnerabilities are studied, documented, and mitigated through shared expertise. The tools and insights provided here aim to support this approach, equipping both researchers and developers to engage critically with the realities of game security.
+
+\begin{tcolorbox}[colback=gray!10, colframe=white, boxrule=0pt, sharp corners]
+A defining strength of this work is that it offers both an \emph{offensive} and \emph{defensive} perspective. By dissecting the technical foundation of cheating, we not only expose the methods used to exploit games but also identify the critical points where defense can be reinforced. This dual approach allows for a more holistic understanding of the adversarial dynamics in competitive gaming and provides actionable insight for both cheat developers and anti-cheat system architects.
+\end{tcolorbox}
+
+\section*{Future Work}
+
+This project is intended as a foundation for further exploration and development. Several potential improvements and research directions include:
+
+\begin{itemize}
+  \item \textbf{Automated Offset Resolution:} Replacing hardcoded offsets with a runtime schema manager that parses Valve's binary schema system. This would allow for dynamic extraction of networked variables and entity layouts, improving resilience to game updates.
+
+  \item \textbf{String Obfuscation and Security:} Enhancing protection against static analysis by encrypting string literals using compile-time encryption libraries such as \texttt{xorstr} or similar approaches.
+
+  \item \textbf{Cross-Engine Generalization:} Expanding the framework to support other Source 2-based titles through adaptable hooking logic and modular rendering components.
+
+  \item \textbf{Instrumentation and Defensive Testing:} Repurposing the cheat framework as a controlled testbed for evaluating anti-cheat detection under realistic attack scenarios, using instrumented hooks and traceable payloads.
+\end{itemize}
+
+Each of these directions strengthens the project as a reference for both offensive and defensive research. We encourage the community to expand, refine, and critically evaluate this work in the interest of better understanding the evolving landscape of digital game security.
+
+This framework remains open by design, providing a transparent and extensible platform for those who wish to study, adapt, or confront the technical and ethical challenges embedded in competitive multiplayer environments.
