@@ -15,7 +15,6 @@
 
 class GameEntitySystem
 {
-
 public:
 	uintptr_t pEntityList;
 	uintptr_t clientDll;
@@ -49,6 +48,7 @@ public:
 
 	void init()
 	{
+		// Offsets
 		clientDll = (uintptr_t)GetModuleHandle("client.dll");
 		pEntityList = (uintptr_t)GetModuleHandle("client.dll") + (uintptr_t)0x19FFE48;
 		pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B23888) + (uintptr_t)0x20F0);

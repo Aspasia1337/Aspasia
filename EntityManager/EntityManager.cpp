@@ -72,7 +72,6 @@ void *GameEntitySystem::GetEntityByIndexFunction(int Index)
 
 void GameEntitySystem::getGameEntities()
 {
-
 	pMaxIndex = *(DWORD *)(*(uintptr_t *)(clientDll + (uintptr_t)0x1B23888) + (uintptr_t)0x20F0);
 
 	ControllerVector.clear();
@@ -144,10 +143,9 @@ void GameEntitySystem::getGameEntities()
 	}
 }
 
-// It's taking every player Alive AND Dead
+// Takes every player Alive & Dead
 void GameEntitySystem::getAllPlayers()
 {
-
 	getGameEntities();
 	PlayersMap.clear();
 
@@ -209,14 +207,6 @@ void GameEntitySystem::getEnemisByFov()
 
 	if (PlayersMap.size() < 1)
 		return;
-
-	/*
-			iHelper->m_Console.printMessage (WARNING,
-			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.x + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.x,
-			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.y + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.y,
-			iGameEntitySystem->LocalPlayerPawn->m_pGameSceneNode->m_vecOrigin.z + iGameEntitySystem->LocalPlayerPawn->m_vecViewOffset.z
-		);
-	*/
 
 	for (unsigned int i = 0; i < PlayersMap.size() - 1; i++)
 	{

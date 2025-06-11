@@ -1,5 +1,4 @@
 ﻿#include "Visual.h"
-#include "Materials.h"
 #include "../../includes/imgui/imgui.h"
 #include "../../EntityManager/EntityManager.h"
 #include "../../math/vector.h"
@@ -11,7 +10,6 @@ ByteColor Visual::UpdateSkybox::ColorCache;
 
 void *Visual::LightningModulation::hLightningModulation(__int64 a1, CAggregateSceneObject *CAgregateSceneObject, __int64 a3)
 {
-
 	CAgregateSceneObject->RedColor = Globals::lightModulationColor[0] * Globals::lightIntensity;
 	CAgregateSceneObject->GreenColor = Globals::lightModulationColor[1] * Globals::lightIntensity;
 	CAgregateSceneObject->BlueColor = Globals::lightModulationColor[2] * Globals::lightIntensity;
@@ -101,7 +99,6 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 		}
 
 		// In Game Player Model
-
 		if ((std::strcmp(schemaName.c_str(), std::string("C_CSPlayerPawnBase").c_str()) == 0 ||
 			 std::strcmp(schemaName.c_str(), std::string("c_cs_player_for_precache").c_str()) == 0 ||
 			 std::strcmp(schemaName.c_str(), std::string("CBasePlayerController").c_str()) == 0) &&
@@ -158,7 +155,7 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 		}
 
-		//// Arms and Gloves
+		// Arms and Gloves
 		if (std::strcmp(schemaName.c_str(), std::string("CBaseAnimGraph").c_str()) == 0 && Globals::ArmsChams)
 		{
 			ByteColor Color = ToByteColor(Globals::ArmsColor);
@@ -181,10 +178,7 @@ void Visual::DrawObjectClass::hDrawObject(void *pAnimatableSceneObjectDesc, void
 			*(byte *)((uintptr_t)arrMeshDraw + 0x52) = Color.b;
 			*(byte *)((uintptr_t)arrMeshDraw + 0x53) = (byte)255;
 		}
-
-		// iHelper->m_Console.printMessage (WARNING, schemaName);
 	}
-
 	return oDrawObject(pAnimatableSceneObjectDesc, pDx11, arrMeshDraw, nDataCount, pSceneView, pSceneLayer, pUnk, pUnk2);
 }
 
