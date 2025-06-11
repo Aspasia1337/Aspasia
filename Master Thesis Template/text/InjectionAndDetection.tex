@@ -67,7 +67,7 @@ As anti-cheat systems became more adept at detecting conventional injection meth
 \textit{Manual Mapping} is a technique in which a DLL is manually loaded into the memory space of a target process without invoking standard Windows loader functions like \texttt{LoadLibrary}. This bypasses many traditional detection mechanisms, as the injected module does not appear in the process's loaded module list and avoids creating suspicious threads \parencite{guidedhackingmanualmap, learnmmap2024}.
 \end{tcolorbox}
 
-Unlike traditional injection, Manual Mapping involves manually parsing the DLL's headers, resolving imports, handling relocations, and executing the entry point—steps that are normally handled by the operating system. This provides the attacker with full control over how and when the code is executed.
+Unlike traditional injection, Manual Mapping involves manually parsing the DLL's headers, resolving imports, handling relocations, and executing the entry point, steps that are normally handled by the operating system. This provides the attacker with full control over how and when the code is executed.
 
 In particular, manual mapping enables:
 
@@ -84,7 +84,7 @@ In particular, manual mapping enables:
     \label{fig:manual_mapping_flow}
 \end{figure}
 
-As part of this research, we developed a custom injector implementing manual mapping as outlined in Figure~\ref{fig:manual_mapping_flow}. The source code is available in the \texttt{injector} branch of the accompanying repository.
+As part of this research, we developed a custom injector implementing manual mapping, as outlined in Figure~\ref{fig:manual_mapping_flow}. The source code is available in the \texttt{injector} branch of the accompanying repository.
 
 
 \section{Detection Techniques in Anti-Cheat Systems}

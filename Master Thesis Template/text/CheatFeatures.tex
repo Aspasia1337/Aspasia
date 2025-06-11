@@ -33,14 +33,14 @@ The first feature explored in this chapter is \textbf{Chams}, one of the most vi
 
 \section{Chams: Enhancing Visibility Through Engine-Based Rendering}
 
-Chams is one of the most widely implemented visual enhancements in internal cheats due to its ability to make enemy player models constantly visible, regardless of obstacles, lighting conditions, or distance. By embedding itself into the game’s rendering pipeline, Chams offers a persistent and clear visual advantage—transforming visibility from a game constraint into a controlled asset.
+Chams is one of the most widely implemented visual enhancements in internal cheats due to its ability to make enemy player models constantly visible, regardless of obstacles, lighting conditions, or distance. By embedding itself into the game’s rendering pipeline, Chams offers a persistent and clear visual advantage, transforming visibility from a game constraint into a controlled asset.
 
 \begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
 \makebox[\linewidth][c]{\textbf{Definition: Chams}} \\
     Chams (short for \textit{chameleon skins}) is a rendering technique that replaces the default materials of in-game models with custom ones. These materials are often configured to ignore depth testing or emit distinctive visual cues, enabling players to see entities through walls, in darkness, or at extreme distances.
 \end{tcolorbox}
 
-In contrast to ESP systems—which rely on external overlays to draw abstract information (such as bounding boxes or skeletons) over the game window—Chams operates entirely within the engine's rendering stack. By hooking material creation and model rendering routines, we gain direct access to the same meshes, bones, and draw calls used by the game itself. This approach allows for highly accurate visual manipulation, including real-time model replacement, pose filtering, and selective visibility.
+In contrast to ESP systems, which rely on external overlays to draw abstract information (such as bounding boxes or skeletons) over the game window, Chams operates entirely within the engine's rendering stack. By hooking material creation and model rendering routines, we gain direct access to the same meshes, bones, and draw calls used by the game itself. This approach allows for highly accurate visual manipulation, including real-time model replacement, pose filtering, and selective visibility.
 
 As a result, Chams is not merely an aesthetic enhancement. It forms the visual foundation for multiple auxiliary cheat features, such as hitbox-aware Aimbots, lag-compensated backtracking, and visibility-dependent targeting logic. Its integration into the rendering pipeline provides a level of fidelity and control that external methods simply cannot match.
 
@@ -49,10 +49,10 @@ Our implementation leverages CS2’s DirectX 11 backend and the internal materia
 The Chams system is structured around four core stages:
 
 \begin{itemize}
-    \item \textbf{Extracting Engine Materials} — Accessing and analyzing the default material definitions used for player models and world entities.
-    \item \textbf{Generating Custom Materials} — Creating custom shader materials with configurable properties such as solid color, glow effects, and depth bypassing.
-    \item \textbf{Hooking Material Creation Functions} — Intercepting engine routines like \texttt{CreateMaterial} to inject and manage our own material instances.
-    \item \textbf{Overriding Model Draw Calls} — Hooking \texttt{OnDrawModelExecute} to selectively override player models with our Chams materials in real time.
+    \item \textbf{Extracting Engine Materials}, accessing and analyzing the default material definitions used for player models and world entities,
+    \item \textbf{Generating Custom Materials}, creating custom shader materials with configurable properties such as solid color, glow effects, and depth bypassing,
+    \item \textbf{Hooking Material Creation Functions}, intercepting engine routines like \texttt{CreateMaterial} to inject and manage our own material instances,
+    \item \textbf{Overriding Model Draw Calls}, hooking \texttt{OnDrawModelExecute} to selectively override player models with our Chams materials in real time.
 \end{itemize}
 
 The following sections explore these steps in detail, illustrating how Chams is constructed, how it interfaces with the CS2 rendering subsystem, and how it maintains compatibility across engine updates.
@@ -61,7 +61,7 @@ The following sections explore these steps in detail, illustrating how Chams is 
 
 To gain precise control over the rendering behavior in \textit{Counter-Strike 2} (CS2), we first needed to understand how the engine instantiates and manages materials internally. This required an in-depth examination of the rendering pipeline, which we achieved through targeted \textbf{debugging} and \textbf{runtime hooking}.
 
-By intercepting the \texttt{OnDraw} routine—responsible for issuing draw calls during model rendering—we captured live references to engine-created materials. One such material, shown below, was extracted directly during gameplay:
+By intercepting the \texttt{OnDraw} routine, responsible for issuing draw calls during model rendering, we captured live references to engine-created materials. One such material, shown below, was extracted directly during gameplay:
 
 \begin{lstlisting}[style=cppstyle, caption={Extracted Default Material from CS2}]
 <!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}
@@ -76,7 +76,7 @@ By intercepting the \texttt{OnDraw} routine—responsible for issuing draw calls
 }
 \end{lstlisting}
 
-This data is encoded in \textbf{KV3} format—a modern, hierarchical serialization language used in Source 2 to describe complex resources such as materials, models, and particle systems. KV3 replaces the older KeyValues system used in Source 1, offering better structure, type safety, and extensibility.
+This data is encoded in \textbf{KV3} format, a modern, hierarchical serialization language used in Source 2 to describe complex resources such as materials, models, and particle systems. KV3 replaces the older KeyValues system used in Source 1, offering better structure, type safety, and extensibility.
 
 At runtime, the engine parses these KV3 definitions to dynamically assemble material instances, apply shaders, load texture maps, and configure rendering properties. Understanding this process gave us the tools to replicate and override default material behavior with our own custom visual assets.
 
@@ -122,7 +122,7 @@ R"(<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d}format:ge
 
 This configuration ensures consistent visibility regardless of lighting or geometry. Materials are dynamically selectable and applied during model draw calls, enabling flexible visual customization without modifying game assets.
 
-Once the material is fully injected and applied to an in-game entity—following the steps outlined in the next sections—it produces a distinct visual result. When rendered with a purple tint, for instance, it highlights the enemy’s entire model, clearly visible through all geometry:
+Once the material is fully injected and applied to an in-game entity, following the steps outlined in the next sections, it produces a distinct visual result. When rendered with a purple tint, for instance, it highlights the enemy’s entire model, clearly visible through all geometry:
 
 \begin{figure}[H]
     \centering
@@ -155,7 +155,7 @@ CMaterial2 *CreateCustomMaterial(const char *materialName, const char *materialD
 }
 \end{lstlisting}
 
-In this function, the parameter \texttt{materialData} refers to the raw material definition string in KV3 format. These strings correspond to the materials we previously defined and stored in an array in \texttt{materials.h}—as described in the previous section. Each entry in that array represents a fully structured material ready for parsing.
+In this function, the parameter \texttt{materialData} refers to the raw material definition string in KV3 format. These strings correspond to the materials we previously defined and stored in an array in \texttt{materials.h}, as described in the previous section. Each entry in that array represents a fully structured material ready for parsing.
 
 When passed to \texttt{LoadKeyValues}, the text-based definition is parsed and converted into a valid \texttt{CKeyValues3} resource object. This parsed structure is then passed to the internal \texttt{CreateMaterialFunction}, which registers the material within the engine’s rendering subsystem, making it immediately usable by any rendering logic or override.
 
@@ -176,24 +176,24 @@ bool Visual::Chams::LoadKV3(CUtilsBuff *buff, CKeyValues3 *CkeyVal)
 }
 \end{lstlisting}
 
-This function takes as input the \textit{material buffer} (\texttt{buff})—which contains the raw string previously defined and stored in the array located in \texttt{materials.h}—and a pointer to an uninitialized \texttt{CKeyValues3} structure. The \texttt{LoadKeyValues} function will parse the \textit{KV3 text}, transforming it into a structured object that can be consumed by the \textit{Source 2 engine}.
+This function takes as input the \textit{material buffer} (\texttt{buff}), which contains the raw string previously defined and stored in the array located in \texttt{materials.h}, and a pointer to an uninitialized \texttt{CKeyValues3} structure. The \texttt{LoadKeyValues} function will parse the \textit{KV3 text}, transforming it into a structured object that can be consumed by the \textit{Source 2 engine}.
 
 \begin{tcolorbox}[colback=gray!05, colframe=gray!50, sharp corners, boxrule=0pt]
 \textbf{KV3 Identifier:}  
 The \texttt{KV3ID\_t} object instructs the Source 2 engine how to parse the input buffer. It consists of:
 
 \begin{itemize}
-  \item \texttt{"generic"} — the KV3 format designation,
-  \item \texttt{0x41B818518343427E} — a format integrity checksum,
-  \item \texttt{0xB5F447C23C0CDF8C} — a resource-type identifier (e.g., material).
+  \item \texttt{"generic"}, the KV3 format designation,
+  \item \texttt{0x41B818518343427E}, a format integrity checksum,
+  \item \texttt{0xB5F447C23C0CDF8C}, a resource-type identifier (e.g., material).
 \end{itemize}
 
-These identifiers are essential for validation: only properly structured and version-compatible KV3 definitions can be parsed and converted into valid \texttt{CMaterial2} objects.
+These identifiers are essential for validation; only properly structured and version-compatible KV3 definitions can be parsed and converted into valid \texttt{CMaterial2} objects.
 \end{tcolorbox}
 
 Once the \texttt{KV3ID\_t} is initialized, the \texttt{LoadKeyValues} function processes the buffer into a structured data tree stored within the \texttt{CKeyValues3} object. This tree is then passed to the internal \texttt{CreateMaterialFunction}, which registers the material within the engine's resource system and makes it available for rendering.
 
-This modular parsing pipeline—comprising definition (raw string), parsing (\texttt{LoadKeyValues}), and registration (\texttt{CreateMaterialFunction})—enables runtime injection of new materials while ensuring their validity and proper lifecycle management within the engine.
+This modular parsing pipeline, comprising definition (raw string), parsing (\texttt{LoadKeyValues}), and registration (\texttt{CreateMaterialFunction}), enables runtime injection of new materials while ensuring their validity and proper lifecycle management within the engine.
 
 \subsection{Hooking \texttt{OnDrawModelExecute} and Overriding Materials}
 
@@ -201,7 +201,7 @@ To dynamically apply Chams, we intercepted \texttt{OnDrawModelExecute}, the func
 
 \subsubsection{Filtering Target Entities}
 
-Since \texttt{OnDrawModelExecute} processes all rendered models, it is necessary to implement a filtering mechanism to ensure that only relevant entities—such as enemy players and weapons—are affected by our Chams system. Without this step, the modification would be applied indiscriminately to all objects in the game, including environmental elements and friendly players, which is neither efficient nor desirable.
+Since \texttt{OnDrawModelExecute} processes all rendered models, it is necessary to implement a filtering mechanism to ensure that only relevant entities, such as enemy players and weapons, are affected by our Chams system. Without this step, the modification would be applied indiscriminately to all objects in the game, including environmental elements and friendly players, which is neither efficient nor desirable.
 
 To achieve this, we retrieve the schema name of each entity and compare it against known identifiers for player models and weapons. For player models, we check whether the entity corresponds to a \texttt{C\_CSPlayerPawnBase} instance, which represents in-game characters.
 
@@ -220,7 +220,7 @@ if (strcmp(schemaName.c_str(), "C_PredictedViewModel") == 0) {
 }
 \end{lstlisting}
 
-By implementing this filtering mechanism, we ensure that Chams are applied exclusively to relevant gameplay elements, enhancing player visibility without interfering with other rendered objects.\\
+By implementing this filtering mechanism, we ensure that Chams are applied exclusively to relevant gameplay elements, enhancing player visibility without interfering with other rendered objects.
 
 This selective filtering approach allows for precise control over the application of Chams, enabling us to differentiate between enemies, allies, weapons, and irrelevant entities. As a result, the system can be extended to apply distinct materials based on entity type or game state, supporting context-aware visual enhancements that are both performant and tactically useful.
 
@@ -256,48 +256,48 @@ In the following figures, we present a selection of our implemented Chams styles
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210228_1.jpg}
-    \caption{Illuminated Yellow Chams – highly visible and reflective under all lighting conditions.}
+    \caption{Illuminated Yellow Chams, highly visible and reflective under all lighting conditions.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210255_1.jpg}
-    \caption{Flat Pink Invisible Chams – used to indicate models occluded by geometry.}
+    \caption{Flat Pink Invisible Chams, used to indicate models occluded by geometry.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210234_1.jpg}
-    \caption{Glow Yellow – produces a bloom effect around silhouettes.}
+    \caption{Glow Yellow, produces a bloom effect around silhouettes.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210300_1.jpg}
-    \caption{Flat Pink Visible – standard colored overlay visible only when in line of sight.}
+    \caption{Flat Pink Visible, standard colored overlay visible only when in line of sight.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210306_1.jpg}
-    \caption{Purple Fresnel – implements rim lighting using Fresnel falloff for edge highlights.}
+    \caption{Purple Fresnel, implements rim lighting using Fresnel falloff for edge highlights.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210323_1.jpg}
-    \caption{Green Plastic – glossy effect mimicking polymer reflectivity.}
+    \caption{Green Plastic, glossy effect mimicking polymer reflectivity.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{images/chams/chams_demo/20250608210328_1.jpg}
-    \caption{High Intensity Glow – amplifies model brightness for high-visibility targeting.}
+    \caption{High Intensity Glow, amplifies model brightness for high-visibility targeting.}
 \end{figure}
 
 \subsubsection{Chams on Local Player and Weapon Models}
 
-After validating Chams on enemies, we extended material overrides to the local player's hands and weapon. Thanks to our entity filter, each model type—enemy, weapon, arms—can receive a distinct material independently.
+After validating Chams on enemies, we extended material overrides to the local player's hands and weapon. Thanks to our entity filter, each model type, enemy, weapon, or arms, can receive a distinct material independently.
 
 \begin{figure}[H]
     \centering
@@ -822,7 +822,7 @@ Anti-Aim provides several key advantages:
 
 \subsection{Importance in Modern Cheats}
 
-Anti-Aim has become one of the most essential components in competitive cheat configurations, especially in cheat-vs-cheat environments (e.g., HvH—Hack vs. Hack matches). In such scenarios, defensive capabilities are as important as offensive ones, and the ability to evade incoming fire becomes a major strategic advantage.
+Anti-Aim has become one of the most essential components in competitive cheat configurations, especially in cheat-vs-cheat environments (e.g., HvH, Hack vs. Hack matches). In such scenarios, defensive capabilities are as important as offensive ones, and the ability to evade incoming fire becomes a major strategic advantage.
 
 Furthermore, as anti-cheat systems become more advanced in detecting aimbots and wallhacks, subtle and effective Anti-Aim techniques provide cheaters with a low-profile method to gain survivability without triggering automated bans.
 

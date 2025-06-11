@@ -6,7 +6,7 @@ Following the development of our hooking infrastructure and the application of r
 While function interception provides a powerful interface for altering behavior at runtime, a deep understanding of the game’s internal architecture is required to apply these modifications meaningfully and with precision.
 
 This chapter introduces the logical foundation of the game engine, beginning with the entity system.  
-By dissecting how entities are created, managed, and manipulated within memory, we establish the context needed to target specific gameplay mechanics—ranging from player visibility and health to movement, projectiles, and animations.  
+By dissecting how entities are created, managed, and manipulated within memory, we establish the context needed to target specific gameplay mechanics, ranging from player visibility and health to movement, projectiles, and animations.  
 Such knowledge is indispensable for implementing cheats that are not only effective, but stable and adaptable across game versions.
 
 \section{Understanding Entity Lists in Video Games}
@@ -46,7 +46,7 @@ While earlier iterations of the Source engine (such as CS:GO) utilized a simple 
 
 \section{Entity Organization in Counter-Strike 2}
 
-In \textit{Counter-Strike 2}, every interactive object—whether a player, weapon, projectile, or environmental element—is internally represented as a dynamic \textbf{entity}. These entities are managed using unique \textit{handles}, lightweight references that combine an entity index and a generation counter to ensure safe access and lifecycle management.
+In \textit{Counter-Strike 2}, every interactive object, whether a player, weapon, projectile, or environmental element, is internally represented as a dynamic \textbf{entity}. These entities are managed using unique \textit{handles}, lightweight references that combine an entity index and a generation counter to ensure safe access and lifecycle management.
 
 \begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
 \makebox[\linewidth][c]{\textbf{Definition: Handle}} \\
@@ -56,13 +56,13 @@ A \textit{handle} is a compact reference to an entity, typically composed of an 
 
 This handle-based system enables robust referencing, safeguarding against invalid memory access even in highly dynamic environments where entities frequently appear and disappear during gameplay.
 
-To map a handle to an actual entity in memory, the Source 2 engine employs a \textbf{two-level paging system}—a mechanism conceptually similar to virtual memory in modern operating systems. This approach balances memory efficiency, scalability, and safety, particularly as entity counts grow in large matches or complex game scenarios.
+To map a handle to an actual entity in memory, the Source 2 engine employs a \textbf{two-level paging system}, a mechanism conceptually similar to virtual memory in modern operating systems. This approach balances memory efficiency, scalability, and safety, particularly as entity counts grow in large matches or complex game scenarios.
 
 When analyzing player-specific data structures, two core classes emerge as critical pillars:
 
 \begin{itemize}
-    \item \textbf{CBasePlayerController} — Manages high-level metadata about a player, including their sanitized name, Steam ID, current input state, and a handle linking to their in-world representation (the pawn).
-    \item \textbf{C\_CSPlayerPawn} — Represents the player's physical presence within the game world, storing vital gameplay attributes such as position, health, team affiliation, view angles, and animation states.
+    \item \textbf{CBasePlayerController}, which manages high-level metadata about a player, including their sanitized name, Steam ID, current input state, and a handle linking to their in-world representation (the pawn).
+    \item \textbf{C\_CSPlayerPawn}, which represents the player's physical presence within the game world, storing vital gameplay attributes such as position, health, team affiliation, view angles, and animation states.
 \end{itemize}
 
 Both player-related classes inherit from \textbf{C\_BaseEntity}, the core base class that provides common properties, behaviors, and networking support for all entities in the engine.
@@ -140,11 +140,11 @@ This class hierarchy enables a clear separation of concerns between the \textit{
 
 \section{Entity List Traversal}
 
-Having established the structural foundations of player entities, the next step involves accessing and enumerating these entities during runtime. This process—known as \textbf{entity list traversal}—is essential for real-time game modification, data extraction, and the development of external tools.
+Having established the structural foundations of player entities, the next step involves accessing and enumerating these entities during runtime. This process, known as \textbf{entity list traversal}, is essential for real-time game modification, data extraction, and the development of external tools.
 
 \subsection{Locating and Identifying the Entity List in Memory}
 
-In the absence of \textbf{debugging symbols} or \textbf{SDK access}—a common scenario in protected or closed-source games—discovering the location and structure of the \textbf{entity list} becomes a crucial part of the reverse engineering process. Two primary approaches are typically employed: \textit{\textbf{dynamic memory inspection}} and \textit{\textbf{static binary analysis}}.
+In the absence of \textbf{debugging symbols} or \textbf{SDK access}, a common scenario in protected or closed-source games, discovering the location and structure of the \textbf{entity list} becomes a crucial part of the reverse engineering process. Two primary approaches are typically employed: \textit{\textbf{dynamic memory inspection}} and \textit{\textbf{static binary analysis}}.
 
 \begin{tcolorbox}[colback=gray!03, colframe=black!15, sharp corners, boxrule=0.3mm, width=\textwidth]
 
@@ -228,7 +228,7 @@ In the absence of \textbf{debugging symbols} or \textbf{SDK access}—a common s
     
     \vspace{0.4cm}
     
-    This hybrid strategy—leveraging both real-time memory inspection and deep static disassembly—has been widely adopted and discussed in the reverse engineering community.  
+    This hybrid strategy, leveraging both real-time memory inspection and deep static disassembly, has been widely adopted and discussed in the reverse engineering community.  
     An excellent case study can be found in a collaborative thread on the UnknownCheats forum\footnote{\url{https://www.unknowncheats.me/forum/general-programming-and-reversing/564058-entity-list.html}}.
     
     \vspace{0.4cm}
@@ -241,7 +241,7 @@ In the absence of \textbf{debugging symbols} or \textbf{SDK access}—a common s
 \subsection{Reverse Engineering the Engine's Entity Resolution Logic}
 
 Understanding how the game engine resolves \textit{entity handles} into actual pointers is essential for interfacing with its internal logic.  
-By statically analyzing the \texttt{client.dll} binary using tools such as \textit{Ghidra}, we reverse engineered the function responsible for transforming abstract handles into concrete entity references—a key step in tracking, accessing, and manipulating in-game actors.
+By statically analyzing the \texttt{client.dll} binary using tools such as \textit{Ghidra}, we reverse engineered the function responsible for transforming abstract handles into concrete entity references, a key step in tracking, accessing, and manipulating in-game actors.
 
 The pseudocode extracted below outlines the internal lookup mechanism:
 
@@ -267,8 +267,8 @@ Entity_t *EntityList(longlong EntityListPointer, uint EntityListIndex)
 \begin{enumerate}
     \item \textbf{Index Validation:}
     \begin{itemize}
-        \item Ensure \texttt{EntityListIndex < 32767} — i.e., within the valid entity range.
-        \item Ensure \texttt{EntityListIndex >> 9 < 64} — i.e., it maps to one of 64 pages (paged entity storage).
+        \item Ensure \texttt{EntityListIndex < 32767}, i.e., within the valid entity range.
+        \item Ensure \texttt{EntityListIndex >> 9 < 64}, i.e., it maps to one of 64 pages (paged entity storage).
     \end{itemize}
 
     \item \textbf{Page Lookup:}
@@ -301,7 +301,7 @@ This logic ensures safe and consistent resolution of handles, using a paged stor
 \subsubsection{Efficient Entity Tracking: Hooking \texttt{OnAddEntity} and \texttt{OnRemoveEntity}}
 
 Iterating through the entire entity list on each frame is a naive but technically valid method for state discovery. However, it is profoundly inefficient at scale.  
-Given that the entity list may store up to \textbf{32,766 entities}, a full traversal on every frame introduces a considerable performance burden—particularly detrimental for an injected cheat operating in real time within the game’s address space.
+Given that the entity list may store up to \textbf{32,766 entities}, a full traversal on every frame introduces a considerable performance burden, particularly detrimental for an injected cheat operating in real time within the game’s address space.
 
 To overcome this constraint, we reverse-engineered the engine’s internal entity lifecycle management.  
 By integrating static analysis, runtime behavior tracing, and low-level hooking, we constructed a lightweight yet effective dynamic entity tracking system based on the following hybrid approach:
@@ -310,8 +310,8 @@ By integrating static analysis, runtime behavior tracing, and low-level hooking,
     \item On match start or map load, a \textbf{one-time traversal} is executed to cache all currently active entities.
     \item From that point forward, two key engine functions are \textbf{hooked}:
     \begin{itemize}
-        \item \texttt{OnAddEntity} — Invoked when a new entity is instantiated.
-        \item \texttt{OnRemoveEntity} — Invoked when an entity is removed from memory.
+        \item \texttt{OnAddEntity}, invoked when a new entity is instantiated.
+        \item \texttt{OnRemoveEntity}, invoked when an entity is removed from memory.
     \end{itemize}
 \end{itemize}
 
@@ -325,7 +325,7 @@ This design allows the cheat to maintain a synchronized and real-time internal r
 \noindent\textbf{Hook Installation with MinHook.}
 
 To implement these redirections, we relied on \textbf{MinHook} in conjunction with custom pattern scanning.  
-The function entry points were identified via static reverse engineering of \texttt{client.dll} using IDA Pro. Once located, their byte signatures were extracted and integrated into our runtime \texttt{PatternScanner} routine—enabling resilient hook installation regardless of address space layout randomization (ASLR), rebasing, or version-specific code shifts.
+The function entry points were identified via static reverse engineering of \texttt{client.dll} using IDA Pro. Once located, their byte signatures were extracted and integrated into our runtime \texttt{PatternScanner} routine, enabling resilient hook installation regardless of address space layout randomization (ASLR), rebasing, or version-specific code shifts.
 
 \begin{lstlisting}[style=cppstyle, caption={Installing the OnAddEntity Hook}]
 uint8_t *onAddEntity = iHelper->m_Mem.PatternScanner(

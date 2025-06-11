@@ -6,7 +6,7 @@ Reverse engineering provides the necessary insight into undocumented functions, 
 
 \begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
 \makebox[\linewidth][c]{\textbf{Definition: Function Hooking}} \\
-\textit{Function hooking} is the practice of redirecting a function's execution flow to custom code. This technique enables interception, observation, or alteration of program behavior at runtime—without requiring access to the source code.
+\textit{Function hooking} is the practice of redirecting a function's execution flow to custom code. This technique enables interception, observation, or alteration of program behavior at runtime, without requiring access to the source code.
 \end{tcolorbox}
 
 Among the various hooking techniques explored during our implementation, the \textbf{trampoline hook} proved to be the most robust and least intrusive. It allows us to reroute execution to our handler while preserving the original logic and avoiding stability issues that often arise from more aggressive methods.
@@ -16,11 +16,11 @@ This chapter provides a focused analysis of trampoline-based interception, its i
 \section{Reverse Engineering and Function Discovery}
 
 Before any hooking can take place, one must first determine which functions are responsible for the in-game behaviors to be modified.  
-This task requires a careful process of reverse engineering—analyzing the game's internal binaries, particularly \texttt{client.dll}, which encapsulates most of the client-side logic.
+This task requires a careful process of reverse engineering, analyzing the game's internal binaries, particularly \texttt{client.dll}, which encapsulates most of the client-side logic.
 
 Using a combination of static analysis tools such as \textit{IDA Pro} and \textit{Ghidra}, along with dynamic debuggers like \textit{x64dbg}, we disassembled code, examined symbols, and traced runtime execution to identify candidate functions for interception.
 
-To bypass Address Space Layout Randomization (ASLR), we extracted \textbf{function signatures}—short, distinctive byte patterns unique to each function.  
+To bypass Address Space Layout Randomization (ASLR), we extracted \textbf{function signatures}, short, distinctive byte patterns unique to each function.  
 Our injected DLL performs runtime pattern scanning to locate these signatures and apply hooks dynamically. This guarantees compatibility across executions and system reboots.
 
 Unlike absolute address targeting, which fails under ASLR, our technique relies on scanning instruction bytes.  
@@ -49,7 +49,7 @@ This balance of flexibility, stealth, and resilience makes trampoline hooking th
 
 \section{Implementing Hooks with MinHook}
 
-To safely and efficiently intercept internal game functions, we rely on \textbf{MinHook}—a lightweight, open-source library tailored for x86 and x64 Windows systems.  
+To safely and efficiently intercept internal game functions, we rely on \textbf{MinHook}, a lightweight, open-source library tailored for x86 and x64 Windows systems.  
 Following the function discovery and signature matching steps described earlier, MinHook enables us to install trampoline hooks with minimal code and maximal reliability.
 
 \begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0pt, sharp corners, width=\linewidth, left=1mm, right=1mm, top=0.5mm, bottom=0.5mm]
@@ -121,7 +121,7 @@ This selective execution strategy ensures that the cheat logic remains unobtrusi
 \textbf{Trampoline hooking} offers a powerful, stealthy, and modular mechanism for real-time manipulation of gameplay logic.  
 By preserving control flow, maintaining valid return addresses, and avoiding allocation of suspicious memory regions, it reduces the likelihood of detection by modern anti-cheat systems.
 
-The methodology presented—comprising targeted \textbf{reverse engineering}, dynamic signature scanning, and robust hook deployment via \textbf{MinHook}—constitutes the core of our cheat framework.  
+The methodology presented, comprising targeted \textbf{reverse engineering}, dynamic signature scanning, and robust hook deployment via \textbf{MinHook}, constitutes the core of our cheat framework.  
 This process has enabled us to identify and intercept internal game functions with precision, even across updates or memory relocations.
 
 
