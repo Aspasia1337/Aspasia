@@ -12,6 +12,11 @@ The project explores game internals, cheat construction, and the broader landsca
 ## 🖼️ Screenshots
 
 <p align="center">
+  <img src="Master Thesis Template/images/anti_aim&aimbot.jpg" alt="Anti-Aim and Aimbot Preview" width="1000"/>
+</p>
+<p align="center"><em>Combined anti-aim and aimbot visualization during a sandbox session.</em></p>
+
+<p align="center">
   <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="700"/>
 </p>
 <p align="center"><em>Visualizing precise bone targeting used for aimbot calibration.</em></p>
@@ -95,6 +100,12 @@ To use this in a controlled environment, a proper loader must support:
 - Code obfuscation / memory concealment
 
 > VAC performs internal consistency and memory validation checks that can trigger post-injection, especially on `.text` segments. Using this in public matches **without a trusted bypass** will likely result in a VAC ban.
+
+If the injection is successful, a developer console will appear in-game showing internal initialization logs. This confirms that the DLL has been properly loaded and that hooks are operational.
+
+<p align="center">
+  <img src="Master Thesis Template/images/inject.png" alt="Injection Console" width="800"/>
+</p>
 
 ---
 

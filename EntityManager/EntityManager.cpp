@@ -93,14 +93,12 @@ void GameEntitySystem::getGameEntities()
 
 		if (GetSchemaName(Entity) == ("C_CSPlayerPawnBase"))
 		{
-
 			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
 			PawnMap.insert(std::make_pair(GetEntityHandle(Entity), Pawn));
 		}
 
 		if (GetSchemaName(Entity) == ("CBasePlayerController"))
 		{
-
 			C_PlayerController *Controller = (C_PlayerController *)Entity;
 			ControllerMap.insert(std::make_pair(GetEntityHandle(Entity), Controller));
 		}
@@ -108,7 +106,6 @@ void GameEntitySystem::getGameEntities()
 		// This means player is an Observer ~ Useful for Spectators
 		if (GetSchemaName(Entity) == "c_cs_observer_for_precache")
 		{
-
 			C_PlayerPawn *Pawn = (C_PlayerPawn *)Entity;
 			ObserverMap.insert(std::make_pair(GetEntityHandle(Entity), Pawn));
 		}
@@ -121,21 +118,18 @@ void GameEntitySystem::getGameEntities()
 
 		if (GetSchemaName(Entity) == ("C_BaseEntity"))
 		{
-
 			C_BaseEntity *BaseEntity = (C_BaseEntity *)Entity;
 			CBaseEntityVector.push_back(BaseEntity);
 		}
 
 		if (GetSchemaName(Entity) == ("C_BaseEntity"))
 		{
-
 			C_BaseEntity *BaseEntity = (C_BaseEntity *)Entity;
 			CBaseEntityVector.push_back(BaseEntity);
 		}
 
 		if (GetSchemaName(Entity) == ("env_sky"))
 		{
-
 			C_EnvSky *SkyEnt = (C_EnvSky *)Entity;
 			Visual::CEnvSkyVector.push_back(SkyEnt);
 		}
