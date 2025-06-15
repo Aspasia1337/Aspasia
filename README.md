@@ -1,56 +1,161 @@
-# Aspasia - CS2 Research Project
+<p align="center">
+  <img src="Master Thesis Template/images/AspasiaBanner.png" alt="Aspasia Banner" width="700"/>
+</p>
+# Aspasia — CS2 Reverse Engineering Suite
 
-Aspasia is an academic research project analyzing the mechanics of Counter-Strike 2 (CS2). Developed in C++, it investigates in-game interactions such as movement physics, aiming behavior, and rendering techniques. The project uses DirectX and ImGui for graphical rendering and MinHook for function interception.
+Aspasia is a C++-based research framework for reverse engineering and prototyping cheat features in **Counter-Strike 2 (CS2)**. Designed for educational and academic purposes, it enables both offensive analysis (cheat development) and defensive exploration (anti-cheat evasion and detection logic).
+
+---
+
+## 🖼️ Screenshots
+
+Visual previews of Aspasia in action, demonstrating various features such as aimbot locking, chams rendering, and bone overlays.
+
+> **Note**: All captures were taken in controlled, offline environments for research and demonstration purposes only.
+
+<p align="center">
+  <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="700"/>
+</p>
+<p align="center"><em>Bone targeting visualization used for precise aimbot locking.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/images/Bones/20250608215858_1.jpg" alt="Entity Bone Overlay" width="700"/>
+</p>
+<p align="center"><em>Bone overlays rendered for all entities during runtime analysis.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/images/chams/chams_demo/20250608210828_1.jpg" alt="Chams Demonstration" width="700"/>
+</p>
+<p align="center"><em>Custom chams materials demonstrating visibility states and entity highlighting.</em></p>
+
+---
 
 ## ⚠️ Disclaimer
-Aspasia is strictly for academic research and educational purposes. It must not be used for unauthorized modifications, online cheating, or any activity that violates game integrity. The developers are not responsible for misuse of this code.
+
+This project is intended **solely for research and educational purposes**. The authors do not endorse or support cheating in multiplayer games. You are fully responsible for how you use this software.
+---
+
+## ✨ Features
+
+- 🎯 **Aimbot System**
+  - Target bone selection
+  - Smooth aim & FOV limit
+  - Configurable hit zones
+
+- 👀 **Visual Enhancements (Chams)**
+  - Custom material generation and injection
+  - Full engine-based wall visibility
+  - Configurable entity filters
+
+- 🧠 **Anti-Aim & Desync Logic**
+  - Lower Body Yaw (LBY) breaker
+  - Anti-resolve techniques
+  - Local animation desync
+
+- 🧵 **Hooking Framework**
+  - MinHook-based trampoline hooks
+  - Mid-function patching and detouring
+  - Inline patch protections
+
+- 🧩 **Entity Analysis**
+  - Memory traversal for entity lists
+  - OnAddEntity / OnRemoveEntity hook analysis
+  - Real-time entity state tracing
+
+- 📈 **Movement & Physics Research**
+  - Strafe optimization
+  - Bhop and acceleration curves
+  - Inertia and friction modeling
 
 ---
 
-## 📌 Key Features
-- **Targeting Mechanics**: Research-focused aim assistance to analyze player precision and reaction times.
-- **Movement Analysis**: Studies on strafing, acceleration, bunny hopping, and movement optimizations.
-- **Visual Enhancements**: Advanced rendering modifications to better observe game environments.
-- **Behavioral Studies**: Evaluation of in-game events, such as player evasion techniques and reaction-based responses.
-- **Advanced Hooking Framework**: Utilizes MinHook to safely intercept and analyze game functions.
+## 🔨 Compilation
 
-## 🛠️ Dependencies
-Aspasia requires the following libraries to function:
-- **DirectX SDK**: Renders graphical overlays and in-game visual modifications.
-- **ImGui**: Provides a lightweight, customizable user interface for in-game research tools.
-- **MinHook**: A function hooking library that allows runtime interception and analysis of game behavior.
+**Requirements:**
+- Windows 10/11 x64
+- Visual Studio 2019+ with C++ support
+- DirectX SDK (June 2010)
+- ImGui
+- MinHook
 
-## 🚀 Installation & Compilation
-### System Requirements
-- **Operating System**: Windows 10/11 (64-bit only)
-- **Compiler**: Microsoft Visual Studio 2019 or later
+**Steps:**
+```sh
+git clone https://github.com/Aspasia1337/Aspasia
+cd Aspasia
+```
 
-### How to Compile
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/Aspasia1337/Aspasia
-   cd Aspasia
-   ```
-2. Open `SourceHook.sln` in Visual Studio.
-3. Set the build configuration to `Release x64`.
-4. Compile the project to generate `Aspasia.dll`.
-5. Load the DLL in a controlled research environment.
-
-## 🔧 DLL Injection Requirement
-To inject `Aspasia.dll` into the game process, a **custom injector** is required. Standard injection methods such as `LoadLibrary` are blocked by CS2's security mechanisms. Ensure that the injector is designed for research purposes and follows safe injection techniques.
-
-## ❓ Frequently Asked Questions
-### Is Aspasia undetectable?
-Aspasia is not intended for competitive use or cheating. It is a research project designed to study in-game mechanics under a controlled environment.
-
-### Can I contribute to Aspasia?
-Yes! If you are interested in game mechanics research, feel free to fork the repository and submit pull requests with improvements, optimizations, or new insights.
-
-## 📜 License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## 📬 Contact
-For academic inquiries or contributions, please open an issue on GitHub or contact the project maintainers.
+- Open `SourceHook.sln` in Visual Studio
+- Set configuration to `Release x64`
+- Build the solution — this will generate `Aspasia.dll`
 
 ---
-**Aspasia** - A research project analyzing Counter-Strike 2 game mechanics.
+
+## 💉 Injection
+
+
+Aspasia is injected via a **custom DLL injector** (not provided). Standard `LoadLibrary` injection is insufficient due to VAC protections. Use:
+- Manual mapping or kernel-assisted injection
+- Custom shellcode loaders or manual PE loaders
+
+> 💡 Bypassing Steam alone is not sufficient. Since CS2, there are numerous in-game checks and internal detection vectors that must also be bypassed. Many of the more aggressive Steam VAC scans only activate after suspicious behavior is detected internally. For instance, if you notice VAC validating read-only sections of game modules, it is likely too late — your process has already been flagged or marked as suspicious.
+
+---
+
+## 🎯 Research Goals
+
+Aspasia is more than just a cheat — it serves as a dual-purpose tool for:
+- Developing proof-of-concept exploits
+- Analyzing anti-cheat surface areas and countermeasures
+- Teaching internal game structure reverse engineering
+
+It highlights how modern cheats are built and how anti-cheat systems attempt to detect and mitigate them.
+
+---
+
+## 📌 Academic Contributions
+
+This project is part of a Master's Thesis and illustrates:
+- Offensive security applied to game environments
+- Defensive response modeling
+- Secure memory traversal and hook safety
+
+---
+
+## 📚 Thesis Document
+
+This repository is part of a broader academic submission. In addition to the code and technical content included here, the full thesis document—hosted in the `Master Thesis Template` directory—provides a comprehensive overview of the context, objectives, and implications of this work.
+
+The document offers:
+- A detailed explanation of the project's goals and methodology
+- A historical and technical overview of cheating in online games
+- A critical analysis of modern anti-cheat systems and evasion techniques
+
+
+You can access the full thesis here: [memoria.pdf](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Master%20Thesis%20Template/memoria.pdf)
+
+Sharing this repository publicly reflects the intention that it may serve as a learning resource for others, beyond being just a personal academic project or anecdote. The goal is to give back to the same community that supported the development of this work—drawing from knowledge shared in forums like UnknownCheats, GuidedHacking, and many others that have contributed to advancing reverse engineering and applied security research.
+
+---
+
+## 📬 Contact & Contributions
+
+We welcome academic contributions and discussions on game reverse engineering. Open an issue or fork the project to propose improvements.
+
+---
+
+## 🧾 License
+
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+
+This means you are free to:
+- **Use** the code for any purpose, including academic, personal, or educational use.
+- **Modify** and **distribute** the source code and binaries under the same license.
+- **Study** and **learn** from the implementation, as long as any derivative work remains open-source and licensed under GPL-3.0 as well.
+
+The GPL-3.0 license ensures that all contributions remain free and accessible, encouraging collaboration and transparency in research and development.
+
+See the full license text in the [`LICENSE`](./LICENSE) file.
+
+---
+
+**Aspasia** — Reverse engineering Counter-Strike 2 from both sides of the battlefield.
