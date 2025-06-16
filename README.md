@@ -33,7 +33,7 @@ This project is closely tied to the accompanying thesis document, which explores
 <p align="center">
   <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
 </p>
-<p align="center"><em>Debug overlay and UI elements for weapon (M4A1) and player view configuration.</em></p>
+<p align="center"><em>Close-up of M4A1 and player arms using custom chams for visual debugging.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
@@ -44,6 +44,11 @@ This project is closely tied to the accompanying thesis document, which explores
   <img src="Master Thesis Template/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
 </p>
 <p align="center"><em>Aimbot with smoothing (interpolation) and chams enabled for both visible and hidden targets.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
+</p>
+<p align="center"><em>UI demonstration of the in-game menu system, featuring tab navigation and real-time configuration.</em></p>
 
 ---
 
