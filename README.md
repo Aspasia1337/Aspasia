@@ -31,6 +31,16 @@ The project explores game internals, cheat construction, and the broader landsca
 </p>
 <p align="center"><em>Chams applied to various entity states with material highlighting.</em></p>
 
+<p align="center">
+  <img src="Master Thesis Template/images/20250615230119_1.jpg" alt="Visual Overlay Snapshot" width="1000"/>
+</p>
+<p align="center"><em>In-game debug interface showcasing real-time overlay elements.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
+</p>
+<p align="center"><em>Example of the in-game UI with expanded debug and configuration menus.</em></p>
+
 ---
 
 ## ⚠️ Disclaimer
