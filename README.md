@@ -1,51 +1,58 @@
 # Aspasia — Counter-Strike 2 Reverse Engineering Framework
+
+<div align="justify">
+
 <p align="center">
   <img src="Master Thesis Template/images/AspasiaBanner.png" alt="Aspasia Banner" width="1000"/>
 </p>
 
-**Aspasia** is a C++ research framework designed for studying and prototyping game manipulation techniques in *Counter-Strike 2 (CS2)*. It was developed as part of a Master's Thesis at Universidad Carlos III de Madrid and serves both academic and technical purposes.
+**Aspasia** is a C++ research framework for studying and prototyping game manipulation techniques in *Counter-Strike 2 (CS2)*. It was developed as part of a Master's Thesis at Universidad Carlos III de Madrid.
 
-The project explores game internals, cheat construction, and the broader landscape of reverse engineering in multiplayer environments. It is not intended for unfair gameplay in public matches, but rather as a tool to deepen understanding of how game and anti-cheat mechanisms work.
+This project is closely tied to the accompanying thesis document, which explores implementation details, design rationale, and the broader context of game cheating and reverse engineering. While Aspasia is not intended for unfair use in public matches, it serves as a tool to understand how game and anti-cheat systems work under the hood.
 
 ---
 
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="Master Thesis Template/images/anti_aim&aimbot.jpg" alt="Anti-Aim and Aimbot Preview" width="1000"/>
+  <video src="Master Thesis Template/clips/anti_aim_clip.mp4" autoplay loop muted playsinline width="1000"></video>
 </p>
-<p align="center"><em>Combined anti-aim and aimbot visualization during a sandbox session.</em></p>
+<p align="center"><em>Real-time demonstration of anti-aim behavior and visual overlay in action.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="700"/>
 </p>
-<p align="center"><em>Visualizing precise bone targeting used for aimbot calibration.</em></p>
+<p align="center"><em>Chams and skeletal overlays for target visualization and debugging.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/Bones/20250608215858_1.jpg" alt="Entity Bone Overlay" width="700"/>
 </p>
-<p align="center"><em>Overlay of all entity bones during runtime for debugging and development.</em></p>
+<p align="center"><em>Real-time bone overlays showing all entities in view for runtime inspection.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/chams/chams_demo/20250608210828_1.jpg" alt="Chams Demonstration" width="700"/>
 </p>
-<p align="center"><em>Chams applied to various entity states with material highlighting.</em></p>
+<p align="center"><em>UI menu with chams tab open, used for configuring material and visibility settings.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/20250615230119_1.jpg" alt="Visual Overlay Snapshot" width="1000"/>
 </p>
-<p align="center"><em>In-game debug interface showcasing real-time overlay elements.</em></p>
+<p align="center"><em>Close-up of USP-S and player arms using custom chams for visual debugging.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
 </p>
-<p align="center"><em>Example of the in-game UI with expanded debug and configuration menus.</em></p>
+<p align="center"><em>Debug overlay and UI elements for weapon (M4A1) and player view configuration.</em></p>
 
 ---
 
 ## ⚠️ Disclaimer
 
-This repository is intended strictly for research and educational purposes. The use of this software to gain unfair advantages in online games is neither supported nor encouraged. You are solely responsible for any use.
+This repository is intended solely for research and educational purposes. It was developed as part of a personal learning journey and academic exploration of game security and reverse engineering.
+
+Using this software to gain unfair advantages in online games is neither supported nor encouraged. That said, individuals with sufficient technical knowledge and custom modifications might adapt it toward such use. Doing so would require bypassing various validation mechanisms implemented by Valve Anti-Cheat (VAC), including integrity checks found in modules like `steamservice.dll`. While somewhat outdated, [danielkrupinski's vac-hooks repository](https://github.com/danielkrupinski/vac-hooks) provides useful insights into these techniques.
+
+Ultimately, you are fully responsible for any use or consequences that may result from interacting with this codebase.
 
 ---
 
@@ -53,128 +60,134 @@ This repository is intended strictly for research and educational purposes. The 
 
 - **Aimbot System**
   - Hitbox selection and FOV constraints
-  - Smooth aiming and recoil control
+  - Smooth aiming using interpolation factor
 - **Chams Rendering**
   - Custom materials and entity visibility overrides
-  - Supports both hidden and visible states
+  - Support for both hidden and visible states
 - **Anti-Aim / Desync**
-  - Lower Body Yaw breaking
-  - Desynchronized local animations
-  - Anti-resolver patterns
+  - Lower Body Yaw (LBY) manipulation
 - **Hooking Infrastructure**
   - MinHook-based detours and inline patching
-  - Function trampolines with memory safety
-- **Entity Analysis Tools**
-  - Hooking OnAddEntity / OnRemoveEntity
-  - Live tracking of class instances and properties
+- **Entity Analysis**
+  - Runtime tracking via OnAddEntity / OnRemoveEntity
+  - Memory structure monitoring
 - **Movement Research**
-  - Acceleration curves, Bhop modeling, strafe logic
+  - Automatic bunny hopping (Bhop)
+- **Visual Clarity Tweaks**
+  - Flashbang and smoke rendering disabled for unobstructed visibility
+- **Player Overlay Enhancements**
+  - Health bars, bone skeletons, and equipped weapon indicators for visible players
 
 ---
 
 ## 🔧 Compilation
 
 ### Requirements
+
 - Windows 10/11 (x64)
 - Visual Studio 2019 or later
 - DirectX SDK (June 2010)
-- ImGui, MinHook
+- ImGui and MinHook (already bundled)
+- C++20 support (`/std:c++20`)
 - Only the `x64` configuration is actively maintained and tested
-- C++20 support must be enabled (set via `/std:c++20` in the project)
-- MinHook and ImGui are already bundled in the repository (no external install required)
 
 ### Instructions
 
-1. Download the repository as a ZIP from GitHub or use Git for Windows:
-   - Open PowerShell or Command Prompt
-   - Run:  
-     ```cmd
-     git clone https://github.com/Aspasia1337/Aspasia.git
-     ```
+1. Download the repository as a ZIP or use Git for Windows:
+   ```cmd
+   git clone https://github.com/Aspasia1337/Aspasia.git
+   ```
 
-2. Open `SourceHook.sln` in Visual Studio (2019 or later)
+2. Open `SourceHook.sln` in Visual Studio.
 
-3. Set the build configuration to `Release x64`
+3. Set the build configuration to `Release x64`.
 
-4. Build the solution, this will generate `Aspasia.dll` inside the appropriate output directory
+4. Build the solution — `Aspasia.dll` will be generated in the output directory.
 
 ---
 
 ## 💉 Injection Guidelines
 
-This project does not include an injector. Due to VAC (Valve Anti-Cheat) protections, standard methods such as `LoadLibrary` are highly detectable and unsafe.
+This project does not include an injector. Due to the nature of Valve Anti-Cheat (VAC), standard injection methods such as `LoadLibrary` are detectable and unsafe.
 
-To use this in a controlled environment, a proper loader must support:
+For safe usage in a controlled environment, the loader should support:
 - Manual mapping
 - Kernel-assisted injection
-- Code obfuscation / memory concealment
+- Memory concealment or obfuscation techniques
 
-> VAC performs internal consistency and memory validation checks that can trigger post-injection, especially on `.text` segments. Using this in public matches **without a trusted bypass** will likely result in a VAC ban.
+> VAC employs memory validation and behavioral heuristics. In public matches, using this without a trusted bypass is likely to result in a VAC ban.
 
-If the injection is successful, a developer console will appear in-game showing internal initialization logs. This confirms that the DLL has been properly loaded and that hooks are operational.
+
+If injection is successful, an in-game console will appear displaying logs. This confirms proper loading and hook initialization.
 
 <p align="center">
   <img src="Master Thesis Template/images/inject.png" alt="Injection Console" width="800"/>
 </p>
 
+Once in-game, the main menu can be opened using the `INSERT` key.
+
 ---
 
 ## 🧪 Research Purpose
 
-Aspasia is not a cheat in the conventional sense, it's a tool for understanding them.
+Aspasia is not a conventional cheat—it is a research tool.
 
-This framework was designed to:
-- Demonstrate common game manipulation strategies
-- Analyze attack surfaces in game engines
-- Understand detection vectors from the perspective of anti-cheat systems
+It was designed to:
+- Demonstrate reverse engineering and game manipulation techniques
+- Model typical anti-cheat detection surfaces
+- Serve as a platform for in-memory inspection and live experimentation
 
-It also supports educational demonstration of memory analysis and runtime manipulation techniques in live environments.
+It is particularly suited for educational demonstrations in sandboxed or offline environments.
 
 ---
 
 ## 🎓 Academic Context
 
-This project is part of a Master's Thesis submitted at Universidad Carlos III de Madrid. It is accompanied by a full thesis document that provides theoretical background and analysis on game cheating, reverse engineering practices, and anti-cheat architectures.
+This project was developed as part of a Master's Thesis at Universidad Carlos III de Madrid. A full written thesis accompanies the repository, detailing implementation, context, and reflections on game security.
 
-You can read the full thesis here: [memoria.pdf](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Master%20Thesis%20Template/memoria.pdf)
+📄 [Read the thesis here](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Master%20Thesis%20Template/memoria.pdf)
 
-Sharing this repository is a way of contributing back to the community that inspired it. Countless resources from platforms like UnknownCheats and GuidedHacking played a role in this research. This work aims to pass that knowledge forward.
-
-This project was created from a researcher's perspective and is far from a professional-grade cheat implementation. I'm not an expert, and part of the motivation behind releasing this is to make visible the process of learning, prototyping, and iterating under the pressure of a Master's Thesis. There is plenty of room for improvement—and that is by design.
+It’s worth mentioning that this project was developed from a learning perspective as part of my academic journey. I don’t consider myself an expert, and much of the code was written under time constraints in preparation for the thesis presentation. There’s plenty of room for improvement, and I hope that sharing this work can help others just as the communities of UnknownCheats, GuidedHacking, and many others have helped me.
 
 ---
 
 ## 🤝 Contributions
 
-Feel free to fork the project, report issues, or propose improvements. Contributions focused on security research, cheat detection, loader design, or schema abstraction are particularly welcome.
+Contributions are welcome — particularly those focusing on:
+- Code quality
+- Loader development
+- Schema automation
+- Anti-cheat research
+
+Open an issue or submit a pull request if you'd like to contribute.
 
 ---
 
 ## 🔄 Potential Improvements
 
-The current implementation is functional for demonstration purposes, but there are several enhancements planned or under consideration to increase robustness, stealth, and extensibility:
+The following improvements are planned or suggested:
 
-- **Code Quality Refactor**: The C++ codebase was developed under tight academic deadlines. Significant improvements could be made in structure, style, naming conventions, modularity, and modern C++ idioms to enhance maintainability and clarity.
-- **Encrypted String Storage**: Replace plain string literals with runtime-decrypted constants using techniques like `XORSTR` or compile-time encrypted string macros.
-- **Schema Manager**: Implement a dynamic netvar and offset resolution system to remove hardcoded addresses and support post-update compatibility.
-- **Target Selection Enhancements**: Refine the aimbot's entity selection using prediction, visibility heuristics, and hitbox prioritization.
-- **Skin Changer Module**: Introduce a customizable inventory/skin changer system for offline or sandbox testing scenarios.
+- **Code Refactor**: Modularization, naming, and clarity improvements across the C++ codebase
+- **Encrypted Strings**: Use compile-time obfuscation macros (e.g., `XORSTR`)
+- **Dynamic Schema Manager**: Automatically resolve netvars and offsets
+- **Smarter Targeting**: Improve aimbot selection logic using prediction and prioritization
+- **Skin Changer**: Offline inventory simulation with custom skins
 
 ---
 
 ## 🧾 License
 
-This project is licensed under the **GNU GPL v3.0**.
+This project is licensed under the **GNU General Public License v3.0**.
 
-You are free to:
-- Use the code for personal, academic, or non-commercial purposes
+You may:
+- Use the code for academic, personal, or educational purposes
 - Modify and redistribute it under the same license
-- Study its design and adapt it for your own learning
+- Study and adapt it, provided derivatives remain open-source under GPL-3.0
 
-Any derivative work must remain open-source and distributed under GPL-3.0.
-
-See the [`LICENSE`](./LICENSE) file for full terms.
+See the [`LICENSE`](./LICENSE) file for complete terms.
 
 ---
 
-**Aspasia** — Investigating the internals of Counter-Strike 2 from both sides of the game.
+**Aspasia** — Exploring the inner workings of Counter-Strike 2 through offensive and defensive analysis.
+
+</div>
