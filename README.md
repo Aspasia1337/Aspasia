@@ -11,17 +11,17 @@ This project is closely tied to the accompanying thesis document, which explores
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="700"/>
+  <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="1000"/>
 </p>
 <p align="center"><em>Chams and skeletal overlays for target visualization and debugging.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/Bones/20250608215858_1.jpg" alt="Entity Bone Overlay" width="700"/>
+  <img src="Master Thesis Template/images/Bones/20250608215858_1.jpg" alt="Entity Bone Overlay" width="1000"/>
 </p>
 <p align="center"><em>Real-time bone overlays showing all entities in view for runtime inspection.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/chams/chams_demo/20250608210828_1.jpg" alt="Chams Demonstration" width="700"/>
+  <img src="Master Thesis Template/images/chams/chams_demo/20250608210828_1.jpg" alt="Chams Demonstration" width="1000"/>
 </p>
 <p align="center"><em>UI menu with chams tab open, used for configuring material and visibility settings.</em></p>
 
