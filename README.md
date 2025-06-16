@@ -2,13 +2,6 @@
 
 <div align="justify">
 
-<p align="center">
-  <a href="https://streamable.com/vgod4q">
-    <img src="https://github.com/Aspasia1337/Aspasia/raw/main-ui/Master%20Thesis%20Template/images/anti_aim&aimbot.jpg" alt="Watch Anti-Aim Demo" width="1000"/>
-  </a>
-</p>
-<p align="center"><em>Click the image above to watch the real-time anti-aim demonstration via Streamable.</em></p>
-
 **Aspasia** is a C++ research framework for studying and prototyping game manipulation techniques in *Counter-Strike 2 (CS2)*. It was developed as part of a Master's Thesis at Universidad Carlos III de Madrid.
 
 This project is closely tied to the accompanying thesis document, which explores implementation details, design rationale, and the broader context of game cheating and reverse engineering. While Aspasia is not intended for unfair use in public matches, it serves as a tool to understand how game and anti-cheat systems work under the hood.
@@ -16,6 +9,11 @@ This project is closely tied to the accompanying thesis document, which explores
 ---
 
 ## 🖼️ Screenshots
+
+<p align="center">
+  <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
+</p>
+<p align="center"><em>Animated preview of anti-aim behavior and overlay visuals in action.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="700"/>
