@@ -11,16 +11,6 @@ This project is closely tied to the accompanying thesis document, which explores
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
-</p>
-<p align="center"><em>Animated preview of anti-aim behavior and overlay visuals in action.</em></p>
-
-<p align="center">
-  <img src="Master Thesis Template/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
-</p>
-<p align="center"><em>Aimbot with smoothing (interpolation) and chams enabled for both visible and hidden targets.</em></p>
-
-<p align="center">
   <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="700"/>
 </p>
 <p align="center"><em>Chams and skeletal overlays for target visualization and debugging.</em></p>
@@ -44,6 +34,16 @@ This project is closely tied to the accompanying thesis document, which explores
   <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
 </p>
 <p align="center"><em>Debug overlay and UI elements for weapon (M4A1) and player view configuration.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
+</p>
+<p align="center"><em>Animated preview of anti-aim behavior and overlay visuals in action.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
+</p>
+<p align="center"><em>Aimbot with smoothing (interpolation) and chams enabled for both visible and hidden targets.</em></p>
 
 ---
 
