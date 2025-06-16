@@ -50,6 +50,11 @@ This project is closely tied to the accompanying thesis document, which explores
 </p>
 <p align="center"><em>UI demonstration of the in-game menu system, featuring tab navigation and real-time configuration.</em></p>
 
+<p align="center">
+  <img src="Master Thesis Template/clips/gameplay.gif" alt="Gameplay Preview" width="1000"/>
+</p>
+<p align="center"><em>Live gameplay preview showing multiple features working together in a real match context.</em></p>
+
 ---
 
 ## ⚠️ Disclaimer
