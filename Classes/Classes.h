@@ -313,7 +313,6 @@ class BoneData_t
 public:
     Vec3 vecPosition;
     float flScale;
-    Vector4D_t vecRotation;
 };
 
 class CModelState
