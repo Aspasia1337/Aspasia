@@ -119,7 +119,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
    git clone https://github.com/Aspasia1337/Aspasia.git
    ```
 
-2. Open `SourceHook.sln` in Visual Studio.
+2. Open `Aspasia Solution.sln` in Visual Studio.
 
 3. Set the build configuration to `Release x64`.
 
