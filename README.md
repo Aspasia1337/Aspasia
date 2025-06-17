@@ -11,6 +11,36 @@ This project is closely tied to the accompanying thesis document, which explores
 ## 🖼️ Screenshots
 
 <p align="center">
+  <img src="Master Thesis Template/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
+</p>
+<p align="center"><em>UI demonstration of the in-game menu system, featuring tab navigation and real-time configuration.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
+</p>
+<p align="center"><em>Aimbot with smoothing (interpolation) and chams enabled for both visible and hidden targets.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
+</p>
+<p align="center"><em>Animated preview of anti-aim behavior and overlay visuals in action.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/flashbang.gif" alt="Flashbang Removal Demo" width="1000"/>
+</p>
+<p align="center"><em>Flashbang effect disabled during gameplay, enabling uninterrupted visual clarity.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/smokerender.gif" alt="Smoke Rendering Removal Demo" width="1000"/>
+</p>
+<p align="center"><em>Smoke rendering bypassed to maintain full visibility in obstructed areas.</em></p>
+
+<p align="center">
+  <img src="Master Thesis Template/clips/gameplay.gif" alt="Gameplay Preview" width="1000"/>
+</p>
+<p align="center"><em>Live gameplay preview showing multiple features working together in a real match context.</em></p>
+
+<p align="center">
   <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="1000"/>
 </p>
 <p align="center"><em>Chams and skeletal overlays for target visualization and debugging.</em></p>
@@ -34,26 +64,6 @@ This project is closely tied to the accompanying thesis document, which explores
   <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
 </p>
 <p align="center"><em>Close-up of M4A1 and player arms using custom chams for visual debugging.</em></p>
-
-<p align="center">
-  <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
-</p>
-<p align="center"><em>Animated preview of anti-aim behavior and overlay visuals in action.</em></p>
-
-<p align="center">
-  <img src="Master Thesis Template/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
-</p>
-<p align="center"><em>Aimbot with smoothing (interpolation) and chams enabled for both visible and hidden targets.</em></p>
-
-<p align="center">
-  <img src="Master Thesis Template/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
-</p>
-<p align="center"><em>UI demonstration of the in-game menu system, featuring tab navigation and real-time configuration.</em></p>
-
-<p align="center">
-  <img src="Master Thesis Template/clips/gameplay.gif" alt="Gameplay Preview" width="1000"/>
-</p>
-<p align="center"><em>Live gameplay preview showing multiple features working together in a real match context.</em></p>
 
 ---
 
