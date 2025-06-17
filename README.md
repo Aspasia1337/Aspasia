@@ -8,6 +8,24 @@ This project is closely tied to the accompanying thesis document, which explores
 
 ---
 
+## Contents
+
+- [Screenshots](#️screenshots)  
+- [Disclaimer](#️disclaimer)  
+- [Features](#features)  
+- [Compilation](#compilation)  
+  - [Requirements](#requirements)  
+  - [Instructions](#instructions)  
+- [Injection Guidelines](#injection-guidelines)  
+- [Research Purpose](#research-purpose)  
+- [Academic Context](#academic-context)  
+- [Contributions](#contributions)  
+- [Potential Improvements](#potential-improvements)  
+- [License](#license)
+
+
+---
+
 ## 🖼️ Screenshots
 
 <p align="center">
