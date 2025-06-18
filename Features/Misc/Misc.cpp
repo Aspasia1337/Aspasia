@@ -7,7 +7,6 @@ void Misc::Spectators::ShowSpectatorList(std::unordered_map<uint32_t, C_PlayerPa
 
 	for (const auto &obs : ObserverMap)
 	{
-
 		if (LocalPlayerPawn->pawnHealth <= 0 || (obs.second->GetPawn(PawnMap))->pawnHealth > 0)
 		{
 			continue;
@@ -20,7 +19,7 @@ void Misc::Spectators::ShowSpectatorList(std::unordered_map<uint32_t, C_PlayerPa
 					TempSpectators.push_back(controller.second->m_sSanitizedPlayerName);
 			}
 		}
-		//	Globals::Spectators.push_back (ControllersMap[obs.first]->second->m_sSanitizedPlayerName);
+		//	Globals::Spectators.push_back (ControllersMap[obs.first]->second->m_sSanitizedPlayerName); 
 	}
 
 	Globals::Spectators = TempSpectators;

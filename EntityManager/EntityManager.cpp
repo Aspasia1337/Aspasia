@@ -64,7 +64,7 @@ uint32_t GameEntitySystem::GetEntityHandle(void *entity)
 
 void *GameEntitySystem::GetEntityByIndexFunction(int Index)
 {
-	// sub_606B10 IDA returns the entity
+	// sub_606B10 check on IDA
 	using fnGetBaseEntity = uintptr_t *(__thiscall *)(void *, int);
 	static auto GetBaseEntity = reinterpret_cast<fnGetBaseEntity>(iHelper->m_Mem.PatternScanner("client.dll", "81 FA ? ? ? ? 77 36 8B C2 C1 F8 09 83 F8 3F 77 2C 48 98 48 8B 4C C1 ? 48 85 C9 74 20 8B C2 25 ? ? ? ? 48 6B C0 78 48 03 C8 74 10 8B 41 10 25 ? ? ? ? 3B C2 75 04 48 8B 01 C3"));
 	return GetBaseEntity(*(uintptr_t **)pEntityList, Index);
@@ -122,12 +122,6 @@ void GameEntitySystem::getGameEntities()
 			CBaseEntityVector.push_back(BaseEntity);
 		}
 
-		if (GetSchemaName(Entity) == ("C_BaseEntity"))
-		{
-			C_BaseEntity *BaseEntity = (C_BaseEntity *)Entity;
-			CBaseEntityVector.push_back(BaseEntity);
-		}
-
 		if (GetSchemaName(Entity) == ("env_sky"))
 		{
 			C_EnvSky *SkyEnt = (C_EnvSky *)Entity;
@@ -175,7 +169,7 @@ void GameEntitySystem::getClosetEnemis()
 {
 	getAllPlayers();
 
-	// bubble sort
+	// TODO: bubble sort but could be imporved with std::sort 
 	for (unsigned int i = 0; i < PlayersMap.size() - 1; i++)
 	{
 		for (unsigned int j = 0; j < PlayersMap.size() - 1 - i; j++)

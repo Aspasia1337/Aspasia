@@ -299,7 +299,6 @@ bool HooksManager::initHook()
 void HooksManager::OverrideViewClass::hCameraServices(__int64 a1, CViewSetupTRY *a2)
 {
 	Vec3 test;
-
 	float exposure;
 
 	return oCameraServices(a1, a2);
@@ -329,6 +328,11 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 	if (isPlayerInGame)
 	{
 		Globals::ping = iGameEntitySystem->GetPlayerController()->ping;
+		
+		// In some cases, such as rejoining an already active game, OnAddGameEntity might not be triggered.
+		// To avoid missing entities, we fetch all game entities manually and populate our hash maps.
+		// After this initial population, we rely on OnAddEntity and OnRemoveEntity for updates.
+		
 		if (iGameEntitySystem->PawnMap.size() <= 1 && iGameEntitySystem->ObserverMap.size() <= 1 && iGameEntitySystem->ControllerMap.size() <= 1)
 		{
 			iGameEntitySystem->getGameEntities();
@@ -336,7 +340,6 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 
 		if (Globals::CreateMoveHook && iGameEntitySystem->PawnMap.size() >= 1)
 		{
-
 			// C_PlayerPawn *EnemyTemp = nullptr;
 			//	for(auto &anyenemy: iGameEntitySystem->PawnMap){
 			//		if (anyenemy.second != iGameEntitySystem->GetPlayerPawn ( ) && !anyenemy.second->pawnIsAlive && anyenemy.second->pawnHealth > 0)
@@ -351,6 +354,7 @@ void HooksManager::CreateMove::hCreateMove(CCSGOInput *csgoInput, __int64 nSlot,
 
 			Vec3 PlayerPos = iGameEntitySystem->GetPlayerPawn()->vOldOrigin;
 
+			// Select the closest enemy
 			for (auto &anyenemy : iGameEntitySystem->PawnMap)
 			{
 				C_PlayerPawn *enemy = anyenemy.second;

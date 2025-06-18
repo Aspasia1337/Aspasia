@@ -597,6 +597,8 @@ HRESULT __stdcall hkPresent (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT
         RenderSpectatorList ( );
     }
 
+    // Watermark is currently shown only when the menu is open, mainly for testing and thesis screen captures.
+    // For production use, consider rendering it independently of the menu visibility.
     RenderWatermark ( );
 
     if (Globals::HealthBar || Globals::PlayerInfo || Globals::RenderPlayerBones || Globals::RenderSkeleton){

@@ -24,7 +24,7 @@ void Helper::Console::printTime(void)
 Helper::Console::Console()
 {
 	AllocConsole();
-	SetConsoleTitle("m_Console");
+	SetConsoleTitle("ASPASIA DEBUG CONSOLE");
 	freopen_s(&m_ConsoleFile, "CONOUT$", "w", stdout);
 	m_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	printMessage(DEBUG, "Aspasia ~ Debug Console");

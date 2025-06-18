@@ -9,10 +9,11 @@
 		type name;                          \
 	}
 
+// Credits for the Union Struct goes to bb110 & pSecurity on UnkownCheats: https://www.unknowncheats.me/forum/c-and-c-/456554-union-struct.html
+
 #include "../math/vector.h"
 #include "../Classes/Classes.h"
 
-// https://www.unknowncheats.me/forum/counter-strike-2-a/687526-bones-indexes.html
 enum class BoneIDs
 {
 	Head = 6,
@@ -92,7 +93,6 @@ class HooksManager
 private:
 public:
 	Vec3 storedViewAngles;
-
 	static int mutex;
 
 	void *CGameInput = nullptr;
@@ -150,7 +150,7 @@ public:
 	{
 	public:
 		typedef void(__fastcall *OverrideViewFunction)(__int64, CViewSetupTRY *);
-		static OverrideViewFunction oCameraServices; // shared among all instances
+		static OverrideViewFunction oCameraServices; // This should be shared among all instances
 		static void __fastcall hCameraServices(__int64 a1, CViewSetupTRY *a2);
 	};
 
@@ -167,7 +167,6 @@ public:
 	FrameStageNotify m_FrameStageNotify;
 
 	typedef void(__fastcall *calcBonesFunction)(void *a1, unsigned int bone);
-
 	static calcBonesFunction calcBones;
 
 	class OnAddEntity

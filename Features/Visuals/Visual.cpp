@@ -279,9 +279,7 @@ CKeyValues3 *Visual::Chams::CreateMaterialResource()
 
 bool Visual::Chams::LoadKV3(CUtilsBuff *buff, CKeyValues3 *CkeyVal)
 {
-
 	KV3ID_t kv3ID = KV3ID_t("generic", 0x41B818518343427E, 0xB5F447C23C0CDF8C);
-
 	return LoadKeyValues(CkeyVal, nullptr, buff, &kv3ID, nullptr, nullptr, nullptr, nullptr, "");
 }
 
@@ -346,7 +344,8 @@ void Visual::OverlayRender::RenderAllPlayerVisuals(C_PlayerPawn *Player)
 			healthColor);
 	}
 
-	// 2. Render Weapon Name
+	// 2. Render Weapon Name 
+	// I don't really know why but sometimes it crashes. Need to be checked.
 	if (Globals::PlayerInfo)
 	{
 		const char *weaponName = "??";

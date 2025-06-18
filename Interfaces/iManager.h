@@ -12,11 +12,11 @@ public:
 
 class CPVS {
 public:
+        // TODO: Not needed for now.
 };
 
 class CInterfaceManager
 {
-
 public:
 
     CGameInput *pGameInput;
@@ -74,7 +74,6 @@ public:
     }
 
     static void (__fastcall *setPVS)(CPVS *, bool);
-
 };
 
 inline CInterfaceManager *g_pInterfaces = new CInterfaceManager ( );
