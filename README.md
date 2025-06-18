@@ -1,4 +1,11 @@
-# Aspasia — Counter-Strike 2 Reverse Engineering Framework
+# Aspasia - Counter-Strike 2 Reverse Engineering Framework
+
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-Windows%20x64-blue"/>
+  <img src="https://img.shields.io/badge/language-C%2B%2B20-brightgreen"/>
+  <img src="https://img.shields.io/badge/context-Master's%20Thesis-blueviolet"/>
+  <img src="https://img.shields.io/badge/license-GNU%20GPLv3-blue"/>
+</p>
 
 <div align="justify">
 
