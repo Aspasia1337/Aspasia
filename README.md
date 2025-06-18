@@ -15,6 +15,24 @@ This project is closely tied to the accompanying thesis document, which explores
 
 ---
 
+## Contents
+
+- [Screenshots](#️screenshots)  
+- [Disclaimer](#️disclaimer)  
+- [Features](#features)  
+- [Compilation](#compilation)  
+  - [Requirements](#requirements)  
+  - [Instructions](#instructions)  
+- [Injection Guidelines](#injection-guidelines)  
+- [Research Purpose](#research-purpose)  
+- [Academic Context](#academic-context)  
+- [Contributions](#contributions)  
+- [Potential Improvements](#potential-improvements)  
+- [License](#license)
+
+
+---
+
 ## 🖼️ Screenshots
 
 <p align="center">
@@ -126,7 +144,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
    git clone https://github.com/Aspasia1337/Aspasia.git
    ```
 
-2. Open `SourceHook.sln` in Visual Studio.
+2. Open `Aspasia Solution.sln` in Visual Studio.
 
 3. Set the build configuration to `Release x64`.
 

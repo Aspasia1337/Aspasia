@@ -151,32 +151,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="includes\imgui\blur\blur.cpp" />
+    <ClCompile Include="Includes\imgui\blur\blur.cpp" />
     <ClCompile Include="Classes\Classes.cpp" />
     <ClCompile Include="Features\Anti-Aim\AntiAim.cpp" />
     <ClCompile Include="EntityManager\EntityManager.cpp" />
-    <ClCompile Include="helper\helper.cpp" />
+    <ClCompile Include="Helper\helper.cpp" />
     <ClCompile Include="HooksManager\HooksManager.cpp" />
-    <ClCompile Include="includes\imgui\custom\custom.cpp" />
-    <ClCompile Include="includes\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="includes\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Includes\imgui\custom\custom.cpp" />
+    <ClCompile Include="Includes\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Includes\imgui\imgui_tables.cpp" />
     <ClCompile Include="Interfaces\iManager.cpp" />
-    <ClCompile Include="includes\imgui\imgui.cpp" />
-    <ClCompile Include="includes\imgui\imgui_demo.cpp" />
-    <ClCompile Include="includes\imgui\imgui_draw.cpp" />
-    <ClCompile Include="includes\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="includes\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="includes\kiero\kiero.cpp" />
-    <ClCompile Include="includes\kiero\minhook\src\buffer.c" />
-    <ClCompile Include="includes\kiero\minhook\src\hde\hde64.c" />
-    <ClCompile Include="includes\kiero\minhook\src\hde\hde32.c" />
-    <ClCompile Include="includes\kiero\minhook\src\hook.c" />
-    <ClCompile Include="includes\kiero\minhook\src\trampoline.c" />
+    <ClCompile Include="Includes\imgui\imgui.cpp" />
+    <ClCompile Include="Includes\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Includes\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Includes\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Includes\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Includes\kiero\kiero.cpp" />
+    <ClCompile Include="Includes\kiero\minhook\src\buffer.c" />
+    <ClCompile Include="Includes\kiero\minhook\src\hde\hde64.c" />
+    <ClCompile Include="Includes\kiero\minhook\src\hde\hde32.c" />
+    <ClCompile Include="Includes\kiero\minhook\src\hook.c" />
+    <ClCompile Include="Includes\kiero\minhook\src\trampoline.c" />
     <ClCompile Include="Features\Legitbot\Legitbot.cpp" />
-    <ClCompile Include="math\vector.cpp" />
+    <ClCompile Include="Math\vector.cpp" />
     <ClCompile Include="Features\Movement\Movement.cpp" />
     <ClCompile Include="Features\Misc\Misc.cpp" />
-    <ClCompile Include="SourceHook.cpp" />
+    <ClCompile Include="Aspasia.cpp" />
     <ClCompile Include="Features\Visuals\Visual.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,38 +186,38 @@
     <ClInclude Include="EntityManager\EntityManager.h" />
     <ClInclude Include="Features\Visuals\Materials.h" />
     <ClInclude Include="globals.h" />
-    <ClInclude Include="helper\helper.h" />
+    <ClInclude Include="Helper\helper.h" />
     <ClInclude Include="HooksManager\HooksManager.h" />
-    <ClInclude Include="includes\imgui\blur\blur.hpp" />
-    <ClInclude Include="includes\imgui\blur\blur_x.hpp" />
-    <ClInclude Include="includes\imgui\blur\blur_y.hpp" />
-    <ClInclude Include="includes\imgui\custom\custom.hpp" />
+    <ClInclude Include="Includes\imgui\blur\blur.hpp" />
+    <ClInclude Include="Includes\imgui\blur\blur_x.hpp" />
+    <ClInclude Include="Includes\imgui\blur\blur_y.hpp" />
+    <ClInclude Include="Includes\imgui\custom\custom.hpp" />
     <ClInclude Include="Interfaces\iManager.h" />
     <ClInclude Include="Features\Legitbot\Legitbot.h" />
-    <ClInclude Include="helper\pe64.h" />
+    <ClInclude Include="Helper\pe64.h" />
     <ClInclude Include="MainThread\font.h" />
     <ClInclude Include="MainThread\mainHook.h" />
-    <ClInclude Include="includes\imgui\imconfig.h" />
-    <ClInclude Include="includes\imgui\imgui.h" />
-    <ClInclude Include="includes\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="includes\imgui\imgui_internal.h" />
-    <ClInclude Include="includes\imgui\imstb_rectpack.h" />
-    <ClInclude Include="includes\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="includes\imgui\imstb_textedit.h" />
-    <ClInclude Include="includes\imgui\imstb_truetype.h" />
-    <ClInclude Include="includes\includes.h" />
-    <ClInclude Include="includes\kiero\kiero.h" />
-    <ClInclude Include="includes\kiero\minhook\include\MinHook.h" />
-    <ClInclude Include="includes\kiero\minhook\src\buffer.h" />
-    <ClInclude Include="includes\kiero\minhook\src\hde\hde32.h" />
-    <ClInclude Include="includes\kiero\minhook\src\hde\hde64.h" />
-    <ClInclude Include="includes\kiero\minhook\src\hde\pstdint.h" />
-    <ClInclude Include="includes\kiero\minhook\src\hde\table32.h" />
-    <ClInclude Include="includes\kiero\minhook\src\hde\table64.h" />
-    <ClInclude Include="includes\kiero\minhook\src\trampoline.h" />
+    <ClInclude Include="Includes\imgui\imconfig.h" />
+    <ClInclude Include="Includes\imgui\imgui.h" />
+    <ClInclude Include="Includes\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Includes\imgui\imgui_internal.h" />
+    <ClInclude Include="Includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Includes\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="Includes\imgui\imstb_truetype.h" />
+    <ClInclude Include="Includes\includes.h" />
+    <ClInclude Include="Includes\kiero\kiero.h" />
+    <ClInclude Include="Includes\kiero\minhook\include\MinHook.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\buffer.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\hde\hde32.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\hde\hde64.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\hde\pstdint.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\hde\table32.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\hde\table64.h" />
+    <ClInclude Include="Includes\kiero\minhook\src\trampoline.h" />
     <ClInclude Include="includes\minhook\MinHook.h" />
     <ClInclude Include="Materials\materials.h" />
-    <ClInclude Include="math\vector.h" />
+    <ClInclude Include="Math\vector.h" />
     <ClInclude Include="Features\Movement\Movement.h" />
     <ClInclude Include="Features\Misc\Misc.h" />
     <ClInclude Include="structs.h" />
@@ -225,11 +225,11 @@
     <ClInclude Include="visuals\Visuals.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="includes\kiero\minhook\dll_resources\MinHook.def" />
+    <None Include="Includes\kiero\minhook\dll_resources\MinHook.def" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="includes\kiero\minhook\dll_resources\MinHook.rc" />
+    <ResourceCompile Include="Includes\kiero\minhook\dll_resources\MinHook.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
