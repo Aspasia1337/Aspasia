@@ -7,6 +7,12 @@
   <img src="https://img.shields.io/badge/license-GNU%20GPLv3-blue"/>
 </p>
 
+<style>
+div, p, li {
+  text-align: justify;
+}
+</style>
+
 <div align="justify">
 
 **Aspasia** is a C++ research framework for studying and prototyping game manipulation techniques in *Counter-Strike 2 (CS2)*. It was developed as part of a Master's Thesis at Universidad Carlos III de Madrid.
@@ -27,7 +33,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 
 ---
 
-## 1. In-Game Preview
+## 1. In-Game Preview: Feature Demonstrations
 
 <p align="center">
   <img src="Master Thesis Template/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
@@ -86,7 +92,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 
 ---
 
-## 2. Features
+## 2. Key Features Overview
 
 - **Aimbot System**
   - Hitbox selection and FOV constraints
@@ -99,9 +105,6 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 - **Anti-Aim / Desync**
   - Lower Body Yaw (LBY) manipulation
 
-- **Hooking Infrastructure**
-  - MinHook-based detours and inline patching
-
 - **Entity Analysis**
   - Runtime tracking via OnAddEntity / OnRemoveEntity
   - Memory structure monitoring
@@ -112,14 +115,17 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 - **Visual Clarity Tweaks**
   - Flashbang and smoke rendering disabled for unobstructed visibility
 
+- **Light and Sky Modulation**
+  - Adjust in-game ambient lighting and skybox color values for enhanced visibility or custom aesthetics
+
 - **Player Overlay Enhancements**
   - Health bars, bone skeletons, and equipped weapon indicators for visible players
 
 ---
 
-## 3. Compilation
+## 3. Compilation & Setup
 
-### 3.1 Requirements
+### 3.1 System Requirements
 
 - Windows 10/11 (x64)
 - Visual Studio 2019 or later
@@ -128,7 +134,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 - C++20 support (`/std:c++20`)
 - Only the `x64` configuration is actively maintained and tested
 
-### 3.2 Instructions
+### 3.2 Build Instructions
 
 1. Download the repository as a ZIP or use Git for Windows:
 
@@ -144,7 +150,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 
 ---
 
-## 4. Injection Guidelines
+## 4. Injection Guidelines & Runtime Behavior
 
 This project does not include an injector. Due to the nature of Valve Anti-Cheat (VAC), standard injection methods such as `LoadLibrary` are detectable and unsafe.
 
@@ -166,7 +172,7 @@ Once in-game, the main menu can be opened using the `INSERT` key.
 
 ---
 
-## 5. Research Purpose
+## 5. Research Intent & Scope
 
 Aspasia is not a conventional cheat—it is a research tool.
 
@@ -180,7 +186,7 @@ It is particularly suited for educational demonstrations in sandboxed or offline
 
 ---
 
-## 6. Academic Context
+## 6. Academic Background
 
 This project was developed as part of a Master's Thesis at Universidad Carlos III de Madrid. A full written thesis accompanies the repository, detailing implementation, context, and reflections on game security.
 
@@ -190,7 +196,7 @@ It’s worth mentioning that this project was developed from a learning perspect
 
 ---
 
-## 7. Potential Improvements
+## 7. Potential Enhancements
 
 The following improvements are planned or suggested:
 
@@ -198,11 +204,11 @@ The following improvements are planned or suggested:
 - **Encrypted Strings**: Use compile-time obfuscation macros (e.g., `XORSTR`)
 - **Dynamic Schema Manager**: Automatically resolve netvars and offsets
 - **Smarter Targeting**: Improve aimbot selection logic using prediction and prioritization
-- **Skin Changer**: Offline inventory simulation with custom skins
+- **Skin Changer**: Inventory simulation with custom skins
 
 ---
 
-## 8. License
+## 8. License & Usage Terms
 
 This project is licensed under the **GNU General Public License v3.0**.
 
