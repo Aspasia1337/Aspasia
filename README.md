@@ -13,27 +13,21 @@
 
 This project is closely tied to the accompanying thesis document, which explores implementation details, design rationale, and the broader context of game cheating and reverse engineering. While Aspasia is not intended for unfair use in public matches, it serves as a tool to understand how game and anti-cheat systems work under the hood.
 
----
-
-## Contents
-
-- [Screenshots](#️screenshots)  
-- [Disclaimer](#️disclaimer)  
-- [Features](#features)  
-- [Compilation](#compilation)  
-  - [Requirements](#requirements)  
-  - [Instructions](#instructions)  
-- [Injection Guidelines](#injection-guidelines)  
-- [Research Purpose](#research-purpose)  
-- [Academic Context](#academic-context)  
-- [Contributions](#contributions)  
-- [Potential Improvements](#potential-improvements)  
-- [License](#license)
-
+</div>
 
 ---
 
-## 🖼️ Screenshots
+## Disclaimer
+
+This repository is intended solely for research and educational purposes. It was developed as part of a personal learning journey and academic exploration of game security and reverse engineering.
+
+Using this software to gain unfair advantages in online games is neither supported nor encouraged. That said, individuals with sufficient technical knowledge and custom modifications might adapt it toward such use. Doing so would require bypassing various validation mechanisms implemented by Valve Anti-Cheat (VAC), including integrity checks found in modules like `steamservice.dll`. While somewhat outdated, [danielkrupinski's vac-hooks repository](https://github.com/danielkrupinski/vac-hooks) provides useful insights into these techniques.
+
+Ultimately, you are fully responsible for any use or consequences that may result from interacting with this codebase.
+
+---
+
+## 1. In-Game Preview
 
 <p align="center">
   <img src="Master Thesis Template/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
@@ -92,43 +86,40 @@ This project is closely tied to the accompanying thesis document, which explores
 
 ---
 
-## ⚠️ Disclaimer
-
-This repository is intended solely for research and educational purposes. It was developed as part of a personal learning journey and academic exploration of game security and reverse engineering.
-
-Using this software to gain unfair advantages in online games is neither supported nor encouraged. That said, individuals with sufficient technical knowledge and custom modifications might adapt it toward such use. Doing so would require bypassing various validation mechanisms implemented by Valve Anti-Cheat (VAC), including integrity checks found in modules like `steamservice.dll`. While somewhat outdated, [danielkrupinski's vac-hooks repository](https://github.com/danielkrupinski/vac-hooks) provides useful insights into these techniques.
-
-Ultimately, you are fully responsible for any use or consequences that may result from interacting with this codebase.
-
----
-
-## ✨ Features
+## 2. Features
 
 - **Aimbot System**
   - Hitbox selection and FOV constraints
   - Smooth aiming using interpolation factor
+
 - **Chams Rendering**
   - Custom materials and entity visibility overrides
   - Support for both hidden and visible states
+
 - **Anti-Aim / Desync**
   - Lower Body Yaw (LBY) manipulation
+
 - **Hooking Infrastructure**
   - MinHook-based detours and inline patching
+
 - **Entity Analysis**
   - Runtime tracking via OnAddEntity / OnRemoveEntity
   - Memory structure monitoring
+
 - **Movement Research**
   - Automatic bunny hopping (Bhop)
+
 - **Visual Clarity Tweaks**
   - Flashbang and smoke rendering disabled for unobstructed visibility
+
 - **Player Overlay Enhancements**
   - Health bars, bone skeletons, and equipped weapon indicators for visible players
 
 ---
 
-## 🔧 Compilation
+## 3. Compilation
 
-### Requirements
+### 3.1 Requirements
 
 - Windows 10/11 (x64)
 - Visual Studio 2019 or later
@@ -137,9 +128,10 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 - C++20 support (`/std:c++20`)
 - Only the `x64` configuration is actively maintained and tested
 
-### Instructions
+### 3.2 Instructions
 
 1. Download the repository as a ZIP or use Git for Windows:
+
    ```cmd
    git clone https://github.com/Aspasia1337/Aspasia.git
    ```
@@ -152,17 +144,17 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 
 ---
 
-## 💉 Injection Guidelines
+## 4. Injection Guidelines
 
 This project does not include an injector. Due to the nature of Valve Anti-Cheat (VAC), standard injection methods such as `LoadLibrary` are detectable and unsafe.
 
 For safe usage in a controlled environment, the loader should support:
+
 - Manual mapping
 - Kernel-assisted injection
 - Memory concealment or obfuscation techniques
 
 > VAC employs memory validation and behavioral heuristics. In public matches, using this without a trusted bypass is likely to result in a VAC ban.
-
 
 If injection is successful, an in-game console will appear displaying logs. This confirms proper loading and hook initialization.
 
@@ -174,11 +166,12 @@ Once in-game, the main menu can be opened using the `INSERT` key.
 
 ---
 
-## 🧪 Research Purpose
+## 5. Research Purpose
 
 Aspasia is not a conventional cheat—it is a research tool.
 
 It was designed to:
+
 - Demonstrate reverse engineering and game manipulation techniques
 - Model typical anti-cheat detection surfaces
 - Serve as a platform for in-memory inspection and live experimentation
@@ -187,7 +180,7 @@ It is particularly suited for educational demonstrations in sandboxed or offline
 
 ---
 
-## 🎓 Academic Context
+## 6. Academic Context
 
 This project was developed as part of a Master's Thesis at Universidad Carlos III de Madrid. A full written thesis accompanies the repository, detailing implementation, context, and reflections on game security.
 
@@ -197,19 +190,7 @@ It’s worth mentioning that this project was developed from a learning perspect
 
 ---
 
-## 🤝 Contributions
-
-Contributions are welcome — particularly those focusing on:
-- Code quality
-- Loader development
-- Schema automation
-- Anti-cheat research
-
-Open an issue or submit a pull request if you'd like to contribute.
-
----
-
-## 🔄 Potential Improvements
+## 7. Potential Improvements
 
 The following improvements are planned or suggested:
 
@@ -221,11 +202,12 @@ The following improvements are planned or suggested:
 
 ---
 
-## 🧾 License
+## 8. License
 
 This project is licensed under the **GNU General Public License v3.0**.
 
 You may:
+
 - Use the code for academic, personal, or educational purposes
 - Modify and redistribute it under the same license
 - Study and adapt it, provided derivatives remain open-source under GPL-3.0
@@ -235,5 +217,3 @@ See the [`LICENSE`](./LICENSE) file for complete terms.
 ---
 
 **Aspasia** — Exploring the inner workings of Counter-Strike 2 through offensive and defensive analysis.
-
-</div>
