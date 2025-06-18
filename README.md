@@ -7,14 +7,6 @@
   <img src="https://img.shields.io/badge/license-GNU%20GPLv3-blue"/>
 </p>
 
-<style>
-div, p, li {
-  text-align: justify;
-}
-</style>
-
-<div align="justify">
-
 **Aspasia** is a C++ research framework for studying and prototyping game manipulation techniques in *Counter-Strike 2 (CS2)*. It was developed as part of a Master's Thesis at Universidad Carlos III de Madrid.
 
 This project is closely tied to the accompanying thesis document, which explores implementation details, design rationale, and the broader context of game cheating and reverse engineering. While Aspasia is not intended for unfair use in public matches, it serves as a tool to understand how game and anti-cheat systems work under the hood.
