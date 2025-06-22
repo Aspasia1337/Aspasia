@@ -75,12 +75,12 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 <p align="center">
   <img src="Master Thesis Template/images/20250615230119_1.jpg" alt="Visual Overlay Snapshot" width="1000"/>
 </p>
-<p align="center"><em>Close-up of USP-S and player arms using custom chams for visual debugging.</em></p>
+<p align="center"><em>Close-up of USP-S and player arms using custom chams.</em></p>
 
 <p align="center">
   <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
 </p>
-<p align="center"><em>Close-up of M4A1 and player arms using custom chams for visual debugging.</em></p>
+<p align="center"><em>Close-up of M4A1 and player arms using custom chams.</em></p>
 
 ---
 
