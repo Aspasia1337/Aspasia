@@ -1,0 +1,131 @@
+% --------------------------------------------------------------------------
+% Version 2.1
+% This template is available on the sites:
+% https://www.overleaf.com/read/rpkkfchcnbsc
+% https://www.overleaf.com/latex/templates/itmo-beamer-theme/fpttrgnmqwsb
+% https://github.com/AlexZabashta/ITMO-Beamer-theme
+% --------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+%\usepackage{fontspec}
+%\usepackage{iflang}
+
+%\setmonofont{Courier New}
+%\defaultfontfeatures{Ligatures=TeX}
+%\setmainfont{Times New Roman}
+%\setsansfont{Arial}
+%\setsansfont{Calibri.ttf}
+
+
+
+\definecolor{ITMOwhite}{RGB}{255,255,255} 
+\definecolor{ITMOblack}{RGB}{0,0,0} 
+
+\definecolor{ITMOred}{RGB}{249,63,65}
+\definecolor{ITMOorange}{RGB}{254,204,53}
+\definecolor{ITMOyellow}{RGB}{255,255,0} 
+\definecolor{ITMOgreen}{RGB}{191,255,0} 
+\definecolor{ITMOcapri}{RGB}{0,204,255}
+\definecolor{ITMOblue}{RGB}{0,105,255} 
+\definecolor{ITMOviolet}{RGB}{126,16,255} 
+\definecolor{ITMOpink}{RGB}{251,118,251}
+
+\setbeamercolor{title}{fg=ITMOwhite}
+\setbeamercolor{frametitle}{fg=ITMOwhite,bg=ITMOviolet}
+
+\setbeamercolor{alerted text}{fg=ITMOred}
+\setbeamercolor{block title alerted}{fg=ITMOred}
+
+\setbeamercolor{block title}{fg=ITMOviolet}
+\setbeamercolor{block title example}{fg=ITMOblue}
+
+\setbeamercolor{caption name}{fg=ITMOblack}
+%\setbeamercolor{footline}{fg=ITMOwhite,bg=ITMOblack}
+%\setbeamercolor{headline}{fg=ITMOwhite,bg=ITMOblack}
+
+\setbeamercolor{section in toc}{fg=ITMOviolet}
+\setbeamercolor{subsection in toc}{fg=ITMOviolet}
+
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{itemize subsubitem}[circle]
+\setbeamercolor{itemize item}{fg=ITMOviolet}
+\setbeamercolor{itemize subitem}{fg=ITMOviolet}
+\setbeamercolor{itemize subsubitem}{fg=ITMOviolet}
+\setbeamercolor{enumerate item}{fg=ITMOviolet}
+\setbeamercolor{enumerate subitem}{fg=ITMOviolet}
+\setbeamercolor{enumerate subsubitem}{fg=ITMOviolet}
+\setbeamercolor{item projected}{fg=ITMOviolet}
+
+
+
+\newcommand{\itmobackgroundsnakes}[1]{
+\usebackgroundtemplate%
+{%
+    \includegraphics[width=\paperwidth,height=\paperheight]{itmo/vitmo_snakes.jpg}%
+}
+\tikz[remember picture,overlay] \node at (current page.center){
+	\includegraphics[height=\paperheight,width=\paperwidth]{itmo/vitmo_snakes.jpg}
+};
+\tikz \node at (current page.center){
+	\begin{minipage}[t][0.97\paperheight][c]{0.843\paperwidth}
+		\begin{center}
+			\usebeamercolor[fg]{title}{
+				#1
+			}
+		\end{center}
+	\end{minipage}
+};
+}
+
+
+\setbeamertemplate{title page}{
+	\itmobackgroundsnakes{
+	    \begin{center}
+	        \vfill
+    		\usebeamerfont{titlegraphic}{\inserttitlegraphic}
+    		\vfill
+    		\usebeamerfont{title}{  \inserttitle} 
+    		\vfill
+    		\usebeamerfont{subtitle}{\insertsubtitle}
+    		\vfill
+    		\insertauthor
+    		\vfill
+    		\insertinstitute
+    		\vfill
+    		\ifx\insertplace\empty
+    			\insertdate
+    		\else
+    			\insertplace,  \insertdate
+    		\fi
+		\end{center}
+	}
+}
+
+
+\def \insertplace {}
+\newcommand{\where}[1]{ \def \insertplace {#1} }
+
+
+\def \insertfootlinetext {\inserttitle}
+\newcommand{\setfootlinetext}[1]{ \def \insertfootlinetext {#1} }
+
+
+\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{footline}[page number]{}
+\setbeamerfont{footnote}{size=\scriptsize}
+
+%\setbeamertemplate{footline}{{\begin{minipage}[c][0.04\textheight][c]{0.83\paperwidth}\hskip1em\insertfootlinetext\hfill\end{minipage}}\colorbox{ITMOviolet}{\begin{minipage}[c][0.04\textheight][c]{0.15\paperwidth}\begin{center}\small\color{ITMOwhite}\textbf{\insertframenumber/\inserttotalframenumber}\end{center}\end{minipage}}}
+%
+
+\setbeamertemplate{footline}{\hfill{\begin{minipage}[c][0.06\textheight][c]{0.1\paperwidth}\begin{center}\small\color{ITMOviolet}\textbf{\insertframenumber/\inserttotalframenumber}\end{center}\end{minipage}}}
+
+
+\setbeamerfont{footline}{size=\footnotesize}
+\setbeamerfont{frametitle}{size=\bf\Large}

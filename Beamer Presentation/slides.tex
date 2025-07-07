@@ -1,0 +1,529 @@
+% --------------------------------------------------------------------------
+% Version 3.0
+% This template is available on the sites:
+% https://www.overleaf.com/read/rpkkfchcnbsc
+% https://www.overleaf.com/latex/templates/itmo-beamer-theme/fpttrgnmqwsb
+% https://github.com/AlexZabashta/ITMO-Beamer-theme
+% --------------------------------------------------------------------------
+
+% Attention!!!
+% This document was created only as an example of using ITMO beamer styling.
+% Don't use it as a Latex or beamer tutorial!
+% Check out the capabilities of Latex and beamer (at least basic) independently.
+
+
+\documentclass[aspectratio=169]{beamer}
+\usepackage{ITMOtheme}
+\setbeamercovered{dynamic}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Use this package to automatically format references.
+% \usepackage[style=mla]{biblatex}
+% \addbibresource{references.bib}
+
+
+
+% The fields 'title', 'author', 'subject', 'keywords' are used to generate a PDF document.
+% It is recommended that you fill them in, even if you are creating your title slide manually.
+
+% use \title[short title]{full title}
+\title[ITMO LaTex]{ITMO University LaTex Presentation}
+
+%\subtitle[short subtitle]{long subtitle}
+
+\author[LastName F.]{FirstName LastName}
+
+%\institute[short institute]{long institute}
+
+\where{St. Petersburg}
+\date{\today}
+
+
+\subject{example}
+\keywords{ITMO University, LaTex teamplate, beamer}
+
+
+
+\begin{document}
+
+% Title slide
+\begin{frame}[plain,noframenumbering]
+    \itmobackgroundsnakes{
+        \vfill
+        \begin{center}
+            \vspace{2cm}
+            
+            {\usebeamerfont{title}\LARGE\textbf{``The Game Beneath the Game:\\The Evolution of Cheats and Anti-Cheat Systems in Counter-Strike 2''}}\\[1.5em]
+            
+            \textbf{Author:} Pablo Valiente\\[0.5em]
+            \textbf{Supervisor:} Dr. Antonio Nappa\\[3em]
+            \textbf{Universidad Carlos III de Madrid}\\[1em]
+            \textbf{Academic Year:} 2024--2025\\[0.5em]
+        \end{center}
+        \vfill
+    }
+\end{frame}
+
+% Table of Contents slide
+\begin{frame}[plain,noframenumbering]
+    \frametitle{Table of Contents}
+    \Large
+    \begin{enumerate}
+        \item Motivation and Context
+        \pause
+        \item Cheating: History, Ecosystem, and Ethics
+        \pause
+        \item Anti-Cheat Technologies and Milestones
+        \pause
+        \item Case Study: Counter-Strike 2
+        \pause
+        \item Technical Analysis: Injection and Evasion
+        \pause
+        \item Game Logic Manipulation and Visual Features
+        \pause
+        \item Final Reflections and Future Directions
+    \end{enumerate}
+\end{frame}
+
+% --- Motivation and Context ---
+\section{Motivation and Context}
+\begin{frame}
+    \frametitle{Motivation}
+    My interest in this topic began around six years ago, driven by a passion for competitive video games.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Curiosity:} Encountering cheaters in ranked matches often led me to wonder: \textit{“How did they do it?”}
+        \pause
+        \item \textbf{Exploration:} This question gradually introduced me to reverse engineering, memory analysis, and anti-cheat evasion.
+        \pause
+        \item \textbf{Background:} Over the years, I acquired technical knowledge through communities, experiments, and academic training.
+        \pause
+        \item \textbf{Objective:} To merge this journey with a rigorous academic study by analyzing and implementing real cheats to test detection systems.
+    \end{itemize}
+\end{frame}
+
+% --- Added thesis sections and slides ---
+
+\AtBeginSection[]{
+    \begin{frame}
+        \frametitle{Outline}
+        \tableofcontents[
+            currentsection,
+            sectionstyle=show/shaded,
+            hideothersubsections
+        ]
+    \end{frame}
+}
+
+
+
+% --- New Introductory Slides: Cheating Phenomenon ---
+
+% --- Cheating: History, Ecosystem, and Ethics ---
+\section{Cheating: History, Ecosystem, and Ethics}
+\begin{frame}
+    \frametitle{Understanding Cheating in Online Games}
+    Cheating undermines fairness and security in competitive online games.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Definition:} Any software or hardware manipulation that grants unfair advantage.
+        \pause
+        \item \textbf{Anti-Cheat:} Monitors and enforces integrity at runtime, acting like an \textbf{EDR} by detecting anomalous behavior, unauthorized memory access, or code injection in protected processes.
+        \pause
+        \item \textbf{Spectrum:} From basic triggerbots to advanced kernel-level exploits.
+        \pause
+        \item \textbf{Impact:} Threatens matchmaking integrity and industry revenue.
+        \pause
+        \item \textbf{Context:} Now part of the broader cybersecurity landscape.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Origins of Cheating: From Debugging to Subversion}
+    Cheating emerged from tools meant for testing and evolved into manipulation.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Debug Codes:} Became public cheat codes (e.g., Konami Code).
+        \pause
+        \item \textbf{GameShark:} Modified RAM directly on console hardware.
+        \pause
+        \item \textbf{Cheat Engine:} Enabled runtime memory editing on PC.
+        \pause
+        \item \textbf{x64dbg and ReClass.NET:} Allowed advanced memory mapping, pointer tracing, and class reconstruction.
+        \pause
+        \item \textbf{Advanced Tooling:} Debuggers like \texttt{x64dbg}, memory editors, and tools such as \texttt{ReClass.NET} enabled deep inspection of structures and dynamic memory regions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{From Hacks to Services: The Turning Point}
+    The early 2010s marked a major shift in how cheats were created, distributed, and perceived.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Community Forums:} Platforms like UnKnoWnCheaTs fostered knowledge sharing and tutorials.
+        \pause
+        \item \textbf{Toolchains:} Public tools and open-source loaders lowered the barrier to entry.
+        \pause
+        \item \textbf{Subscription Models:} Private cheats became commercialized with regular updates and support.
+        \pause
+        \item \textbf{User Demand:} Players sought not just to win, but to dominate with minimal effort—fueling a sustainable market.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Cheating Today: A Professionalized Ecosystem}
+    Cheating has evolved from hobbyist tools to a mature ecosystem that mirrors legitimate software development.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Commercialization:} Cheat providers operate like startups—offering licensing, tiered features, and customer support.
+        \pause
+        \item \textbf{Stealth Technology:} Use of polymorphism, virtualization, and driver-level code to evade detection.
+        \pause
+        \item \textbf{Infrastructure:} Loaders, obfuscators, HWID spoofers, and encrypted update channels ensure persistence.
+        \pause
+        \item \textbf{Community:} Development is sustained by technical forums, Discord channels, and reverse engineering collectives.
+        \pause
+        \item \textbf{Ethical Ambiguity:} Some actors claim educational or research motives—blurring lines between analysis and abuse.
+    \end{itemize}
+\end{frame}
+
+
+% --- Anti-Cheat Timeline Table ---
+% --- Anti-Cheat Technologies and Milestones ---
+\section{Anti-Cheat Technologies and Milestones}
+\begin{frame}
+    \frametitle{Anti-Cheat Systems Timeline}
+    Anti-cheat systems have evolved from basic client-side tools to complex, kernel-level detectors. Each marked a significant shift in visibility, access, or enforcement.
+    \vspace{0.4cm}
+    \begin{table}[]
+        \small
+        \begin{tabular}{|l|l|l|l|}
+            \hline
+            \textbf{System} & \textbf{Year} & \textbf{Mode} & \textbf{Milestone or Innovation} \\
+            \hline
+            PunkBuster & 2000 & User & First real-time memory scan and screenshot system \\
+            VAC & 2002 & User & Delayed ban model to obfuscate detection methods \\
+            BattleEye & 2004 & Kernel & Early adoption of kernel-mode drivers \\
+            FairFight & 2012 & Server & Behavioral/statistical detection at server level \\
+            EAC & 2018 & Kernel & Real-time scanning with driver-level protection \\
+            Vanguard & 2020 & Kernel & Persistent always-on kernel driver (controversial) \\
+            VAC Live & 2023 & Hybrid & Real-time detection with low-latency enforcement \\
+            \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+
+
+% --- Justification Slide: Why Counter-Strike 2? ---
+\begin{frame}
+    \frametitle{Why Counter-Strike 2?}
+    Counter-Strike 2 represents a prime environment to study modern cheating.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Large Player Base:} Over 1 million monthly active users in 2024--2025.
+        \pause
+        \item \textbf{High Competitive Stakes:} Ranked ladders, esports scene, and skin economy intensify incentives.
+        \pause
+        \item \textbf{Persistent Cheating Problem:} VAC bans, report abuse, and public complaints highlight widespread issues.
+        \pause
+        \item \textbf{Technical Maturity:} CS2 is built on Source 2 with new anti-cheat features and detection paradigms.
+        \pause
+        \item \textbf{Public Data:} Rich dataset from platforms like SteamCharts and CSStats enables evidence-based analysis.
+    \end{itemize}
+\end{frame}
+
+% --- NEW: Genre-Specific Vulnerabilities Slide ---
+\begin{frame}
+    \frametitle{Why FPS Games Are Especially Vulnerable}
+    First-person shooters present unique architectural weaknesses that make them highly susceptible to game manipulation.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Client-Side Rendering:} The game client must access enemy positions to render them—even through walls.
+        \pause
+        \item \textbf{Memory Residency:} Positional and player state data exist in memory and can be externally read or modified.
+        \pause
+        \item \textbf{Contrast With Strategy Games:} RTS or turn-based titles store game logic server-side, making manipulation far more difficult.
+        \pause
+        \item \textbf{Exploitation Vector:} These FPS traits enable features like ESP, aimbots, and recoil control by hijacking user input or memory data.
+    \end{itemize}
+\end{frame}
+
+
+% --- NEW: CS2 Player Base Growth Slide ---
+\begin{frame}
+    \frametitle{CS2 Player Base Growth (2024–2025)}
+    To contextualize the scale of CS2's ecosystem, the following graph illustrates the evolution of its player base based on SteamCharts data.
+    \vspace{0.3cm}
+    \begin{tikzpicture}
+    \begin{axis}[
+        width=\linewidth,
+        height=6.5cm,
+        xlabel={Month},
+        ylabel={Average Players},
+        symbolic x coords={Jan24, Feb24, Mar24, Apr24, May24, Jun24, Jul24, Aug24, Sep24, Oct24, Nov24, Dec24, Jan25, Feb25, Mar25, Apr25, May25},
+        xtick=data,
+        xticklabel style={rotate=45, anchor=east, font=\scriptsize},
+        yticklabel style={font=\scriptsize},
+        label style={font=\small},
+        tick style={thin},
+        grid=both,
+        minor tick num=1,
+        major grid style={line width=.3pt, draw=gray!40},
+        minor grid style={line width=.2pt, draw=gray!20},
+        ymin=700000, ymax=1100000,
+        enlargelimits=0.05,
+        smooth,
+        mark options={scale=1.2, fill=red!70},
+        line width=0.8pt,
+        legend style={at={(0.5,-0.2)}, anchor=north, font=\small},
+    ]
+    \addplot[
+        color=red,
+        mark=*,
+    ]
+    coordinates {
+        (Jan24,760859) (Feb24,786631) (Mar24,885630) (Apr24,930749)
+        (May24,958207) (Jun24,947521) (Jul24,875365) (Aug24,897338)
+        (Sep24,836307) (Oct24,829439) (Nov24,852164) (Dec24,913953)
+        (Jan25,914092) (Feb25,1003571) (Mar25,1039663) (Apr25,1045702)
+        (May25,1038597)
+    };
+    \end{axis}
+    \end{tikzpicture}
+\end{frame}
+
+% --- NEW: Steam Top 10 Visual Context Slide ---
+\begin{frame}
+    \frametitle{Steam Top 10: July 7, 2025}
+    \begin{center}
+        \includegraphics[width=0.63\linewidth]{images/steam_stats.png}
+    \end{center}
+    \vspace{0.3cm}
+\end{frame}
+
+\section{Case Study: Counter-Strike 2}
+
+% --- NEW: VAC Anti-Cheat Strategy Slide ---
+\begin{frame}
+    \frametitle{VAC: Valve's Anti-Cheat Strategy}
+    Since the early days of Counter-Strike, Valve has maintained its own anti-cheat system—VAC (Valve Anti-Cheat).
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Consistency:} VAC has been used since CS 1.6 and evolved alongside the series.
+        \pause
+        \item \textbf{User Mode Limitation:} VAC operates entirely in user space, unlike newer kernel-mode anticheats.
+        \pause
+        \item \textbf{Detection Philosophy:} Prefers silent detection with delayed banwaves to avoid tipping off cheat developers.
+        \pause
+        \item \textbf{Upcoming Evolution:} Valve announced integration of \textbf{machine learning models} into VAC Live to detect behavioral patterns and cheating heuristics in real time.
+    \end{itemize}
+\end{frame}
+
+% --- Improved Trust Factor and Detection Challenges ---
+\begin{frame}
+    \frametitle{Trust Factor and Detection Challenges}
+    Valve's Trust Factor system, introduced in late 2017, fundamentally changed matchmaking by leveraging a hidden reputation metric to segregate players in CS:GO and, later, CS2. Its historical and functional design aims to reduce disruption, but also introduces new detection and exploitation challenges.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Introduction:} Trust Factor was introduced in late 2017 to improve matchmaking integrity in CS:GO and later adopted in CS2.
+        \pause
+        \item \textbf{Function:} Uses behavioral data, report history, account characteristics, and system metrics to infer player reliability.
+        \pause
+        \item \textbf{Segregation Strategy:} Groups cheaters with cheaters, and legitimate players with each other, to reduce disruptive overlap.
+        \pause
+        \item \textbf{Opacity:} The exact calculation is hidden, preventing transparency or dispute of unfair evaluations.
+    \end{itemize}
+\end{frame}
+
+% --- Improved Economic and Psychological Impact ---
+\begin{frame}
+    \frametitle{Economic and Psychological Impact}
+    Cheating in CS2 generates profound economic losses and undermines player well-being.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Skin Markets:} \textbf{VAC bans} can instantly invalidate cosmetic items worth \textbf{thousands of euros}.
+        \pause
+        \item \textbf{False Positives:} \textbf{Unjustified bans} occur, often with no appeals process or recourse.
+        \pause
+        \item \textbf{Morale:} \textbf{Rampant cheating} erodes competitive spirit, trust, and perceived fairness.
+        \pause
+        \item \textbf{Retention:} \textbf{Frustrated players} abandon the game, shrinking and destabilizing the community.
+    \end{itemize}
+\end{frame}
+
+
+% --- CS2 Player Base vs Cheating Incidents ---
+% --- Improved CS2 Player Base vs. Cheating Incidents ---
+\begin{frame}
+    \frametitle{CS2 Player Base vs. Cheating Incidents}
+    The true scale of cheating is revealed by player statistics and detection data.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Player Base:} \textbf{Over 1 million} monthly active users in 2024--2025.
+        \pause
+        \item \textbf{VAC Reports:} \textbf{32,000+ matches} with banned players detected in early 2024.
+        \pause
+        \item \textbf{Low Profile:} \textbf{97\% of matches} featured only one silent cheater.
+        \pause
+        \item \textbf{Stealth:} \textbf{Modern cheats} prioritize \textbf{invisibility} and subtlety over blatant advantage.
+    \end{itemize}
+\end{frame}
+
+% --- Quantitative Data Analysis Slide (NEW) ---
+\begin{frame}
+    \frametitle{Quantifying the Impact: Cheating and Player Statistics}
+    Beyond anecdotal evidence, empirical data helps us understand the scope of cheating in CS2.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Player Growth:} Monthly average players increased from 760k to over 1 million (SteamCharts, Jan 2024 -- May 2025).
+        \pause
+        \item \textbf{Delayed Enforcement:} 28\% of VAC bans occur within 24h of last match; average delay is 20 days.
+        \pause
+        \item \textbf{Cheating Embedded:} 97\% of affected matches had only one banned player—often undetected in real time.
+        \pause
+        \item \textbf{No Case Farming Evidence:} Cheaters are not primarily motivated by item drops but by gameplay disruption or rank inflation.
+    \end{itemize}
+\end{frame}
+
+
+\section{Technical Analysis: Injection and Evasion}
+
+\begin{frame}
+    \frametitle{DLL Injection and Manual Mapping}
+    \begin{itemize}
+        \item DLLs are injected using classic methods (LoadLibrary, CreateRemoteThread).
+        \pause
+        \item Manual Mapping avoids detection: no LoadLibrary calls, no module list entry.
+        \pause
+        \item Allows stealthy loading of cheat code into memory.
+    \end{itemize}
+\end{frame}
+
+% --- Manual Mapping Diagram ---
+\begin{frame}
+    \frametitle{Manual Mapping Overview}
+    \centering
+    \vspace{0.5cm}
+    
+    \small
+    \textbf{Key Steps:}
+    \begin{enumerate}
+        \item Allocate memory in target process.
+        \pause
+        \item Map sections of the DLL manually.
+        \pause
+        \item Resolve imports and apply relocations.
+        \pause
+        \item Execute DLL entry point stealthily.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{VAC Detection and Countermeasures}
+    \begin{itemize}
+        \item VAC detects signatures, thread start addresses, and VMT hooks.
+        \pause
+        \item Developers evade detection with string encryption, polymorphism, and fileless techniques.
+        \pause
+        \item It's a constant game of adaptation and evasion.
+    \end{itemize}
+\end{frame}
+
+\section{Game Logic Manipulation and Visual Features}
+
+\begin{frame}
+    \frametitle{Function Hooking and MinHook}
+    \begin{itemize}
+        \item Hooks intercept engine calls (e.g., render, input).
+        \pause
+        \item MinHook provides safe trampoline hooking.
+        \pause
+        \item Allows modification without altering engine behavior.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Entity List and Memory Traversal}
+    \begin{itemize}
+        \item Entities are managed via paged handles.
+        \pause
+        \item We hook OnAddEntity/OnRemoveEntity to track game state.
+        \pause
+        \item Static and dynamic analysis reveal entity structure.
+    \end{itemize}
+\end{frame}
+
+% (section absorbed in previous title, line removed)
+
+\begin{frame}
+    \frametitle{Chams and ESP}
+    \begin{itemize}
+        \item Chams: custom materials injected to render models through walls.
+        \pause
+        \item ESP: overlays entity data (e.g., health, name, position).
+        \pause
+        \item Fully internal: no overlays or external rendering.
+    \end{itemize}
+\end{frame}
+
+% --- Visual Examples: Chams Materials ---
+\begin{frame}
+    \frametitle{Visual Examples: Chams Materials}
+    
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Left: Bloom-based Glow Chams
+        \pause
+        \item Right: Fresnel edge-highlight Chams
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Aimbot and Anti-Aim}
+    \begin{itemize}
+        \item Aimbot: computes angle vectors and modifies view orientation.
+        \pause
+        \item Anti-Aim: misleads enemies and aimbots by desyncing player model.
+        \pause
+        \item Both features are configurable and stealthy.
+    \end{itemize}
+\end{frame}
+
+\section{Final Reflections and Future Directions}
+
+\begin{frame}
+    \frametitle{Conclusions}
+    \begin{itemize}
+        \item Cheating is both a technical and cultural phenomenon.
+        \pause
+        \item Current anti-cheat approaches are limited by privacy and evasion tactics.
+        \pause
+        \item Dual analysis (offensive + defensive) provides better insight into vulnerabilities.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Future Work}
+    \begin{itemize}
+        \item Dynamic schema parsing to replace hardcoded offsets.
+        \pause
+        \item Secure string obfuscation to evade static analysis.
+        \pause
+        \item Generalize to other Source 2 games and integrate with anti-cheat benchmarking.
+    \end{itemize}
+\end{frame}
+
+% --- Closing Questions Slide ---
+\begin{frame}
+    \frametitle{Questions}
+    \begin{center}
+        \Huge Thank you for your attention!\\[1em]
+        \Large Any questions?
+    \end{center}
+\end{frame}
+
+\end{document}
