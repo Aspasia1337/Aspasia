@@ -73,17 +73,11 @@
     \Large
     \begin{enumerate}
         \item Motivation and Context
-        \pause
         \item Cheating: History, Ecosystem, and Ethics
-        \pause
         \item Anti-Cheat Technologies and Milestones
-        \pause
         \item Case Study: Counter-Strike 2
-        \pause
         \item Technical Analysis: Injection and Evasion
-        \pause
         \item Game Logic Manipulation and Visual Features
-        \pause
         \item Final Reflections and Future Directions
     \end{enumerate}
 \end{frame}
@@ -99,9 +93,7 @@
         \pause
         \item \textbf{Exploration:} This question gradually introduced me to reverse engineering, memory analysis, and anti-cheat evasion.
         \pause
-        \item \textbf{Background:} Over the years, I acquired technical knowledge through communities, experiments, and academic training.
-        \pause
-        \item \textbf{Objective:} To merge this journey with a rigorous academic study by analyzing and implementing real cheats to test detection systems.
+        \item \textbf{Objective:} To merge this journey with an academic study by analyzing and implementing real cheats to test detection systems.
     \end{itemize}
 \end{frame}
 
@@ -153,8 +145,6 @@
         \item \textbf{Cheat Engine:} Enabled runtime memory editing on PC.
         \pause
         \item \textbf{x64dbg and ReClass.NET:} Allowed advanced memory mapping, pointer tracing, and class reconstruction.
-        \pause
-        \item \textbf{Advanced Tooling:} Debuggers like \texttt{x64dbg}, memory editors, and tools such as \texttt{ReClass.NET} enabled deep inspection of structures and dynamic memory regions.
     \end{itemize}
 \end{frame}
 
@@ -165,11 +155,7 @@
     \begin{itemize}
         \item \textbf{Community Forums:} Platforms like UnKnoWnCheaTs fostered knowledge sharing and tutorials.
         \pause
-        \item \textbf{Toolchains:} Public tools and open-source loaders lowered the barrier to entry.
-        \pause
         \item \textbf{Subscription Models:} Private cheats became commercialized with regular updates and support.
-        \pause
-        \item \textbf{User Demand:} Players sought not just to win, but to dominate with minimal effort, fueling a sustainable market.
     \end{itemize}
 \end{frame}
 
@@ -183,15 +169,13 @@
         \item \textbf{Stealth Technology:} Use of polymorphism, virtualization, and driver-level code to evade detection.
         \pause
         \item \textbf{Infrastructure:} Loaders, obfuscators, HWID spoofers, and encrypted update channels ensure persistence.
-        \pause
-        \item \textbf{Community:} Development is sustained by highly technical reverse engineers who are constantly reversing every update in the game.
     \end{itemize}
 \end{frame}
 
 
 % --- Anti-Cheat Timeline Table ---
 % --- Anti-Cheat Technologies and Milestones ---
-\section{The Rise of Anti-Cheat: Technologies and Milestones}
+\section{Counter-Strike 2: A Case Study in Cheating Dynamics}
 \begin{frame}
     \frametitle{Anti-Cheat Systems Timeline}
     Anti-cheat systems have evolved from basic client-side tools to complex, kernel-level detectors. Each marked a significant shift in visibility, access, or enforcement.
@@ -214,23 +198,6 @@
     \end{table}
 \end{frame}
 
-% --- NEW: Genre-Specific Vulnerabilities Slide ---
-\begin{frame}
-    \frametitle{Why FPS Games Are Especially Vulnerable}
-    First-person shooters present unique architectural weaknesses that make them highly susceptible to game manipulation.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Client-Side Rendering:} The game client must access enemy positions to render them, even through walls.
-        \pause
-        \item \textbf{Memory Residency:} Positional and player state data exist in memory and can be externally read or modified.
-        \pause
-        \item \textbf{Contrast With Strategy Games:} RTS or turn-based titles store game logic server-side, making manipulation far more difficult.
-        \pause
-        \item \textbf{Exploitation Vector:} These FPS traits enable features like ESP, aimbots, and recoil control by hijacking user input or memory data.
-    \end{itemize}
-\end{frame}
-
-
 
 % --- Justification Slide: Why Counter-Strike 2? ---
 \begin{frame}
@@ -244,14 +211,9 @@
         \pause
         \item \textbf{Persistent Cheating Problem:} VAC bans, report abuse, and public complaints highlight widespread issues.
         \pause
-        \item \textbf{Technical Maturity:} CS2 is built on Source 2 with new anti-cheat features and detection paradigms.
-        \pause
         \item \textbf{Public Data:} Rich dataset from platforms like SteamCharts and CSStats enables evidence-based analysis.
     \end{itemize}
 \end{frame}
-
-
-
 
 % --- NEW: CS2 Player Base Growth Slide ---
 \begin{frame}
@@ -305,7 +267,6 @@
     \vspace{0.3cm}
 \end{frame}
 
-\section{Counter-Strike 2: A Case Study in Cheating Dynamics}
 
 % --- NEW: VAC Anti-Cheat Strategy Slide ---
 \begin{frame}
@@ -323,55 +284,10 @@
     \end{itemize}
 \end{frame}
 
-
-% --- Improved Trust Factor and Detection Challenges ---
-\begin{frame}
-    \frametitle{Trust Factor and Detection Challenges}
-    Valve's Trust Factor system, introduced in late 2017, fundamentally changed matchmaking by leveraging a hidden reputation metric to segregate players. 
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Function:} Uses behavioral data, report history, account characteristics, and system metrics to infer player reliability.
-        \pause
-        \item \textbf{Segregation Strategy:} Groups suspect cheaters with other suspect cheaters, and legitimate players with each other, to reduce disruptive overlap.
-        \pause
-        \item \textbf{Opacity:} The exact calculation is hidden, preventing transparency or dispute of unfair evaluations.
-    \end{itemize}
-\end{frame}
-
-% --- NEW: What Actually Affects Trust Factor? ---
-\begin{frame}
-    \frametitle{What Actually Affects Trust Factor?}
-    Although Valve keeps the exact algorithm secret, several factors are known or strongly suspected to influence Trust Factor:
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Account Age and Game Hours:} Older accounts and higher total playtime positively impact Trust Factor.
-        \pause
-        \item \textbf{Money Spent:} Purchasing games or items (e.g., skins, Prime status) improves account reputation.
-        \pause
-        \item \textbf{Report History:} Frequent reports, especially confirmed ones, lower your Trust Factor.
-        \pause
-        \item \textbf{Friend Network:} Being friends with banned or suspicious players may reduce your Trust Factor.
-    \end{itemize}
-\end{frame}
-
-% --- Improved Economic and Psychological Impact ---
-\begin{frame}
-    \frametitle{Economic and Psychological Impact}
-    Cheating in CS2 generates profound economic losses and undermines player well-being.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Skin Markets:} \textbf{VAC bans} can instantly invalidate cosmetic items worth \textbf{thousands of euros}. Locking down those accounts and disabling trade offers.
-        \pause
-        \item \textbf{Morale:} \textbf{Rampant cheating} erodes competitive spirit, trust, and perceived fairness.
-        \pause
-        \item \textbf{Retention:} \textbf{Frustrated players} abandon the game, shrinking and destabilizing the community.
-    \end{itemize}
-\end{frame}
-
 % --- NEW: Survey Slide: Cheating as a Critical Threat ---
 \begin{frame}
     \frametitle{Survey: Cheating as a Critical Threat}
-    A 2018 global survey by Irdeto revealed the widespread negative impact of cheating in Counter-Strike: Global Offensive:
+    A 2018 global survey by Irdeto revealed the widespread negative impact of cheating in Counter-Strike:
     \vspace{0.4cm}
     \begin{table}[]
         \small
@@ -396,24 +312,6 @@
         \item Economic implications due to reduced engagement and spending.
     \end{itemize}
 \end{frame}
-
-% --- Quantitative Data Analysis Slide (NEW) ---
-\begin{frame}
-    \frametitle{Quantifying the Impact: Cheating and Player Statistics}
-    Beyond anecdotal evidence, empirical data helps us understand the scope of cheating in CS2.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Player Growth:} Monthly average players increased from 760k to over 1 million (SteamCharts, Jan 2024 -- May 2025).
-        \pause
-        \item \textbf{Delayed Enforcement:} 28\% of VAC bans occur within 24h of last match; average delay is 20 days.
-        \pause
-        \item \textbf{Cheating Embedded:} 97\% of affected matches had only one banned player, often undetected in real time.
-        \pause
-        \item \textbf{No Case Farming Evidence:} Cheaters are not primarily motivated by item drops but by gameplay disruption or rank inflation.
-    \end{itemize}
-\end{frame}
-
-
 \section{Code Injection and Cheat Delivery Mechanisms}
 
 \begin{frame}
@@ -425,30 +323,11 @@
         \pause
         \item \textbf{Manual Mapping:} Avoids standard API calls, skipping LoadLibrary and not registering the module.
         \pause
-        \item \textbf{Stealth Advantage:} Enables loading cheat code directly into memory without leaving traces.
-        \pause
         \item \textbf{Malware Parallels:} These techniques mirror malware behavior, stealthy, evasive, and persistent.
     \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Real-World Implementation: Cheat Loaders}
-    Modern cheat providers rely on custom loaders rather than directly sharing raw DLLs.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Encrypted Payloads:} DLLs are downloaded and decrypted at runtime.
-        \pause
-        \item \textbf{Anti-Detection Techniques:} Loaders bypass anti-cheat hooks and spoof return addresses.
-        \pause
-        \item \textbf{Examples:} Popular cheats like \textit{NeverLose} and \textit{Skeet} deploy secure loaders to ensure stealth.
-        \pause
-        \item \textbf{Operational Flow:}\\
-    \vspace{0.6cm}
-    \begin{center}
-        \texttt{Launch loader → Restart Steam → Inject payload → Execute entry point silently}
-    \end{center}
-    \end{itemize}
-\end{frame}
+
 
 \begin{frame}
     \frametitle{VAC Detection and Countermeasures}
@@ -458,10 +337,6 @@
         \item \textbf{Detection Vectors:} Includes signature scanning, suspicious thread start addresses, and VMT hook detection.
         \pause
         \item \textbf{Reversing Insight:} Analyzing \texttt{steamservice.dll} reveals that VAC streams detection modules from Valve servers.
-        \pause
-        \item \textbf{PE Injection:} These modules are manually mapped into memory using PE Injection.
-        \pause
-        \item \textbf{Dynamic Landscape:} The result is a constant arms race between detection systems and cheat developers.
     \end{itemize}
 \end{frame}
 
@@ -472,11 +347,11 @@
     Hooking allows interception of internal engine calls to alter behavior at runtime.
     \vspace{0.4cm}
     \begin{itemize}
+        \item \textbf{Core Role:} Alongside reverse engineering, hooking forms the backbone of our cheat architecture.
+        \pause
         \item \textbf{Initial Step:} Reverse engineer the game binary to locate key virtual functions related to input, rendering, or entity updates.
         \pause
         \item \textbf{Hooking Layer:} Inject trampoline hooks to redirect control flow to our cheat-defined functions.
-        \pause
-        \item \textbf{MinHook Library:} We employed \texttt{MinHook} for ease of use and reliability.
         \pause
         \item \textbf{Limitations:} While MinHook is sufficient for prototyping, more stealth-oriented alternatives exist (e.g., Shadow Hooking, Page Guard, or VEH-based hooks).
     \end{itemize}
@@ -490,10 +365,16 @@
     \begin{itemize}
         \item \textbf{Entity Management:} The game uses a handle-based paging system to manage all in-game entities.
         \pause
-        \item \textbf{Callback Hooks:} We named the functions \texttt{OnAddEntity} and \texttt{OnRemoveEntity} during our reverse engineering, as they lack debug symbols. These routines are ideal hook points to track player spawns and despawns.
+        \item \textbf{Cheat Integration:} Our entity list must stay in sync with the game to avoid crashes from invalid pointers.
         \pause
         \item \textbf{Memory Structures:} Reverse engineering revealed a central list containing pointers to entity classes and their data.
     \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Entity List in Reclass}        
+    \includegraphics[width=1\linewidth]{images/al1gn_reclass_uc.png}
 \end{frame}
 
 % --- NEW: Implementation of Cheat Features Slide ---
@@ -504,7 +385,7 @@
     \begin{itemize}
         \item \textbf{Features Developed:}
         \begin{itemize}
-            \item \textit{Chams}: custom materials to highlight player models through geometry.
+            \item \textit{Chams}: reverse the material system to highlight player models through geometry.
             \pause
             \item \textit{Aimbot}: automatic aim adjustment based on enemy position, using directional vector math and angle normalization (see equations in appendix).
             \pause
@@ -534,9 +415,14 @@
         \item \textbf{Function Hooks:} We hooked two internal engine functions: one responsible for material creation, another for rendering passes.
         \pause
         \item \textbf{Selective Injection:} By filtering the render queue, we applied our custom material only to specific models (e.g., player entities, weapons).
-        \pause
-        \item \textbf{Outcome:} Player models become visually enhanced through walls using internal rendering only.
     \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Material VK3 structure}        
+    \includegraphics[width=1\linewidth]{images/carbon.png}
 \end{frame}
 
 % --- Visual Examples: Chams Materials ---
@@ -558,51 +444,6 @@
 \begin{frame}
     \frametitle{Visual Examples: Chams Materials}        
     \includegraphics[width=1\linewidth]{../Master Thesis Template/images/chams/chams_demo/20250608210427_1.jpg}
-\end{frame}
-
-
-
-% --- NEW: Aimbot: Mathematical Overview ---
-\begin{frame}
-    \frametitle{Aimbot: Mathematical Overview}
-    The aimbot determines the angle between the player and the target using 3D vector math.
-    \vspace{0.4cm}
-    \textbf{Angle Calculation:}
-    \begin{equation*}
-        \text{delta} = \text{targetPos} - \text{playerPos}
-    \end{equation*}
-    \begin{equation*}
-        \text{yaw} = \text{atan2}(\text{delta}_y, \text{delta}_x) \times \frac{180}{\pi}
-    \end{equation*}
-    \begin{equation*}
-        \text{pitch} = -\text{atan2}(\text{delta}_z, \sqrt{\text{delta}_x^2 + \text{delta}_y^2}) \times \frac{180}{\pi}
-    \end{equation*}
-
-    \vspace{0.4cm}
-    \textbf{Explanation:}
-    \begin{itemize}
-        \item Converts a 3D vector into pitch and yaw angles required for aiming.
-        \item Ensures consistent aiming regardless of relative position in space.
-        \item Used each frame to update view angles if target is valid and visible.
-    \end{itemize}
-\end{frame}
-
-% --- NEW: Aimbot: Target Selection and Smoothing ---
-\begin{frame}
-    \frametitle{Aimbot: Target Selection and Smoothing}
-    For practical gameplay, raw angle calculation is insufficient. We enhance realism and precision using additional heuristics.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Interpolation Factor:} We introduce a smoothing coefficient that linearly interpolates between the current view angle and the target angle, reducing abrupt snapping.
-        \pause
-        \item \textbf{Formula:}
-        \[
-            \text{newAngle} = (1 - \alpha) \cdot \text{currentAngle} + \alpha \cdot \text{targetAngle}
-        \]
-        where \( \alpha \in [0,1] \) controls the smoothing intensity.
-        \pause
-        \item \textbf{FOV Filter:} We filter potential targets by their distance to the center of the screen (Field of View), prioritizing those closer to the crosshair.
-    \end{itemize}
 \end{frame}
 
 
