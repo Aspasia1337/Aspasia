@@ -83,22 +83,6 @@
 \end{frame}
 
 
-
-% Table of Contents slide
-\begin{frame}[plain,noframenumbering]
-    \frametitle{Table of Contents}
-    \Large
-    \begin{enumerate}
-        \item Motivation and Context
-        \item Cheating: History, Ecosystem, and Ethics
-        \item Anti-Cheat Technologies and Milestones
-        \item Case Study: Counter-Strike 2
-        \item Technical Analysis: Injection and Evasion
-        \item Game Logic Manipulation and Visual Features
-        \item Final Reflections and Future Directions
-    \end{enumerate}
-\end{frame}
-
 % --- Motivation and Context ---
 \section{Motivation and Context}
 \begin{frame}
@@ -132,8 +116,6 @@
         \item \textbf{Spectrum:} From basic aimbots to advanced GUI Drawings.
         \pause
         \item \textbf{Impact:} Threatens matchmaking integrity and industry revenue.
-        \pause
-        \item \textbf{Context:} Now part of the broader cybersecurity landscape.
     \end{itemize}
 \end{frame}
 
@@ -214,8 +196,6 @@
         \item \textbf{High Competitive Stakes:} Ranked ladders, esports scene, and skin economy intensify incentives.
         \pause
         \item \textbf{Persistent Cheating Problem:} VAC bans, report abuse, and public complaints highlight widespread issues.
-        \pause
-        \item \textbf{Public Data:} Rich dataset from platforms like SteamCharts and CSStats enables evidence-based analysis.
     \end{itemize}
 \end{frame}
 
@@ -278,8 +258,6 @@
     Since the early days of Counter-Strike, Valve has maintained its own anti-cheat system, VAC (Valve Anti-Cheat).
     \vspace{0.4cm}
     \begin{itemize}
-        \item \textbf{Consistency:} VAC has been used since CS 1.6 and evolved alongside the series.
-        \pause
         \item \textbf{User Mode Limitation:} VAC operates entirely in user space, unlike newer kernel-mode anticheats.
         \pause
         \item \textbf{Detection Philosophy:} Prefers silent detection with delayed banwaves to avoid tipping off cheat developers.
@@ -380,8 +358,6 @@
         \item \textbf{Initial Step:} Reverse engineer the game binary to locate key virtual functions related to input, rendering, or entity updates.
         \pause
         \item \textbf{Hooking Layer:} Inject trampoline hooks to redirect control flow to our cheat-defined functions.
-        \pause
-        \item \textbf{Limitations:} While MinHook is sufficient for prototyping, more stealth-oriented alternatives exist (e.g., Shadow Hooking, Page Guard, or VEH-based hooks).
     \end{itemize}
 \end{frame}
 
