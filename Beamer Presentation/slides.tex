@@ -24,6 +24,7 @@
 % \usepackage[style=mla]{biblatex}
 % \addbibresource{references.bib}
 
+\usepackage{animate}
 
 
 % The fields 'title', 'author', 'subject', 'keywords' are used to generate a PDF document.
@@ -49,6 +50,20 @@
 
 \begin{document}
 
+
+% --- Added thesis sections and slides ---
+
+\AtBeginSection[]{
+    \begin{frame}
+        \frametitle{Outline}
+        \tableofcontents[
+            currentsection,
+            sectionstyle=show/shaded,
+            hideothersubsections
+        ]
+    \end{frame}
+}
+
 % Title slide
 \begin{frame}[plain,noframenumbering]
     \itmobackgroundsnakes{
@@ -66,6 +81,8 @@
         \vfill
     }
 \end{frame}
+
+
 
 % Table of Contents slide
 \begin{frame}[plain,noframenumbering]
@@ -96,19 +113,6 @@
         \item \textbf{Objective:} To merge this journey with an academic study by analyzing and implementing real cheats to test detection systems.
     \end{itemize}
 \end{frame}
-
-% --- Added thesis sections and slides ---
-
-\AtBeginSection[]{
-    \begin{frame}
-        \frametitle{Outline}
-        \tableofcontents[
-            currentsection,
-            sectionstyle=show/shaded,
-            hideothersubsections
-        ]
-    \end{frame}
-}
 
 
 
@@ -331,14 +335,38 @@
 
 \begin{frame}
     \frametitle{VAC Detection and Countermeasures}
-    VAC employs traditional and modern detection mechanisms to identify unauthorized modifications.
+    VAC employs both traditional and modern mechanisms to detect unauthorized modifications within the game environment.
     \vspace{0.4cm}
     \begin{itemize}
-        \item \textbf{Detection Vectors:} Includes signature scanning, suspicious thread start addresses, and VMT hook detection.
+        \item \textbf{Detection Vectors:} Signature scanning, analysis of suspicious thread start addresses, and detection of VMT (Virtual Method Table) hooks are among its key strategies.
         \pause
-        \item \textbf{Reversing Insight:} Analyzing \texttt{steamservice.dll} reveals that VAC streams detection modules from Valve servers.
+        \item \textbf{Reversing Insight:} Inspection of \texttt{steamservice.dll} reveals that VAC dynamically streams detection modules from Valve’s servers into memory at runtime.
+        \pause
+        \item \textbf{Dumper Feasibility:} With moderate reverse engineering effort, it is possible to create a dumper capable of capturing and writing these modules to disk for offline analysis.
     \end{itemize}
 \end{frame}
+
+\begin{frame}
+    \frametitle{VAC and Valve Anti-Cheat Visuals}
+    \begin{center}
+        \begin{minipage}[t]{0.48\linewidth}
+            \centering
+            \animategraphics[height=5.2cm,autoplay,loop]{10}{images/images/valve-anticheat-frisk/frame_}{00}{62}
+            
+            \vspace{0.2cm}
+            {\footnotesize\textbf{Frisk Meme (Valve Anti-Cheat)}}
+        \end{minipage}
+        \hspace{-0.1\linewidth} % Ajusta este valor si hace falta
+        \begin{minipage}[t]{0.48\linewidth}
+            \centering
+            \animategraphics[height=5.2cm,autoplay,loop]{10}{images/images/vac-valve/frame_}{00}{62}
+            
+            \vspace{0.2cm}
+            {\footnotesize\textbf{Door Meme (VAC Bypass)}}
+        \end{minipage}
+    \end{center}
+\end{frame}
+
 
 \section{Cheat Implementation: Hooking, Logic, and Features}
 
@@ -377,34 +405,9 @@
     \includegraphics[width=1\linewidth]{images/al1gn_reclass_uc.png}
 \end{frame}
 
-% --- NEW: Implementation of Cheat Features Slide ---
-\begin{frame}
-    \frametitle{From Theory to Practice: Implementing Cheat Features}
-    Once the game’s memory structures and entity management system are fully understood, the implementation of cheat features becomes straightforward.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Features Developed:}
-        \begin{itemize}
-            \item \textit{Chams}: reverse the material system to highlight player models through geometry.
-            \pause
-            \item \textit{Aimbot}: automatic aim adjustment based on enemy position, using directional vector math and angle normalization (see equations in appendix).
-            \pause
-            \item \textit{Bunny Hop (BHop)}: automated jump timing to maximize movement speed.
-            \pause
-            \item \textit{Visual Enhancements}: overlays and tweaks to highlight relevant data in the scene.
-            \pause
-            \item \textit{Bone ESP}: skeletal rendering of player models to track posture and positioning through obstacles.
-        \end{itemize}
-    \end{itemize}
-\end{frame}
-
-
-
-% (section absorbed in previous title, line removed)
-
 
 \begin{frame}
-    \frametitle{Chams: Internal Material Injection}
+    \frametitle{Feature: Chams \& Internal Material Injection}
     To implement Chams, we reverse engineered one of CS2’s internal material files to understand its structure.
     \vspace{0.4cm}
     \begin{itemize}
@@ -503,8 +506,6 @@
 \begin{frame}
     \frametitle{Future Work and Research Directions}
     \begin{itemize}
-        \item Extend the cheat framework to support multiple Source 2 titles, enabling comparative analysis.
-        \pause
         \item Integrate automated schema extraction and dynamic offset resolution for update resilience.
         \pause
         \item Design and test new stealth hooking methods, including hardware breakpoints and kernel-level indirection.
