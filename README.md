@@ -182,7 +182,12 @@ It is particularly suited for educational demonstrations in sandboxed or offline
 
 This project was developed as part of a Master's Thesis at Universidad Carlos III de Madrid. A full written thesis accompanies the repository, detailing implementation, context, and reflections on game security.
 
-📄 [Read the thesis here](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Master%20Thesis%20Template/memoria.pdf)
+| Resource         | Description                                 | Link                                                                 |
+|------------------|---------------------------------------------|----------------------------------------------------------------------|
+| 📄 Thesis (PDF)   | Full academic write-up of the Aspasia project | [Read the thesis](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Master%20Thesis%20Template/memoria.pdf) |
+| 🎞️ Slides (PDF)   | Beamer presentation with feature visuals     | [View the slides](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Beamer%20Presentation/slides.pdf) |
+
+> 💡 To properly render the animated GIFs in the presentation, use a PDF viewer that supports embedded animations, such as Adobe Reader or a modern browser.
 
 It’s worth mentioning that this project was developed from a learning perspective as part of my academic journey. I don’t consider myself an expert, and much of the code was written under time constraints in preparation for the thesis presentation. There’s plenty of room for improvement, and I hope that sharing this work can help others just as the communities of UnknownCheats, GuidedHacking, and many others have helped me.
 
