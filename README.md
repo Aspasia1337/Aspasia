@@ -189,6 +189,11 @@ This project was developed as part of a Master's Thesis at Universidad Carlos II
 
 > 💡 To properly render the animated GIFs in the presentation, use a PDF viewer that supports embedded animations, such as Adobe Reader or a modern browser.
 
+
+Special thanks to **Alexey Zabashta** for providing the [ITMO Beamer Theme](https://www.overleaf.com/latex/templates/itmo-beamer-theme/fpttrgnmqwsb), which served as the foundation for the presentation slides.  
+
+### Acknowledgements
+
 It’s worth mentioning that this project was developed from a learning perspective as part of my academic journey. I don’t consider myself an expert, and much of the code was written under time constraints in preparation for the thesis presentation. There’s plenty of room for improvement, and I hope that sharing this work can help others just as the communities of UnknownCheats, GuidedHacking, and many others have helped me.
 
 ---
