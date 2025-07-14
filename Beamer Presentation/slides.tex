@@ -113,13 +113,12 @@
         \item \textbf{Anti-Cheat:} Monitors and enforces integrity at runtime, acting like an \textbf{EDR} by detecting anomalous behavior, unauthorized memory access, or code injection in protected processes.
         \pause
         \item \textbf{Spectrum:} From basic aimbots to advanced GUI Drawings.
-        \pause
-        \item \textbf{Impact:} Threatens matchmaking integrity and industry revenue.
+ 
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Origins of Cheating: From Debugging to Subversion}
+    \frametitle{Historical Origins: From Developer Shortcuts to Cheating Tools}
     Cheating emerged from tools meant for testing and evolved into manipulation.
     \vspace{0.4cm}
     \begin{itemize}
@@ -140,6 +139,12 @@
         \pause
         \item \textbf{Subscription Models:} Private cheats became commercialized with regular updates and support.
     \end{itemize}
+    \vspace{0.5cm}
+    \only<2->{%
+        \begin{center}
+            \includegraphics[width=0.6\linewidth]{images/aimware_logo.png}
+        \end{center}
+    }
 \end{frame}
 
 \begin{frame}
@@ -148,8 +153,6 @@
     \vspace{0.4cm}
     \begin{itemize}
         \item \textbf{Commercialization:} Cheat providers operate like startups, offering licensing, tiered features, and customer support.
-        \pause
-        \item \textbf{Stealth Technology:} Use of polymorphism, virtualization, and driver-level code to evade detection.
         \pause
         \item \textbf{Infrastructure:} Loaders, obfuscators, HWID spoofers, and encrypted update channels ensure persistence.
     \end{itemize}
@@ -164,7 +167,7 @@
 
 % --- NEW: CS2 Player Base Growth Slide ---
 \begin{frame}
-    \frametitle{CS2 Player Base Growth (2024–2025)}
+    \frametitle{Why Counter Strike 2?}
     To contextualize the scale of CS2's ecosystem, the following graph illustrates the evolution of its player base based on SteamCharts data.
     \vspace{0.3cm}
     \begin{tikzpicture}
@@ -240,23 +243,6 @@
 \end{frame}
 
 
-
-% --- Justification Slide: Why Counter-Strike 2? ---
-\begin{frame}
-    \frametitle{Why Counter-Strike 2?}
-    Counter-Strike 2 represents a prime environment to study modern cheating.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Large Player Base:} Over 1 million monthly active users in 2024--2025.
-        \pause
-        \item \textbf{High Competitive Stakes:} Ranked ladders, esports scene, and skin economy intensify incentives.
-        \pause
-        \item \textbf{Persistent Cheating Problem:} VAC bans, report abuse, and public complaints highlight widespread issues.
-    \end{itemize}
-\end{frame}
-
-
-
 % --- NEW: Survey Slide: Cheating as a Critical Threat ---
 \begin{frame}
     \frametitle{Survey: Cheating as a Critical Threat}
@@ -295,7 +281,7 @@
     \begin{itemize}
         \item \textbf{Detection Vectors:} Signature scanning, analysis of suspicious thread start addresses, and detection of VMT (Virtual Method Table) hooks are among its key strategies.
         \pause
-        \item \textbf{Reversing Insight:} Inspection of \texttt{steamservice.dll} reveals that VAC dynamically streams detection modules from Valve’s servers into memory at runtime.
+        \item \textbf{Steamservice.dll:} Inspection of \texttt{steamservice.dll} reveals that VAC dynamically streams detection modules from Valve’s servers into memory at runtime.
         \pause
         \item \textbf{Dumper Feasibility:} With moderate reverse engineering effort, it is possible to create a dumper capable of capturing and writing these modules to disk for offline analysis.
     \end{itemize}
@@ -323,7 +309,7 @@
 \end{frame}
 
 
-\section{Cheat Implementation: Hooking, Logic, and Features}
+\section{Cheat Implementation: Entities, Logic, and Features}
 
 % --- Improved Entity List and Memory Traversal Slide ---
 \begin{frame}
@@ -331,17 +317,17 @@
     During the reverse engineering process of CS2, we identified how entities are registered and updated in memory.
     \vspace{0.4cm}
     \begin{itemize}
-        \item \textbf{Entity Management:} The game uses a handle-based paging system to manage all in-game entities.
+        \item \textbf{Memory Structures:} Reverse engineering revealed a central list containing pointers to entity classes and their data.
+        \pause
+        \item \textbf{Entity Management:} C\_CSPlayerPawm \& C\_CBasePlayerController.
         \pause
         \item \textbf{Cheat Integration:} Our entity list must stay in sync with the game to avoid crashes from invalid pointers.
-        \pause
-        \item \textbf{Memory Structures:} Reverse engineering revealed a central list containing pointers to entity classes and their data.
     \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Entity List in Reclass}        
+    \frametitle{Entity List Reversed in Reclass every 0x78 Bytes}        
     \includegraphics[width=1\linewidth]{images/al1gn_reclass_uc.png}
 \end{frame}
 
@@ -351,13 +337,11 @@
     To implement Chams, we reverse engineered one of CS2’s internal material files to understand its structure.
     \vspace{0.4cm}
     \begin{itemize}
-        \item \textbf{Material Discovery:} We decrypted and analyzed a material from Valve's asset system (suspected format: \texttt{.vk3}).
-        \pause
-        \item \textbf{Material Creation:} This allowed us to mimic and reconstruct materials programmatically.
+        \item \textbf{Material Discovery:} We decrypted and analyzed a material from Valve's asset system (suspected format: \texttt{.vk3}) dumped from memory.
         \pause
         \item \textbf{Function Hooks:} We hooked two internal engine functions: one responsible for material creation, another for rendering passes.
         \pause
-        \item \textbf{Selective Injection:} By filtering the render queue, we applied our custom material only to specific models (e.g., player entities, weapons).
+        \item \textbf{Selective Injection:} By filtering the render queue, we applied our custom material only to specific models (e.g. \textbf{C\_CSPlayerPawn, C\_CSWeapon}).
     \end{itemize}
 
 \end{frame}
@@ -398,7 +382,7 @@
     \begin{itemize}
         \item \textbf{Bone Matrix Discovery:} The game maintains a matrix of bone positions indexed per entity, storing 3D coordinates for each joint.
         \pause
-        \item \textbf{Rendering Strategy:} Once the matrix was located, we extracted the relevant joint coordinates and projected them into screen space.
+        \item \textbf{Bone Indices:} Once the matrix was located, we extracted the relevant joint coordinates and projected them into screen space.
         \pause
         \item \textbf{Skeleton Drawing:} We connected selected bones (e.g., head, spine, limbs) with lines to visually represent the player’s skeleton.
     \end{itemize}
@@ -433,13 +417,12 @@
 \begin{frame}
     \frametitle{Final Reflections}
     \begin{itemize}
-        \item Cheating in online games reflects a complex interplay between technical ingenuity and social dynamics.
+        \item The cat-and-mouse dynamic between cheaters and anti-cheat systems reflects a fundamental aspect of human nature: \textbf{the relentless drive to win, by any means necessary}.
         \pause
-        \item The continual arms race between cheat developers and anti-cheat systems mirrors broader cybersecurity challenges.
-        \pause
-        \item Gaining offensive insight through cheat implementation reveals critical blind spots in detection strategies.
-        \pause
-        \item Ethical, economic, and technical dimensions must be addressed together to preserve competitive integrity.
+        \item A single user, acting anonymously from home, can challenge and undermine the work of entire development teams and multi-million-dollar infrastructures.
+        \begin{center}
+            \includegraphics[width=0.5\linewidth]{images/cheater_anticheat.png}
+        \end{center}
     \end{itemize}
 \end{frame}
 
@@ -450,12 +433,9 @@
         \pause
         \item Design and test new stealth hooking methods, including hardware breakpoints and kernel-level indirection.
         \pause
-        \item Explore cheat detection benchmarking using controlled environments and real-time telemetry.
+        \item Explore and implement hooks from the \textbf{Anti Cheat dumped modules}.
     \end{itemize}
 \end{frame}
-
-
-    
 
 % --- Closing Questions Slide ---
 \begin{frame}
