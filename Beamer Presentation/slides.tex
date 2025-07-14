@@ -127,9 +127,7 @@
         \pause
         \item \textbf{GameShark:} Modified RAM directly on console hardware.
         \pause
-        \item \textbf{Cheat Engine:} Enabled runtime memory editing on PC.
-        \pause
-        \item \textbf{x64dbg and ReClass.NET:} Allowed advanced memory mapping, pointer tracing, and class reconstruction.
+        \item \textbf{Cheat Engine \& ReClass.NET:} Allowed advanced memory mapping, pointer tracing, and class reconstruction.
     \end{itemize}
 \end{frame}
 
@@ -158,45 +156,11 @@
 \end{frame}
 
 
-% --- Anti-Cheat Timeline Table ---
+
 % --- Anti-Cheat Technologies and Milestones ---
 \section{Counter-Strike 2: A Case Study in Cheating Dynamics}
-\begin{frame}
-    \frametitle{Anti-Cheat Systems Timeline}
-    Anti-cheat systems have evolved from basic client-side tools to complex, kernel-level detectors. Each marked a significant shift in visibility, access, or enforcement.
-    \vspace{0.4cm}
-    \begin{table}[]
-        \small
-        \begin{tabular}{|l|l|l|l|}
-            \hline
-            \textbf{System} & \textbf{Year} & \textbf{Mode} & \textbf{Milestone or Innovation} \\
-            \hline
-            PunkBuster & 2000 & User & First real-time memory scan and screenshot system \\
-            VAC & 2002 & User & Delayed ban model to obfuscate detection methods \\
-            BattleEye & 2004 & Kernel & Early adoption of kernel-mode drivers \\
-            FairFight & 2012 & Server & Behavioral/statistical detection at server level \\
-            EAC & 2018 & Kernel & Real-time scanning with driver-level protection \\
-            Vanguard & 2020 & Kernel & Persistent always-on kernel driver (controversial) \\
-            VAC Live & 2023 & Hybrid & Real-time detection with low-latency enforcement \\
-            \hline
-        \end{tabular}
-    \end{table}
-\end{frame}
 
 
-% --- Justification Slide: Why Counter-Strike 2? ---
-\begin{frame}
-    \frametitle{Why Counter-Strike 2?}
-    Counter-Strike 2 represents a prime environment to study modern cheating.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Large Player Base:} Over 1 million monthly active users in 2024--2025.
-        \pause
-        \item \textbf{High Competitive Stakes:} Ranked ladders, esports scene, and skin economy intensify incentives.
-        \pause
-        \item \textbf{Persistent Cheating Problem:} VAC bans, report abuse, and public complaints highlight widespread issues.
-    \end{itemize}
-\end{frame}
 
 % --- NEW: CS2 Player Base Growth Slide ---
 \begin{frame}
@@ -241,6 +205,8 @@
     \end{tikzpicture}
 \end{frame}
 
+
+
 % --- NEW: Steam Top 10 Visual Context Slide ---
 \begin{frame}
     \frametitle{Steam Top 10: July 7, 2025}
@@ -251,19 +217,45 @@
 \end{frame}
 
 
-% --- NEW: VAC Anti-Cheat Strategy Slide ---
 \begin{frame}
-    \frametitle{VAC: Valve's Anti-Cheat Strategy}
-    Since the early days of Counter-Strike, Valve has maintained its own anti-cheat system, VAC (Valve Anti-Cheat).
+    \frametitle{Anti-Cheat Systems Timeline}
+    Anti-cheat systems have evolved from basic client-side tools to complex, kernel-level detectors. Each marked a significant shift in visibility, access, or enforcement.
+    \vspace{0.4cm}
+    \begin{table}[]
+        \small
+        \begin{tabular}{|l|l|l|l|}
+            \hline
+            \textbf{System} & \textbf{Year} & \textbf{Mode} & \textbf{Milestone or Innovation} \\
+            \hline
+            PunkBuster & 2000 & User & First real-time memory scan and screenshot system \\
+            VAC & 2002 & User & Delayed ban model to obfuscate detection methods \\
+            BattleEye & 2004 & Kernel & Early adoption of kernel-mode drivers \\
+            FairFight & 2012 & Server & Behavioral/statistical detection at server level \\
+            EAC & 2018 & Kernel & Real-time scanning with driver-level protection \\
+            Vanguard & 2020 & Kernel & Persistent always-on kernel driver (controversial) \\
+            VAC Live & 2023 & Hybrid & Real-time detection with low-latency enforcement \\
+            \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+
+
+% --- Justification Slide: Why Counter-Strike 2? ---
+\begin{frame}
+    \frametitle{Why Counter-Strike 2?}
+    Counter-Strike 2 represents a prime environment to study modern cheating.
     \vspace{0.4cm}
     \begin{itemize}
-        \item \textbf{User Mode Limitation:} VAC operates entirely in user space, unlike newer kernel-mode anticheats.
+        \item \textbf{Large Player Base:} Over 1 million monthly active users in 2024--2025.
         \pause
-        \item \textbf{Detection Philosophy:} Prefers silent detection with delayed banwaves to avoid tipping off cheat developers.
+        \item \textbf{High Competitive Stakes:} Ranked ladders, esports scene, and skin economy intensify incentives.
         \pause
-        \item \textbf{Upcoming Evolution:} Valve announced integration of \textbf{machine learning models} into VAC Live to detect behavioral patterns and cheating heuristics in real time.
+        \item \textbf{Persistent Cheating Problem:} VAC bans, report abuse, and public complaints highlight widespread issues.
     \end{itemize}
 \end{frame}
+
+
 
 % --- NEW: Survey Slide: Cheating as a Critical Threat ---
 \begin{frame}
@@ -294,20 +286,6 @@
     \end{itemize}
 \end{frame}
 \section{Code Injection and Cheat Delivery Mechanisms}
-
-\begin{frame}
-    \frametitle{DLL Injection and Manual Mapping}
-    Cheats are commonly implemented as DLL files injected into the game process.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Classic Methods:} LoadLibrary and CreateRemoteThread are frequently used, but easily detected.
-        \pause
-        \item \textbf{Manual Mapping:} Avoids standard API calls, skipping LoadLibrary and not registering the module.
-        \pause
-        \item \textbf{Malware Parallels:} These techniques mirror malware behavior, stealthy, evasive, and persistent.
-    \end{itemize}
-\end{frame}
-
 
 
 \begin{frame}
@@ -346,19 +324,6 @@
 
 
 \section{Cheat Implementation: Hooking, Logic, and Features}
-
-\begin{frame}
-    \frametitle{Hooking the Engine: Input, Rendering, and Events}
-    Hooking allows interception of internal engine calls to alter behavior at runtime.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Core Role:} Alongside reverse engineering, hooking forms the backbone of our cheat architecture.
-        \pause
-        \item \textbf{Initial Step:} Reverse engineer the game binary to locate key virtual functions related to input, rendering, or entity updates.
-        \pause
-        \item \textbf{Hooking Layer:} Inject trampoline hooks to redirect control flow to our cheat-defined functions.
-    \end{itemize}
-\end{frame}
 
 % --- Improved Entity List and Memory Traversal Slide ---
 \begin{frame}
