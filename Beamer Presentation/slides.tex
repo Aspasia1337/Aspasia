@@ -243,6 +243,23 @@
 \end{frame}
 
 
+
+\section{Code Injection and Cheat Delivery Mechanisms}
+
+
+\begin{frame}
+    \frametitle{VAC Detection and Countermeasures}
+    VAC employs both traditional and modern mechanisms to detect unauthorized modifications within the game environment.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Detection Vectors:} Signature scanning, analysis of suspicious thread start addresses, and detection of VMT (Virtual Method Table) hooks are among its key strategies.
+        \pause
+        \item \textbf{Steamservice.dll:} Inspection of \texttt{steamservice.dll} reveals that VAC dynamically streams detection modules from Valve’s servers into memory at runtime.
+        \pause
+        \item \textbf{Dumper Feasibility:} With moderate reverse engineering effort, it is possible to create a dumper capable of capturing and writing these modules to disk for offline analysis.
+    \end{itemize}
+\end{frame} 
+
 % --- NEW: Survey Slide: Cheating as a Critical Threat ---
 \begin{frame}
     \frametitle{Survey: Cheating as a Critical Threat}
@@ -271,21 +288,6 @@
         \item Economic implications due to reduced engagement and spending.
     \end{itemize}
 \end{frame}
-\section{Code Injection and Cheat Delivery Mechanisms}
-
-
-\begin{frame}
-    \frametitle{VAC Detection and Countermeasures}
-    VAC employs both traditional and modern mechanisms to detect unauthorized modifications within the game environment.
-    \vspace{0.4cm}
-    \begin{itemize}
-        \item \textbf{Detection Vectors:} Signature scanning, analysis of suspicious thread start addresses, and detection of VMT (Virtual Method Table) hooks are among its key strategies.
-        \pause
-        \item \textbf{Steamservice.dll:} Inspection of \texttt{steamservice.dll} reveals that VAC dynamically streams detection modules from Valve’s servers into memory at runtime.
-        \pause
-        \item \textbf{Dumper Feasibility:} With moderate reverse engineering effort, it is possible to create a dumper capable of capturing and writing these modules to disk for offline analysis.
-    \end{itemize}
-\end{frame} 
 
 \begin{frame}
     \frametitle{Community on VAC}
@@ -338,18 +340,23 @@
     \vspace{0.4cm}
     \begin{itemize}
         \item \textbf{Material Discovery:} We decrypted and analyzed a material from Valve's asset system (suspected format: \texttt{.vk3}) dumped from memory.
-        \pause
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+    \includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{images/carbon.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Feature: Chams \& Internal Material Injection}
+    To implement Chams, we reverse engineered one of CS2’s internal material files to understand its structure.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Material Discovery:} We decrypted and analyzed a material from Valve's asset system (suspected format: \texttt{.vk3}) dumped from memory.
         \item \textbf{Function Hooks:} We hooked two internal engine functions: one responsible for material creation, another for rendering passes.
         \pause
         \item \textbf{Selective Injection:} By filtering the render queue, we applied our custom material only to specific models (e.g. \textbf{C\_CSPlayerPawn, C\_CSWeapon}).
     \end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Material VK3 structure}        
-    \includegraphics[width=1\linewidth]{images/carbon.png}
 \end{frame}
 
 % --- Visual Examples: Chams Materials ---
@@ -431,7 +438,7 @@
     \begin{itemize}
         \item Integrate automated schema extraction and dynamic offset resolution for update resilience.
         \pause
-        \item Design and test new stealth hooking methods, including hardware breakpoints and kernel-level indirection.
+        \item Design and test new stealth hooking methods, including hardware breakpoints and kernel-level injection.
         \pause
         \item Explore and implement hooks from the \textbf{Anti Cheat dumped modules}.
     \end{itemize}
