@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Windows%20x64-blue"/>
-  <img src="https://img.shields.io/badge/language-C%2B%2B20-brightgreen"/>
+  <img src="https://img.shields.io/badge/language-C%2B%2B17-brightgreen"/>
   <img src="https://img.shields.io/badge/context-Master's%20Thesis-blueviolet"/>
   <img src="https://img.shields.io/badge/license-GNU%20GPLv3-blue"/>
 </p>
@@ -10,8 +10,6 @@
 **Aspasia** is a C++ research framework for studying and prototyping game manipulation techniques in *Counter-Strike 2 (CS2)*. It was developed as part of a Master's Thesis at Universidad Carlos III de Madrid.
 
 This project is closely tied to the accompanying thesis document, which explores implementation details, design rationale, and the broader context of game cheating and reverse engineering. While Aspasia is not intended for unfair use in public matches, it serves as a tool to understand how game and anti-cheat systems work under the hood.
-
-</div>
 
 ---
 
@@ -28,57 +26,57 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 ## 1. In-Game Preview: Feature Demonstrations
 
 <p align="center">
-  <img src="Master Thesis Template/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
+  <img src="thesis/clips/menu.gif" alt="Menu UI Demo" width="1000"/>
 </p>
 <p align="center"><em>UI demonstration of the in-game menu system, featuring tab navigation and real-time configuration.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
+  <img src="thesis/clips/aimbot_smoothing.gif" alt="Aimbot Smoothing Demo" width="1000"/>
 </p>
 <p align="center"><em>Aimbot with smoothing (interpolation) and chams enabled for both visible and hidden targets.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
+  <img src="thesis/clips/anti_aim_clip.gif" alt="Anti-Aim Demo" width="1000"/>
 </p>
 <p align="center"><em>Animated preview of anti-aim behavior and overlay visuals in action.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/clips/flashbang.gif" alt="Flashbang Removal Demo" width="1000"/>
+  <img src="thesis/clips/flashbang.gif" alt="Flashbang Removal Demo" width="1000"/>
 </p>
 <p align="center"><em>Flashbang effect disabled during gameplay, enabling uninterrupted visual clarity.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/clips/smokerender.gif" alt="Smoke Rendering Removal Demo" width="1000"/>
+  <img src="thesis/clips/smokerender.gif" alt="Smoke Rendering Removal Demo" width="1000"/>
 </p>
 <p align="center"><em>Smoke rendering bypassed to maintain full visibility in obstructed areas.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/clips/gameplay.gif" alt="Gameplay Preview" width="1000"/>
+  <img src="thesis/clips/gameplay.gif" alt="Gameplay Preview" width="1000"/>
 </p>
 <p align="center"><em>Live gameplay preview showing multiple features working together in a real match context.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="1000"/>
+  <img src="thesis/images/Bones/20250608222549_1.jpg" alt="Target Bone Visualization" width="1000"/>
 </p>
 <p align="center"><em>Chams and skeletal overlays for target visualization and debugging.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/Bones/20250608215858_1.jpg" alt="Entity Bone Overlay" width="1000"/>
+  <img src="thesis/images/Bones/20250608215858_1.jpg" alt="Entity Bone Overlay" width="1000"/>
 </p>
 <p align="center"><em>Real-time bone overlays showing all entities in view for runtime inspection.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/chams/chams_demo/20250608210828_1.jpg" alt="Chams Demonstration" width="1000"/>
+  <img src="thesis/images/chams/chams_demo/20250608210828_1.jpg" alt="Chams Demonstration" width="1000"/>
 </p>
 <p align="center"><em>UI menu with chams tab open, used for configuring material and visibility settings.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/20250615230119_1.jpg" alt="Visual Overlay Snapshot" width="1000"/>
+  <img src="thesis/images/20250615230119_1.jpg" alt="Visual Overlay Snapshot" width="1000"/>
 </p>
 <p align="center"><em>Close-up of USP-S and player arms using custom chams.</em></p>
 
 <p align="center">
-  <img src="Master Thesis Template/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
+  <img src="thesis/images/20250615230003_1.jpg" alt="Debug Menu Showcase" width="1000"/>
 </p>
 <p align="center"><em>Close-up of M4A1 and player arms using custom chams.</em></p>
 
@@ -115,18 +113,34 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 
 ---
 
-## 3. Compilation & Setup
+## 3. Project Structure
 
-### 3.1 System Requirements
+| Directory | Description |
+|---|---|
+| `Features/` | Individual feature modules (aimbot, visuals, anti-aim, movement, misc) |
+| `HooksManager/` | Hook setup and lifecycle management via MinHook |
+| `EntityManager/` | Entity tracking via `OnAddEntity` / `OnRemoveEntity` callbacks |
+| `Interfaces/` | CS2 interface resolution at runtime |
+| `Classes/` | Game class definitions and memory layout structs |
+| `helper/` | PE utilities and miscellaneous helpers |
+| `math/` | Vector math |
+| `includes/` | Third-party libraries (ImGui, Kiero, MinHook, offsets) |
+| `thesis/` | Academic write-up, slides, screenshots, and GIFs |
+
+---
+
+## 4. Compilation & Setup
+
+### 4.1 System Requirements
 
 - Windows 10/11 (x64)
 - Visual Studio 2019 or later
 - DirectX SDK (June 2010)
 - ImGui and MinHook (already bundled)
-- C++20 support (`/std:c++20`)
+- C++17 support (`/std:c++17`)
 - Only the `x64` configuration is actively maintained and tested
 
-### 3.2 Build Instructions
+### 4.2 Build Instructions
 
 1. Download the repository as a ZIP or use Git for Windows:
 
@@ -142,7 +156,7 @@ Ultimately, you are fully responsible for any use or consequences that may resul
 
 ---
 
-## 4. Injection Guidelines & Runtime Behavior
+## 5. Injection Guidelines & Runtime Behavior
 
 This project does not include an injector. Due to the nature of Valve Anti-Cheat (VAC), standard injection methods such as `LoadLibrary` are detectable and unsafe.
 
@@ -157,14 +171,14 @@ For safe usage in a controlled environment, the loader should support:
 If injection is successful, an in-game console will appear displaying logs. This confirms proper loading and hook initialization.
 
 <p align="center">
-  <img src="Master Thesis Template/images/inject.png" alt="Injection Console" width="800"/>
+  <img src="thesis/images/inject.png" alt="Injection Console" width="800"/>
 </p>
 
 Once in-game, the main menu can be opened using the `INSERT` key.
 
 ---
 
-## 5. Research Intent & Scope
+## 6. Research Intent & Scope
 
 Aspasia is not a conventional cheat—it is a research tool.
 
@@ -176,31 +190,35 @@ It was designed to:
 
 It is particularly suited for educational demonstrations in sandboxed or offline environments.
 
+### Technical Notes (as of April 2026)
+
+- Anti-cheat module streaming is currently **disabled** — VAC modules are not being pushed to clients at this time.
+- The most significant detection logic resides in **`client.dll`**, which is where the bulk of integrity and behavioral checks are implemented.
+
 ---
 
-## 6. Academic Background
+## 7. Academic Background
 
 This project was developed as part of a Master's Thesis at Universidad Carlos III de Madrid. A full written thesis accompanies the repository, detailing implementation, context, and reflections on game security.
 
-| Resource         | Description                                 | Link                                                                 |
-|------------------|---------------------------------------------|----------------------------------------------------------------------|
-| 📄 Thesis (PDF)   | Full academic write-up of the Aspasia project | [Read the thesis](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Master%20Thesis%20Template/memoria.pdf) |
-| 🎞️ Slides (PDF)   | Beamer presentation with feature visuals     | [View the slides](https://github.com/Aspasia1337/Aspasia/blob/main-ui/Beamer%20Presentation/slides.pdf) |
+| Resource | Description | Link |
+|---|---|---|
+| Thesis (PDF) | Full academic write-up of the Aspasia project | [Read the thesis](https://github.com/Aspasia1337/Aspasia/blob/main-ui/thesis/memoria.pdf) |
+| Slides (PDF) | Beamer presentation with feature visuals | [View the slides](https://github.com/Aspasia1337/Aspasia/blob/main-ui/slides/slides.pdf) |
 
-> 💡 To properly render the animated GIFs in the presentation, use a PDF viewer that supports embedded animations, such as Adobe Reader or a modern browser.
+> To properly render the animated GIFs in the presentation, use a PDF viewer that supports embedded animations, such as Adobe Reader or a modern browser.
 
-
-Special thanks to **Alexey Zabashta** for providing the [ITMO Beamer Theme](https://www.overleaf.com/latex/templates/itmo-beamer-theme/fpttrgnmqwsb), which served as the foundation for the presentation slides.  
+Special thanks to **Alexey Zabashta** for providing the [ITMO Beamer Theme](https://www.overleaf.com/latex/templates/itmo-beamer-theme/fpttrgnmqwsb), which served as the foundation for the presentation slides.
 
 ### Acknowledgements
 
-It’s worth mentioning that this project was developed from a learning perspective as part of my academic journey. I don’t consider myself an expert, and much of the code was written under time constraints in preparation for the thesis presentation. There’s plenty of room for improvement, and I hope that sharing this work can help others just as the communities of UnknownCheats, GuidedHacking, and many others have helped me.
+This project was developed from a learning perspective as part of my academic journey. Much of the code was written under time constraints in preparation for the thesis presentation. I hope that sharing this work can be useful to others, just as the communities of UnknownCheats, GuidedHacking, and many others have been to me.
 
 ---
 
-## 7. Potential Enhancements
+## 8. Potential Enhancements
 
-The following improvements are planned or suggested:
+This project is complete as a thesis submission and is no longer actively developed. The following were identified as areas for future work:
 
 - **Code Refactor**: Modularization, naming, and clarity improvements across the C++ codebase
 - **Encrypted Strings**: Use compile-time obfuscation macros (e.g., `XORSTR`)
@@ -210,7 +228,7 @@ The following improvements are planned or suggested:
 
 ---
 
-## 8. License & Usage Terms
+## 9. License & Usage Terms
 
 This project is licensed under the **GNU General Public License v3.0**.
 
