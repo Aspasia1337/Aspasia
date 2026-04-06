@@ -1,7 +1,7 @@
 #include "Legitbot.h"
 
 #include <iostream>
-#include "../../helper/helper.h"
+#include "../../Helper/helper.h"
 
 Vec3 Legitbot::GetBonePosition::GetBonePosFromIndex(uint32_t index, C_PlayerPawn *Player, C_PlayerPawn *Me)
 {

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <type_traits>
 
-#include "helper/helper.h"
+#include "Helper/helper.h"
 #include "EntityManager/EntityManager.h"
 #include "HooksManager/HooksManager.h"
 

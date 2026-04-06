@@ -1,7 +1,7 @@
 ﻿#include "Visual.h"
-#include "../../includes/imgui/imgui.h"
+#include "../../Includes/imgui/imgui.h"
 #include "../../EntityManager/EntityManager.h"
-#include "../../math/vector.h"
+#include "../../Math/vector.h"
 
 #include <algorithm>
 

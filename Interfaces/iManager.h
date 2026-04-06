@@ -4,7 +4,7 @@
 #include "vector"
 #include "iostream"
 
-#include "../helper/helper.h"
+#include "../Helper/helper.h"
 
 class CGameInput {
 public:

@@ -4,10 +4,10 @@
 #include <iostream>
 #include <vector>
 #include "HooksManager.h"
-#include "../helper/helper.h"
-#include "../includes/kiero/minhook/include/MinHook.h"
+#include "../Helper/helper.h"
+#include "../Includes/kiero/minhook/include/MinHook.h"
 #include "../globals.h"
-#include "../math/vector.h"
+#include "../Math/vector.h"
 #include "../Interfaces/iManager.h"
 #include "../Features/Anti-Aim/AntiAim.h"
 #include "../Features/Movement/Movement.h"

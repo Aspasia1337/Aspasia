@@ -11,7 +11,7 @@
 
 // Credits for the Union Struct goes to bb110 & pSecurity on UnkownCheats: https://www.unknowncheats.me/forum/c-and-c-/456554-union-struct.html
 
-#include "../math/vector.h"
+#include "../Math/vector.h"
 #include "../Classes/Classes.h"
 
 enum class BoneIDs

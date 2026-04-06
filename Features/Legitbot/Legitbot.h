@@ -1,5 +1,5 @@
 #pragma once
-#include "../../math/vector.h"
+#include "../../Math/vector.h"
 #include "../../Classes/Classes.h"
 
 class Legitbot

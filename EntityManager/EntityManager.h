@@ -3,11 +3,11 @@
 #include <algorithm>
 #include <string>
 
-#include "../helper/helper.h"
+#include "../Helper/helper.h"
 #include "../Classes/Classes.h"
 #include "../globals.h"
-#include "../math/vector.h"
-#include "../includes/imgui/imgui.h"
+#include "../Math/vector.h"
+#include "../Includes/imgui/imgui.h"
 
 #include "../Features/Visuals/Visual.h"
 

@@ -1,7 +1,7 @@
 ﻿#include "vector.h"
 #include "../globals.h"
 #include "../EntityManager/EntityManager.h"
-#include "../helper/helper.h"
+#include "../Helper/helper.h"
 
 const bool Vec3::WorldToScreen(Vec2 &out, float (*ViewMatrix)[4][4])
 {

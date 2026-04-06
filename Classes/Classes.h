@@ -12,8 +12,8 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "../math/vector.h"
-#include "../helper/helper.h"
+#include "../Math/vector.h"
+#include "../Helper/helper.h"
 
 namespace terroristBones
 {

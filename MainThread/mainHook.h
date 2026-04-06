@@ -1,9 +1,9 @@
 ﻿
 #define IMGUI_DEFINE_MATH_OPERATORS
-#include "../includes/imgui/custom/custom.hpp"
-#include "../includes/imgui/imgui_impl_dx11.h"
-#include "../includes/imgui/imgui_impl_win32.h"
-#include "../includes/imgui/blur/blur.hpp"
+#include "../Includes/imgui/custom/custom.hpp"
+#include "../Includes/imgui/imgui_impl_dx11.h"
+#include "../Includes/imgui/imgui_impl_win32.h"
+#include "../Includes/imgui/blur/blur.hpp"
 
 #include <Windows.h>
 #include <d3d11.h>
@@ -13,8 +13,8 @@
 #include <string>
 #include <time.h>
 
-#include "../includes/includes.h"
-#include "../bytes.hpp"
+#include "../Includes/includes.h"
+#include "../Includes/bytes.hpp"
 
 Present oPresent;
 HWND window = nullptr;
