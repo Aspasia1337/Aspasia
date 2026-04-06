@@ -81,8 +81,6 @@ namespace Globals {
 	extern float ArmsColor[3];
 	extern float InvisibleChamsColor[3];
 
-	extern float SkyTintColor[3];
-
 	extern  void *MouseEvent;
 
 	extern std::vector <Feature> Features;
