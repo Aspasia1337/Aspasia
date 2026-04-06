@@ -16,12 +16,14 @@ int main (void) {
 
 	DWORD PID = 0;
 
-	do {
-		if (strcmp (PE32.szExeFile, szProc)) {
-			PID = PE32.th32ProcessID;
-			break;
-		}
-	} while (Process32Next (hSnap, &PE32));
+	if (Process32First (hSnap, &PE32)) {
+		do {
+			if (!strcmp (PE32.szExeFile, szProc)) {
+				PID = PE32.th32ProcessID;
+				break;
+			}
+		} while (Process32Next (hSnap, &PE32));
+	}
 
 	CloseHandle (hSnap);
 

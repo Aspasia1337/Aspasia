@@ -72,7 +72,7 @@ void __stdcall Shellcode (MANUAL_MAPPING_DATA *pData) {
 		}
 	}
 
-	_DLLMain (pBase, DLL_THREAD_ATTACH, nullptr);
+	_DLLMain (pBase, DLL_PROCESS_ATTACH, nullptr);
 
 	pData->hMod = reinterpret_cast<HINSTANCE>(pBase);
 	
@@ -121,7 +121,7 @@ bool ManualMap (HANDLE hProc, const char *szDllFile) {
 	File.close ( );
 
 	//Check if it's a valid FILE
-	if (reinterpret_cast<IMAGE_DOS_HEADER *>(pSrcData)->e_magic == 0x5A4D) { //MZ -> PE Magic Number
+	if (reinterpret_cast<IMAGE_DOS_HEADER *>(pSrcData)->e_magic != 0x5A4D) { //MZ -> PE Magic Number
 		std::cout << "File isn't a valid PE File";
 		delete[] pSrcData;
 		return 0;
